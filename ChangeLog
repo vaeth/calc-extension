@@ -1,5 +1,10 @@
 # ChangeLog for calc:
 
+*calc-0.2:
+	Martin Väth <martin at mvath.de>:
+	- Output in hexadecimal and octal only if number is larger than 7
+	- Simplify background.js
+
 *calc-0.1:
 	Martin Väth <martin at mvath.de>:
 	- Initial implementation

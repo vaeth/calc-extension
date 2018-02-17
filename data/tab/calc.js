@@ -411,7 +411,7 @@ function calculate(state, input) {
     throw errorNonNumeric(result);
   }
   const value = state.previous = result.value;
-  if (!Number.isInteger(value)) {
+  if ((value <= 7) || !Number.isInteger(value)) {
     return String(value);
   }
   return String(value) + "\xa0\xa00x" + value.toString(16) +

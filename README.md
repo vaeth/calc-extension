@@ -10,18 +10,22 @@ After installing __calc__, it can be used as follows.
 
 Click the __calc__ symbol `1+2`.
 Then a page opens where you can enter a formula which will be calculated
-when you press return. If the result is an integer number, it will be output
-in decimal, hexadecimal, and octal.
+when you press return. If the result is an integer number larger than 7,
+it will be output in decimal, hexadecimal, and octal.
 
 A simple formula is a usual mathematical expression which consists of numbers,
 the usual operators `+` `-` `*` `/` and braces `(` `)`.
 
-Numbers have the usual floating-point format, e.g. `17`  `0.1` `1.2e-3`
+**Do not enter a trailing `=` symbol!**
+
+**Note that `*` must be used for multiplication (not `x`)**
+
+_As usual in computer notation (but unlike to mathematical convention),_
+_ellipsis of the multiplication operator_ `*` _is not supported._
+
+Numbers have the usual floating-point format, e.g. `17`  `0.1` `1.2e-3`,
 or they can be octal or hexadecimal: For an octal number start with `0`,
 for a hexadecimal number start with `0x`.
-
-As usual in computer notation (but unlike to mathematical convention),
-ellipsis of the multiplication operator `*` is not supported.
 
 There are further operators which can be used in expressions:
 
@@ -75,6 +79,8 @@ javascript interpreter.
 
 ## Example session
 
+- `(1+2)*3-5`
+- 4
 - `1 - cos(2 * PI) / 2`
 - 0.5
 - `a = (# + 1) * 3`
