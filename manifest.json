@@ -5,7 +5,7 @@
   "author": "Martin Väth",
   "version": "0.1",
   "manifest_version": 2,
-  "homepage_url": "https://github.com/vaeth/calc-webextension/",
+  "homepage_url": "https://addons.mozilla.org/en-US/firefox/addon/calc-extension/"
   "default_locale": "en",
 
   "background": {

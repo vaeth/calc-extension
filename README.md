@@ -11,13 +11,13 @@ After installing __calc__, it can be used as follows.
 Click the __calc__ symbol `1+2`.
 Then a page opens where you can enter a formula which will be calculated
 when you press return. If the result is an integer number, it will be output
-in decimal, hexademical, and octal.
+in decimal, hexadecimal, and octal.
 
 A simple formula is a usual mathematical expression which consists of numbers,
 the usual operators `+` `-` `*` `/` and braces `(` `)`.
 
 Numbers have the usual floating-point format, e.g. `17`  `0.1` `1.2e-3`
-or they can be octal or hexademical: For an octal number start with `0`,
+or they can be octal or hexadecimal: For an octal number start with `0`,
 for a hexadecimal number start with `0x`.
 
 As usual in computer notation (but unlike to mathematical convention),
@@ -62,8 +62,8 @@ Furthermore, there are constants available:
 Finally, it is possible to define variables with e.g. `a=...` and to use them.
 Variable names must only consist of English characters, numbers, or `_`.
 
-There is a special varable name `#` which always refers to the result of
-the previous succesfull calculation.
+There is a special variable name `#` which always refers to the result of
+the previous succesful calculation.
 
 The whole syntax and operator precedence with the exception of `#` is
 inspired by the javascript specification.
