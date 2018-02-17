@@ -1,0 +1,59 @@
+{
+  "name": "__MSG_extensionName__",
+  "short_name": "calc",
+  "description": "__MSG_extensionDescription__",
+  "author": "Martin Väth",
+  "version": "0.1",
+  "manifest_version": 2,
+  "homepage_url": "https://github.com/vaeth/calc-webextension/",
+  "default_locale": "en",
+
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "16": "data/icons/48.svg",
+      "19": "data/icons/48.svg",
+      "20": "data/icons/48.svg",
+      "24": "data/icons/48.svg",
+      "30": "data/icons/48.svg",
+      "32": "data/icons/48.svg",
+      "38": "data/icons/48.svg",
+      "48": "data/icons/48.svg",
+      "64": "data/icons/48.svg",
+      "96": "data/icons/48.svg",
+      "128": "data/icons/48.svg"
+    },
+    "browser_style": true
+  },
+
+  "options_ui": {
+    "page": "data/options/index.html",
+    "browser_style": true
+  },
+
+  "icons": {
+    "16": "data/icons/48.svg",
+    "19": "data/icons/48.svg",
+    "20": "data/icons/48.svg",
+    "24": "data/icons/48.svg",
+    "30": "data/icons/48.svg",
+    "32": "data/icons/48.svg",
+    "38": "data/icons/48.svg",
+    "48": "data/icons/48.svg",
+    "64": "data/icons/48.svg",
+    "96": "data/icons/48.svg",
+    "128": "data/icons/48.svg"
+  },
+
+  "applications": {
+    "gecko": {
+      "id": "calc@martin-vaeth.org",
+      "strict_min_version": "48.0"
+    }
+  }
+}

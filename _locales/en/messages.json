@@ -1,0 +1,86 @@
+{
+  "extensionName": {
+    "message": "calc",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Calculate values of mathematical expressions",
+    "description": "Description of the extension"
+  },
+  "messageError": {
+    "message": "Error: $ERROR$",
+    "description": "Report specified error",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "error description"
+      }
+    }
+  },
+  "errorIllegalCharacter": {
+    "message": "illegal character “$TOKEN$”",
+    "description": "error for specified illegal character",
+    "placeholders": {
+      "token": {
+        "content": "$1",
+        "example": ","
+      }
+    }
+  },
+  "errorUninitializedVariable": {
+    "message": "uninitialized variable “$NAME$”",
+    "description": "error for specified unintialized variable",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "x"
+      }
+    }
+  },
+  "errorUnresolvableFunction": {
+    "message": "function “$NAME$” cannot be resolved. Possibly missing braces",
+    "description": "error for specified unresolvable function, probably due to missing braces",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "log"
+      }
+    }
+  },
+  "errorUnexpectedToken": {
+    "message": "unexpected token “$TOKEN$”",
+    "description": "error for specified unexpected token",
+    "placeholders": {
+      "token": {
+        "content": "$1",
+        "example": "("
+      }
+    }
+  },
+  "errorMissingToken": {
+    "message": "missing “$TOKEN$”",
+    "description": "error for specified missing token",
+    "placeholders": {
+      "token": {
+        "content": "$1",
+        "example": ")"
+      }
+    }
+  },
+  "errorUnexpectedEnd": {
+    "message": "unexpected end of expression",
+    "description": "error for unexpected end of expression"
+  },
+  "errorAssignNonVariable": {
+    "message": "attempt to assign a value to a non-variable",
+    "description": "error for an attempt to assign to a non-variable"
+  },
+  "errorCallNonFunction": {
+    "message": "attempt to call a non-function",
+    "description": "error for an attempt to call a non-function"
+  },
+  "errorParse": {
+    "message": "parse error",
+    "description": "error for an unspecified parse error"
+  }
+}

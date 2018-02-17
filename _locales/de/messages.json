@@ -1,0 +1,86 @@
+{
+  "extensionName": {
+    "message": "Rechner",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Wertberechnung mathematischer Ausdrücke",
+    "description": "Description of the extension"
+  },
+  "messageError": {
+    "message": "Fehler: $ERROR$",
+    "description": "Report specified error",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Fehlerbeschreibung"
+      }
+    }
+  },
+  "errorIllegalCharacter": {
+    "message": "unerlaubtes Zeichen “$TOKEN$”",
+    "description": "error for specified illegal character",
+    "placeholders": {
+      "token": {
+        "content": "$1",
+        "example": ","
+      }
+    }
+  },
+  "errorUninitializedVariable": {
+    "message": "uninitialisierte Variable “$NAME$”",
+    "description": "error for specified unintialized variable",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "x"
+      }
+    }
+  },
+  "errorUnresolvableFunction": {
+    "message": "Die Funktion “$NAME$” kann nicht aufgelöst werden, wahrscheinlich wegen fehlender Klammern",
+    "description": "error for specified unresolvable function, probably due to missing braces",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "log"
+      }
+    }
+  },
+  "errorUnexpectedToken": {
+    "message": "unerwartetes Token “$TOKEN$”",
+    "description": "error for specified unexpected token",
+    "placeholders": {
+      "token": {
+        "content": "$1",
+        "example": "("
+      }
+    }
+  },
+  "errorMissingToken": {
+    "message": "fehlendes “$TOKEN$”",
+    "description": "error for specified missing token",
+    "placeholders": {
+      "token": {
+        "content": "$1",
+        "example": ")"
+      }
+    }
+  },
+  "errorUnexpectedEnd": {
+    "message": "unerwartetes Ende des Ausdrucks",
+    "description": "error for unexpected end of expression"
+  },
+  "errorAssignNonVariable": {
+    "message": "Versuch einer Zuweisung an eine Nicht-Variable",
+    "description": "error for an attempt to assign to a non-variable"
+  },
+  "errorCallNonFunction": {
+    "message": "Versuch des Aufrufs einer Nicht-Funktion",
+    "description": "error for an attempt to call a non-function"
+  },
+  "errorParse": {
+    "message": "Fehler beim Parsen",
+    "description": "error for an unspecified parse error"
+  }
+}
