@@ -37,8 +37,7 @@ function initLayout() {
 }
 
 function appendInput(parent, id, size) {
-  const input = document.createElement("INPUT");
-  input.type = "text";
+  const input = document.createElement("TEXTAREA");
   input.id = id;
   if (size) {
     input.size = size;
