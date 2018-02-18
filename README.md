@@ -1,4 +1,4 @@
-# calc
+# calc-extension
 
 (C) Martin Väth <martin@mvath.de>
 
@@ -6,12 +6,11 @@ This project is under the GNU Public License 2.0.
 
 A WebExtension: Calculate values of mathematical expressions
 
-After installing __calc__, it can be used as follows.
+After installing __calc-extension__, it can be used as follows.
 
-Click the __calc__ symbol `1+2`.
+Click the __calc-extension__ symbol `1+2` or the link on the options page.
 Then a page opens where you can enter a formula which will be calculated
-when you press return. If the result is an integer number larger than 7,
-it will be output in decimal, hexadecimal, and octal.
+when you press return.
 
 A simple formula is a usual mathematical expression which consists of numbers,
 the usual operators `+` `-` `*` `/` and braces `(` `)`.
@@ -69,8 +68,17 @@ Variable names must only consist of English characters, numbers, or `_`.
 There is a special variable name `#` which always refers to the result of
 the last (succesful) calculation.
 
-The whole syntax and operator precedence with the exception of `#` is
-inspired by the javascript specification.
+There are also special sequences which can occur anywhere in an expression:
+
+- `"16"` switch to hexadecimal output from now on.
+  Instead of 16 any number between 2 and 36 can be used as the number basis.
+  Use `""` or `"0"` to reset to the default output (decimal) format.
+- `'60'` forces the displayed size of all inputs field to be 60.
+  Instead of 60 any other positive integer number can be used as the size.
+  Use `''` or `'0'` to reset to the default size chosen by the browser.
+
+The whole syntax and operator precedence with the exception of `#` and
+special sequences is inspired by the javascript specification.
 
 The actual calculation of the functions and number conversion occurs
 by javascript calls. Therefore, available precision, error messages,
@@ -87,5 +95,5 @@ javascript interpreter.
 - 4.5
 - `# + 4 * a`
 - 22.5
-- `0xF | 0100`
-- 79  0x4f  0117
+- `0xF | 0100 "16"`
+- 4f (in basis 16)

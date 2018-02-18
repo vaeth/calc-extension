@@ -22,9 +22,13 @@ function initLayout() {
   setTitle(title);
   setHead(title);
   const translateId = [
-    "announceExamples", "announceOperators", "announceFunctions",
-    "announceConstants", "announceLast", "announceOutput",
-    "textOutput"
+    "announceExamples",
+    "announceOperators",
+    "announceFunctions",
+    "announceConstants",
+    "announceSize", "textSize",
+    "announceBase", "textBase",
+    "announceLast"
   ];
   for (let id of translateId) {
     const translation = browser.i18n.getMessage(id);
@@ -32,17 +36,19 @@ function initLayout() {
   }
 }
 
-function appendInput(parent, id) {
+function appendInput(parent, id, size) {
   const input = document.createElement("INPUT");
   input.type = "text";
   input.id = id;
-  // input.size = 60;
+  if (size) {
+    input.size = size;
+  }
   parent.appendChild(input);
 }
 
-function appendInputCol(parent, id) {
+function appendInputCol(parent, id, size) {
   const col = document.createElement("P");
-  appendInput(col, id);
+  appendInput(col, id, size);
   parent.appendChild(col);
 }
 
@@ -62,9 +68,26 @@ function appendNext(state) {
   const index = String(++state.counter);
   const top = getTop();
   const id = "input=" + index
-  appendInputCol(top, id);
+  appendInputCol(top, id, state.size);
   appendTextNodeCol(top, "output=" + index);
   document.getElementById(id).focus();
+}
+
+function changeSize(top, size) {
+  if (!top.hasChildNodes()) {
+    return;
+  }
+  for (let child of top.childNodes) {
+    if ((child.nodeName == "INPUT") && child.id.startsWith("input=")) {
+      if (size) {
+        child.size = size;
+      } else {
+        child.removeAttribute("SIZE");
+      }
+    } else {
+      changeSize(child, size);
+    }
+  }
 }
 
 function errorUnexpected(text) {
@@ -323,8 +346,30 @@ class Parser {
 function lexToken(input) {
   const token = {};
   const first = input.charAt(0);
-  if (/[()+\-*\/%=#|&\^]/.test(first)) {
-    if (input.startsWith("**")) {
+  if (/['"()+\-*\/%=#|&\^]/.test(first)) {
+    if (first === '"') {
+      const quote = /^"[\s\d]*"/.exec(input);
+      if (!quote) {
+        throw  browser.i18n.getMessage("errorBadDoubleQuote");
+      }
+      token.type = first;
+      token.text = quote[0];
+      token.value = Number.parseInt("0" + quote[0].replace(/[\s"]/g, ""), 10);
+      if (token.value === NaN) {
+        token.value = 0;
+      }
+    } else if (first === "'") {
+      const quote = /^'[\s\d]*'/.exec(input);
+      if (!quote) {
+        throw browser.i18n.getMessage("errorBadSingleQuote");
+      }
+      token.type = first;
+      token.text = quote[0];
+      token.value = Number.parseInt("0" + quote[0].replace(/[\s']/g, ""), 10);
+      if (token.value === NaN) {
+        token.value = 0;
+      }
+    } else if (input.startsWith("**")) {
       token.text = token.type = "**";
     } else {
       token.text = token.type = first;
@@ -362,18 +407,27 @@ function lexToken(input) {
   return token;
 }
 
-function getTokenArray(input) {
+function getTokenArray(state, input) {
   const tokens = [];
   while ((input = input.replace(/^[;\s]+/, ""))) {
     const token = lexToken(input);
-    tokens.push(token);
+    if (token.type === "'") {
+      if (state.size !== token.value) {
+        changeSize(getTop(), token.value);
+        state.size = token.value;
+      }
+    } else if (token.type === '"') {
+      state.base = token.value;
+    } else {
+      tokens.push(token);
+    }
     input = input.substr(token.text.length);
   }
   return tokens;
 }
 
 function calculate(state, input) {
-  const tokens = getTokenArray(input);
+  const tokens = getTokenArray(state, input);
   if (!tokens.length) {
     return "";
   }
@@ -420,11 +474,12 @@ function calculate(state, input) {
     throw errorNonNumeric(result);
   }
   const value = state.last = result.value;
-  if ((value <= 7) || !Number.isInteger(value)) {
-    return String(value);
+  const base = state.base;
+  if (base && (base >= 2) && (base <= 36)) {
+    return browser.i18n.getMessage("messageResult",
+      [value.toString(base), String(base)]);
   }
-  return String(value) + "\xa0\xa00x" + value.toString(16) +
-    "\xa0\xa00" + value.toString(8);
+  return String(value);
 }
 
 function changeListener(state, event) {
@@ -461,6 +516,8 @@ initLayout();
   const state = {
     counter: 0,
     last: null,
+    base: 0,
+    size: 0,
     parser: new Parser()
   };
   document.addEventListener("change", (event) => {

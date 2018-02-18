@@ -23,17 +23,39 @@
     "message": "Konstanten",
     "description": "Announcement of available constants"
   },
+  "announceSize": {
+    "message": "Eingabegröße",
+    "description": "Announcement of explanation of input size"
+  },
+  "textSize": {
+    "message": "'60' (0 für Browservorgabe)",
+    "description": "Describe that 'size' changes size; 0 for browser default"
+  },
+  "announceBase": {
+    "message": "Ausgabebasis",
+    "description": "Announcement of explanation of output base"
+  },
+  "textBase": {
+    "message": "\"16\" (Werte 2-36 oder 0 sind gültig)",
+    "description": "Describe that \"base\" changes output base; valid bases are 2-36 or 0/empty"
+  },
   "announceLast": {
     "message": "letztes Ergebnis",
     "description": "Announcement of symbol for last result"
   },
-  "announceOutput": {
-    "message": "Ausgabe",
-    "description": "Announcement of explanation of output"
-  },
-  "textOutput": {
-    "message": "Dezimalzahl (sowie Hexadezimal- und Oktalzahl für ganze Zahlen größer als 7) oder eine Fehlerbeschreibung",
-    "description": "Description of the output format"
+  "messageResult": {
+    "message": "$RESULT$ (zur Basis $BASE$)",
+    "description": "output specified result in specified base",
+    "placeholders": {
+      "result": {
+        "content": "$1",
+        "example": "ff"
+      },
+      "base": {
+        "content": "$2",
+        "example": "15"
+      }
+    }
   },
   "messageError": {
     "message": "Fehler: $ERROR$",
@@ -54,6 +76,14 @@
         "example": ","
       }
     }
+  },
+  "errorBadDoubleQuote": {
+    "message": "ungültiger \"Basis\"-Ausdruck",
+    "description": "error for bad \"base\" token"
+  },
+  "errorBadSingleQuote": {
+    "message": "ungültiger 'Eingebegröße'-Ausdruck",
+    "description": "error for bad 'input size' token"
   },
   "errorUninitializedVariable": {
     "message": "uninitialisierte Variable “$NAME$”",

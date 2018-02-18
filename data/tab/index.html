@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title id="pageTitle">Calc</title>
+    <title id="pageTitle">calc-extension</title>
     <link rel="icon" sizes="any" type="image/svg+xml" href="/data/icons/48.svg" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
@@ -14,7 +14,7 @@
       </tr>
       <tr><td>a=#</td></tr>
       <tr><td>2*a + cos(PI) + log(E) + log(100)/LN10 + sqrt(4)</td></tr>
-      <tr><td>0x2F | 021</td></tr>
+      <tr><td>0x2F | 021 "16"</td></tr>
       <tr><td>Long_name = (c=d=#) + c^d^a</td></tr>
       <tr>
         <th id="announceOperators"></th>
@@ -29,14 +29,9 @@
         <td>E=exp(1)&nbsp;&nbsp;PI=4*atan(1)&nbsp;&nbsp;SQRT2=sqrt(2)&nbsp;&nbsp;SQRT1_2=sqrt(1/2)</td>
       </tr>
       <tr><td>LN2=log(2)&nbsp;&nbsp;LN10=log(10)&nbsp;&nbsp;LOG2E=log(E)/LN2&nbsp;&nbsp;LOG10E=log(E)/LN10</td></tr>
-      <tr>
-        <th id="announceLast"></th>
-        <td>#</td>
-      </tr>
-      <tr>
-        <th id="announceOutput"></th>
-        <td id="textOutput"></td>
-      </tr>
+      <tr><th id="announceSize"></th><td id="textSize"></td></tr>
+      <tr><th id="announceBase"></th><td id="textBase"></td></tr>
+      <tr><th id="announceLast"></th><td>#</td></tr>
     </table>
     <script src="calc.js" type="text/javascript"></script>
   </body>

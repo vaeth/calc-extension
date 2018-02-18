@@ -23,17 +23,39 @@
     "message": "Constants",
     "description": "Announcement of available constants"
   },
+  "announceSize": {
+    "message": "Input size",
+    "description": "Announcement of explanation of input size"
+  },
+  "textSize": {
+    "message": "'60' (0 for browser default)",
+    "description": "Describe that 'size' changes size; 0 for browser default"
+  },
+  "announceBase": {
+    "message": "Output base",
+    "description": "Announcement of explanation of output base"
+  },
+  "textBase": {
+    "message": "\"16\" (base values 2-36 or 0 are valid)",
+    "description": "Describe that \"base\" changes output base; valid bases are 2-36 or 0/empty"
+  },
   "announceLast": {
     "message": "Last result",
     "description": "Announcement of symbol for last result"
   },
-  "announceOutput": {
-    "message": "Output",
-    "description": "Announcement of explanation of output"
-  },
-  "textOutput": {
-    "message": "result in decimal (and hexadecimal and octal for integers larger than 7) or an error description",
-    "description": "Description of the output format"
+  "messageResult": {
+    "message": "$RESULT$ (in base $BASE$)",
+    "description": "output specified result in specified base",
+    "placeholders": {
+      "result": {
+        "content": "$1",
+        "example": "ff"
+      },
+      "base": {
+        "content": "$2",
+        "example": "15"
+      }
+    }
   },
   "messageError": {
     "message": "Error: $ERROR$",
@@ -54,6 +76,14 @@
         "example": ","
       }
     }
+  },
+  "errorBadDoubleQuote": {
+    "message": "no valid \"base\" token",
+    "description": "error for bad \"base\" token"
+  },
+  "errorBadSingleQuote": {
+    "message": "no valid 'input size' token",
+    "description": "error for bad 'input size' token"
   },
   "errorUninitializedVariable": {
     "message": "uninitialized variable “$NAME$”",
