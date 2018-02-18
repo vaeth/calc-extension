@@ -37,22 +37,35 @@ function initLayout() {
 }
 
 function appendInput(parent, id, size) {
-  const input = document.createElement("TEXTAREA");
-  input.id = id;
-  if (size) {
-    input.size = size;
-  }
-  parent.appendChild(input);
+  const textarea = document.createElement("TEXTAREA");
+  textarea.cols = Math.min((size && size[0]) || 60, 200);  // sanitize
+  textarea.rows = Math.min((size && size[1]) || 1, 20);  // sanitize
+  textarea.id = id;
+  parent.appendChild(textarea);
 }
 
-function appendInputCol(parent, id, size) {
+function appendInputParagraph(parent, id, size) {
   const col = document.createElement("P");
   appendInput(col, id, size);
   parent.appendChild(col);
 }
 
+function appendButton(parent, id, textId) {
+  const button = document.createElement("BUTTON");
+  button.type = "button";
+  button.id = id;
+  button.textContent = browser.i18n.getMessage(textId);
+  parent.appendChild(button);
+}
+
+function appendButtonCol(row, id, textId) {
+  const col = document.createElement("TD");
+  appendButton(col, id, textId);
+  row.appendChild(col);
+}
+
 function appendTextNodeCol(parent, id) {
-  const col = document.createElement("P");
+  const col = document.createElement("TD");
   col.id = id;
   const textNode = document.createTextNode("");
   col.appendChild(textNode);
@@ -65,28 +78,18 @@ function changeText(id, text) {
 
 function appendNext(state) {
   const index = String(++state.counter);
-  const top = getTop();
+  const row = document.createElement("TR");
+  appendButtonCol(row, "button=" + index, "buttonResult");
+  appendTextNodeCol(row, "output=" + index);
+  const table = document.createElement("TABLE");
+  table.appendChild(row);
+  const paragraph = document.createElement("P");
+  paragraph.appendChild(table);
   const id = "input=" + index
-  appendInputCol(top, id, state.size);
-  appendTextNodeCol(top, "output=" + index);
+  const top = getTop();
+  appendInputParagraph(top, id, state.size);
+  top.appendChild(paragraph);
   document.getElementById(id).focus();
-}
-
-function changeSize(top, size) {
-  if (!top.hasChildNodes()) {
-    return;
-  }
-  for (let child of top.childNodes) {
-    if ((child.nodeName == "INPUT") && child.id.startsWith("input=")) {
-      if (size) {
-        child.size = size;
-      } else {
-        child.removeAttribute("SIZE");
-      }
-    } else {
-      changeSize(child, size);
-    }
-  }
 }
 
 function errorUnexpected(text) {
@@ -342,32 +345,44 @@ class Parser {
   }
 }
 
+function numberOrZero(text) {
+  if (!text) {
+    return 0;
+  }
+  const plain = text.replace(/\s+/g, "");
+  if (!plain) {
+    return 0;
+  }
+  const result = Number.parseInt(plain, 10);
+  if (result === NaN) {
+    return 0;
+  }
+  return result;
+}
+
 function lexToken(input) {
   const token = {};
   const first = input.charAt(0);
   if (/['"()+\-*\/%=#|&\^]/.test(first)) {
     if (first === '"') {
-      const quote = /^"[\s\d]*"/.exec(input);
+      const quote = /^"([\s\d]*)"/.exec(input);
       if (!quote) {
         throw  browser.i18n.getMessage("errorBadDoubleQuote");
       }
       token.type = first;
       token.text = quote[0];
-      token.value = Number.parseInt("0" + quote[0].replace(/[\s"]/g, ""), 10);
-      if (token.value === NaN) {
-        token.value = 0;
-      }
+      token.value = numberOrZero(quote[1]);
     } else if (first === "'") {
-      const quote = /^'[\s\d]*'/.exec(input);
+      const quote = /^'([\s\d]*)[:x*,;|-]?([\s\d]*)'/.exec(input);
       if (!quote) {
         throw browser.i18n.getMessage("errorBadSingleQuote");
       }
       token.type = first;
       token.text = quote[0];
-      token.value = Number.parseInt("0" + quote[0].replace(/[\s']/g, ""), 10);
-      if (token.value === NaN) {
-        token.value = 0;
-      }
+      token.value = [
+        numberOrZero(quote[1]),
+        numberOrZero(quote[2])
+      ];
     } else if (input.startsWith("**")) {
       token.text = token.type = "**";
     } else {
@@ -411,10 +426,7 @@ function getTokenArray(state, input) {
   while ((input = input.replace(/^[;\s]+/, ""))) {
     const token = lexToken(input);
     if (token.type === "'") {
-      if (state.size !== token.value) {
-        changeSize(getTop(), token.value);
-        state.size = token.value;
-      }
+      state.size = token.value;
     } else if (token.type === '"') {
       state.base = token.value;
     } else {
@@ -481,16 +493,16 @@ function calculate(state, input) {
   return String(value);
 }
 
-function changeListener(state, event) {
+function clickListener(state, event) {
   if (!event.target || !event.target.id) {
     return;
   }
   const id = event.target.id;
-  if (!id.startsWith("input=")) {
+  if (!id.startsWith("button=")) {
     return;
   }
-  const current = id.substr(6);  // 6 = "input=".length
-  const input = document.getElementById(id).value;
+  const current = id.substr(7);  // 7 = "button=".length
+  const input = document.getElementById("input=" + current).value;
   let text;
   try {
     text = calculate(state, input);
@@ -503,7 +515,7 @@ function changeListener(state, event) {
     appendNext(state);
     return;
   }
-  const currentNumeric = Number.parseInt(current);
+  const currentNumeric = Number.parseInt(current, 10);
   const next = document.getElementById("input=" + String(currentNumeric + 1));
   if (next) {  // should always happen
     next.focus();
@@ -516,11 +528,11 @@ initLayout();
     counter: 0,
     last: null,
     base: 0,
-    size: 0,
+    size: [0, 0],
     parser: new Parser()
   };
-  document.addEventListener("change", (event) => {
-    changeListener(state, event);
+  document.addEventListener("click", (event) => {
+    clickListener(state, event);
   });
   appendNext(state);
 }

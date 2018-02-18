@@ -24,12 +24,12 @@
     "description": "Announcement of available constants"
   },
   "announceSize": {
-    "message": "Eingabegröße",
-    "description": "Announcement of explanation of input size"
+    "message": "Eingabebereichsgröße",
+    "description": "Announcement of explanation of input area size"
   },
   "textSize": {
-    "message": "'60' (0 für Browservorgabe)",
-    "description": "Describe that 'size' changes size; 0 for browser default"
+    "message": "'60:1' '60' ':1' (Voreinstellung 60:1 für neue Eingabebereiche)",
+    "description": "Describe that '60:1' sets size of new input areas; default is 60 or 1, respectively"
   },
   "announceBase": {
     "message": "Ausgabebasis",
@@ -42,6 +42,10 @@
   "announceLast": {
     "message": "letztes Ergebnis",
     "description": "Announcement of symbol for last result"
+  },
+  "buttonResult": {
+    "message": "=",
+    "description": "Result button"
   },
   "messageResult": {
     "message": "$RESULT$ (zur Basis $BASE$)",
@@ -78,12 +82,12 @@
     }
   },
   "errorBadDoubleQuote": {
-    "message": "ungültiger \"Basis\"-Ausdruck",
-    "description": "error for bad \"base\" token"
+    "message": "Syntaxfehler bei Angabe von \"Basis\"",
+    "description": "error in \"base\" specification"
   },
   "errorBadSingleQuote": {
-    "message": "ungültiger 'Eingebegröße'-Ausdruck",
-    "description": "error for bad 'input size' token"
+    "message": "Syntaxfehler bei Angabe von 'Eingabebereichsgröße'",
+    "description": "error in 'input area size' specification"
   },
   "errorUninitializedVariable": {
     "message": "uninitialisierte Variable “$NAME$”",

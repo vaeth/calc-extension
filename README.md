@@ -10,12 +10,10 @@ After installing __calc-extension__, it can be used as follows.
 
 Click the __calc-extension__ symbol `1+2` or the link on the options page.
 Then a page opens where you can enter a formula which will be calculated
-when you press return.
+when you press the solver button (`=`).
 
 A simple formula is a usual mathematical expression which consists of numbers,
 the usual operators `+` `-` `*` `/` and braces `(` `)`.
-
-**Do not enter a trailing `=` symbol!**
 
 **Note that `*` must be used for multiplication (not `x`)**
 
@@ -65,20 +63,25 @@ Furthermore, there are constants available:
 Finally, it is possible to define variables with e.g. `a=...` and to use them.
 Variable names must only consist of English characters, numbers, or `_`.
 
+The whole syntax and operator precedence is inspired by the javascript
+specification. However, the following things are new.
+
 There is a special variable name `#` which always refers to the result of
 the last (succesful) calculation.
 
 There are also special sequences which can occur anywhere in an expression:
 
 - `"16"` switch to hexadecimal output from now on.
-  Instead of 16 any number between 2 and 36 can be used as the number basis.
-  Use `""` or `"0"` to reset to the default output (decimal) format.
-- `'60'` forces the displayed size of all inputs field to be 60.
-  Instead of 60 any other positive integer number can be used as the size.
-  Use `''` or `'0'` to reset to the default size chosen by the browser.
 
-The whole syntax and operator precedence with the exception of `#` and
-special sequences is inspired by the javascript specification.
+  Instead of 16 any number between 2 and 36 can be used as the number base.
+  Use `""` or `"0"` to reset to the default output (decimal) format.
+
+- `'60:1'` defines the initial size of new input areas to be 60:1.
+
+  Instead of 60 or 1 any other positive integer number can be used.
+  Either number (and the `:` part) can be omitted;
+  the defaults for omitted values are 60 or 1, respectively.
+
 
 The actual calculation of the functions and number conversion occurs
 by javascript calls. Therefore, available precision, error messages,
@@ -88,12 +91,12 @@ javascript interpreter.
 ## Example session
 
 - `(1+2)*3-5`
-- 4
+- = 4
 - `1 - cos(2 * PI) / 2`
-- 0.5
+- = 0.5
 - `a = (# + 1) * 3`
-- 4.5
+- = 4.5
 - `# + 4 * a`
-- 22.5
+- = 22.5
 - `0xF | 0100 "16"`
-- 4f (in basis 16)
+- = 4f (in base 16)

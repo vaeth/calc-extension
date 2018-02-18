@@ -4,8 +4,9 @@
 	Martin Väth <martin at mvath.de>:
 	- Do not use several number formats for output. Instead:
 	- Introduce "..." special to set output base
-	- Introduce '...' special to set input size
-	- Remove options page
+	- Use textarea instead of input element and provide result button
+	- Introduce '...' special to set default size of new textareas
+	- Remove broken options page
 	- For all above: https://github.com/vaeth/calc-extension/issues/1
 
 *calc-0.2:
