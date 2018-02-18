@@ -7,6 +7,37 @@
   </head>
   <body id="top">
     <h1 id="headTitle"><img src="/data/icons/48.svg" width="48" height="48" alt="" /></h1>
-    <script src="calc.js"></script>
+    <table>
+      <tr>
+        <th id="announceExamples" rowspan="5" valign="top"></th>
+        <td>7/(1+2*3) + 1.5 + -.5 + 1e2 + 2**2**3</td>
+      </tr>
+      <tr><td>a=#</td></tr>
+      <tr><td>2*a + cos(PI) + log(E) + log(100)/LN10 + sqrt(4)</td></tr>
+      <tr><td>0x2F | 021</td></tr>
+      <tr><td>Long_name = (c=d=#) + c^d^a</td></tr>
+      <tr>
+        <th id="announceOperators"></th>
+        <td>+&nbsp;&nbsp;-&nbsp;&nbsp;*&nbsp;&nbsp;/&nbsp;&nbsp;%&nbsp;&nbsp;**&nbsp;&nbsp;&amp;&nbsp;&nbsp;|&nbsp;&nbsp;^</td>
+      </tr>
+      <tr>
+        <th id="announceFunctions"></th>
+        <td>log exp sin cos tan acos asin atan sqrt floor ceil round</td>
+      </tr>
+      <tr>
+        <th id="announceConstants" rowspan="2" valign="top"></th>
+        <td>E=exp(1)&nbsp;&nbsp;PI=4*atan(1)&nbsp;&nbsp;SQRT2=sqrt(2)&nbsp;&nbsp;SQRT1_2=sqrt(1/2)</td>
+      </tr>
+      <tr><td>LN2=log(2)&nbsp;&nbsp;LN10=log(10)&nbsp;&nbsp;LOG2E=log(E)/LN2&nbsp;&nbsp;LOG10E=log(E)/LN10</td></tr>
+      <tr>
+        <th id="announceLast"></th>
+        <td>#</td>
+      </tr>
+      <tr>
+        <th id="announceOutput"></th>
+        <td id="textOutput"></td>
+      </tr>
+    </table>
+    <script src="calc.js" type="text/javascript"></script>
   </body>
 </html>

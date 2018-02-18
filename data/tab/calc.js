@@ -21,6 +21,15 @@ function initLayout() {
   const title = browser.i18n.getMessage("extensionName");
   setTitle(title);
   setHead(title);
+  const translateId = [
+    "announceExamples", "announceOperators", "announceFunctions",
+    "announceConstants", "announceLast", "announceOutput",
+    "textOutput"
+  ];
+  for (let id of translateId) {
+    const translation = browser.i18n.getMessage(id);
+    document.getElementById(id).textContent = translation;
+  }
 }
 
 function appendInput(parent, id) {
@@ -78,10 +87,10 @@ function errorNonNumeric(expression) {
 }
 
 class ParserState {
-  constructor(tokens, previous) {
+  constructor(tokens, last) {
     this.tokens = tokens;
     this.tokenIndex = 0;
-    this.previous = previous;
+    this.last = last;
     // this.left   // serves as parameter to parser actions
     // this.token  // serves as parameter to parser actions
     // this.getExpression // main recursive function; needs context variables
@@ -171,15 +180,15 @@ class Parser {
     }));
   }
 
-  registerPrevious(name) {
+  registerLast(name) {
     this.registerPrefix(name, (parserState)  => {
-      if (parserState.previous === null) {
-        throw errorUninitialized(name);
+      if (parserState.last === null) {
+        throw browser.i18n.getMessage("errorNoLast");
       }
       return {
         type: "result",
         numeric: true,
-        value: parserState.previous
+        value: parserState.last
       };
     });
   }
@@ -280,7 +289,7 @@ class Parser {
     this.registerConstant("LOG2E", Math.LOG2E);
     this.registerConstant("LOG10E", Math.LOG10E);
     this.registerNumber("number");
-    this.registerPrevious("#");
+    this.registerLast("#");
     this.registerFunction("log", Math.log);
     this.registerFunction("exp", Math.exp);
     this.registerFunction("sin", Math.sin);
@@ -369,7 +378,7 @@ function calculate(state, input) {
     return "";
   }
   const parser = state.parser;
-  const parserState = new ParserState(tokens, state.previous);
+  const parserState = new ParserState(tokens, state.last);
 
   function getExpression(precedence = 0, rightToLeft) {
     parserState.getExpression = getExpression;
@@ -410,7 +419,7 @@ function calculate(state, input) {
   if (!result.numeric) {
     throw errorNonNumeric(result);
   }
-  const value = state.previous = result.value;
+  const value = state.last = result.value;
   if ((value <= 7) || !Number.isInteger(value)) {
     return String(value);
   }
@@ -451,7 +460,7 @@ initLayout();
 {
   const state = {
     counter: 0,
-    previous: null,
+    last: null,
     parser: new Parser()
   };
   document.addEventListener("change", (event) => {

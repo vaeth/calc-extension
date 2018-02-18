@@ -7,6 +7,34 @@
     "message": "Wertberechnung mathematischer Ausdrücke",
     "description": "Description of the extension"
   },
+  "announceExamples": {
+    "message": "Beispiele",
+    "description": "Announcement of some examples"
+  },
+  "announceOperators": {
+    "message": "Operatoren",
+    "description": "Announcement of available operators"
+  },
+  "announceFunctions": {
+    "message": "Funktionen",
+    "description": "Announcement of available functions"
+  },
+  "announceConstants": {
+    "message": "Konstanten",
+    "description": "Announcement of available constants"
+  },
+  "announceLast": {
+    "message": "letztes Ergebnis",
+    "description": "Announcement of symbol for last result"
+  },
+  "announceOutput": {
+    "message": "Ausgabe",
+    "description": "Announcement of explanation of output"
+  },
+  "textOutput": {
+    "message": "Dezimalzahl (sowie Hexadezimal- und Oktalzahl für ganze Zahlen größer als 7) oder eine Fehlerbeschreibung",
+    "description": "Description of the output format"
+  },
   "messageError": {
     "message": "Fehler: $ERROR$",
     "description": "Report specified error",
@@ -36,6 +64,10 @@
         "example": "x"
       }
     }
+  },
+  "errorNoLast": {
+    "message": "Derzeit ist “#” unbekannt: es gab noch kein Ergebnis",
+    "description": "error for using non-existent last result #"
   },
   "errorUnresolvableFunction": {
     "message": "Die Funktion “$NAME$” kann nicht aufgelöst werden, wahrscheinlich wegen fehlender Klammern",
@@ -67,9 +99,9 @@
       }
     }
   },
-  "errorUnexpectedEnd": {
-    "message": "unerwartetes Ende des Ausdrucks",
-    "description": "error for unexpected end of expression"
+  "errorIncomplete": {
+    "message": "Ausdruck ist unvollständig",
+    "description": "error for incomplete expression"
   },
   "errorAssignNonVariable": {
     "message": "Versuch einer Zuweisung an eine Nicht-Variable",

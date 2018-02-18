@@ -67,7 +67,7 @@ Finally, it is possible to define variables with e.g. `a=...` and to use them.
 Variable names must only consist of English characters, numbers, or `_`.
 
 There is a special variable name `#` which always refers to the result of
-the previous succesful calculation.
+the last (succesful) calculation.
 
 The whole syntax and operator precedence with the exception of `#` is
 inspired by the javascript specification.
@@ -85,7 +85,7 @@ javascript interpreter.
 - 0.5
 - `a = (# + 1) * 3`
 - 4.5
-- `# + 2 * a`
-- 13.5
+- `# + 4 * a`
+- 22.5
 - `0xF | 0100`
-- 79  0x4f  0117
+- 79  0x4f  0117

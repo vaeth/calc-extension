@@ -1,8 +1,13 @@
-# ChangeLog for calc:
+# ChangeLog for calc-extension:
 
 *calc-0.2:
 	Martin Väth <martin at mvath.de>:
+	- Provide brief description on top of page
 	- Output in hexadecimal and octal only if number is larger than 7
+	- Rename to calc-extension (calc was already used by legacy extension)
+	- Update homepage address
+	- Improve error messages for # and unexpected end = incomplete
+	- Refer to # as "last" result (instead of "previous")
 	- Simplify background.js
 
 *calc-0.1:

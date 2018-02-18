@@ -1,11 +1,39 @@
 {
   "extensionName": {
-    "message": "calc",
+    "message": "calc-extension",
     "description": "Name of the extension"
   },
   "extensionDescription": {
     "message": "Calculate values of mathematical expressions",
     "description": "Description of the extension"
+  },
+  "announceExamples": {
+    "message": "Examples",
+    "description": "Announcement of some examples"
+  },
+  "announceOperators": {
+    "message": "Operators",
+    "description": "Announcement of available operators"
+  },
+  "announceFunctions": {
+    "message": "Functions",
+    "description": "Announcement of available functions"
+  },
+  "announceConstants": {
+    "message": "Constants",
+    "description": "Announcement of available constants"
+  },
+  "announceLast": {
+    "message": "Last result",
+    "description": "Announcement of symbol for last result"
+  },
+  "announceOutput": {
+    "message": "Output",
+    "description": "Announcement of explanation of output"
+  },
+  "textOutput": {
+    "message": "result in decimal (and hexadecimal and octal for integers larger than 7) or an error description",
+    "description": "Description of the output format"
   },
   "messageError": {
     "message": "Error: $ERROR$",
@@ -37,6 +65,10 @@
       }
     }
   },
+  "errorNoLast": {
+    "message": "cannot use “#” (yet): there was no last result",
+    "description": "error for using non-existent last result #"
+  },
   "errorUnresolvableFunction": {
     "message": "function “$NAME$” cannot be resolved. Possibly missing braces",
     "description": "error for specified unresolvable function, probably due to missing braces",
@@ -67,9 +99,9 @@
       }
     }
   },
-  "errorUnexpectedEnd": {
-    "message": "unexpected end of expression",
-    "description": "error for unexpected end of expression"
+  "errorIncomplete": {
+    "message": "expression is incomplete",
+    "description": "error for incomplete expression"
   },
   "errorAssignNonVariable": {
     "message": "attempt to assign a value to a non-variable",
