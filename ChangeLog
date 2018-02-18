@@ -5,7 +5,7 @@
 	- Do not use several number formats for output. Instead:
 	- Introduce "..." special to set output base
 	- Introduce '...' special to set input size
-	- Fix options page
+	- Remove options page
 	- For all above: https://github.com/vaeth/calc-extension/issues/1
 
 *calc-0.2:
