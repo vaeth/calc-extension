@@ -2,12 +2,15 @@
 
 *calc-1.0:
 	Martin Väth <martin at mvath.de>:
+	- Introduce option to change between textarea/button (new default) or
+	  input element (previously only way)
 	- Do not use several number formats for output. Instead:
 	- Introduce "..." special to set output base
-	- Use textarea instead of input element and provide result button
-	- Introduce '...' special to set default size of new textareas
-	- Remove broken options page
-	- For all above: https://github.com/vaeth/calc-extension/issues/1
+	- Increase width of textareas/input elements to 60. Moreover:
+	- Introduce '...' special to set default size of new textareas and to
+	  change size of all previous input elements.
+	- For all above, see https://github.com/vaeth/calc-extension/issues/1
+	- Typo fixes in German translation
 
 *calc-0.2:
 	Martin Väth <martin at mvath.de>:

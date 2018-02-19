@@ -7,6 +7,10 @@
     "message": "Wertberechnung mathematischer Ausdrücke",
     "description": "Description of the extension"
   },
+  "checkboxInputMode": {
+    "message": "Ersetzen des „=“-Knopfes durch die Eingabe von Enter oder Verlassen des Eingabefeld. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann. Außerdem wird der Wert von „#“ nur dann aktualisiert, wenn der Ausdruck verändert wurde",
+    "description": "Checkbox for replacing the = button by pressing return or leaving the input field."
+  },
   "announceExamples": {
     "message": "Beispiele",
     "description": "Announcement of some examples"
@@ -72,7 +76,7 @@
     }
   },
   "errorIllegalCharacter": {
-    "message": "unerlaubtes Zeichen “$TOKEN$”",
+    "message": "unerlaubtes Zeichen „$TOKEN$“",
     "description": "error for specified illegal character",
     "placeholders": {
       "token": {
@@ -90,7 +94,7 @@
     "description": "error in 'input area size' specification"
   },
   "errorUninitializedVariable": {
-    "message": "uninitialisierte Variable “$NAME$”",
+    "message": "uninitialisierte Variable „$NAME$“",
     "description": "error for specified unintialized variable",
     "placeholders": {
       "name": {
@@ -100,11 +104,11 @@
     }
   },
   "errorNoLast": {
-    "message": "Derzeit ist “#” unbekannt: es gab noch kein Ergebnis",
+    "message": "Derzeit ist „#“ unbekannt: es gab noch kein Ergebnis",
     "description": "error for using non-existent last result #"
   },
   "errorUnresolvableFunction": {
-    "message": "Die Funktion “$NAME$” kann nicht aufgelöst werden, wahrscheinlich wegen fehlender Klammern",
+    "message": "Die Funktion „$NAME$“ kann nicht aufgelöst werden, wahrscheinlich wegen fehlender Klammern",
     "description": "error for specified unresolvable function, probably due to missing braces",
     "placeholders": {
       "name": {
@@ -114,7 +118,7 @@
     }
   },
   "errorUnexpectedToken": {
-    "message": "unerwartetes Token “$TOKEN$”",
+    "message": "unerwartetes Token „$TOKEN$“",
     "description": "error for specified unexpected token",
     "placeholders": {
       "token": {
@@ -124,7 +128,7 @@
     }
   },
   "errorMissingToken": {
-    "message": "fehlendes “$TOKEN$”",
+    "message": "fehlendes „$TOKEN$“",
     "description": "error for specified missing token",
     "placeholders": {
       "token": {

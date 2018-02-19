@@ -100,3 +100,23 @@ javascript interpreter.
 - = 22.5
 - `0xF | 0100 "16"`
 - = 4f (in base 16)
+
+## Option
+
+There is an option to replace the `=` button by pressing return or
+leaving the input field. This is more convenient but less intuitive.
+A further disadvantage is that it is not possible to break an expression
+over several lines and that the size of the field cannot be adjusted
+with the mouse. Moreover, if the expression was not modified, the value
+of `#` will not be updated.
+
+## Permissions
+
+The extension requires storage permissions in order to set the options locally.
+
+## Languages
+
+Currently, the following languages are supported:
+
+- en (default language)
+- de

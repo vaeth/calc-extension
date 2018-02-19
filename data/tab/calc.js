@@ -36,18 +36,37 @@ function initLayout() {
   }
 }
 
-function appendInput(parent, id, size) {
-  const textarea = document.createElement("TEXTAREA");
-  textarea.cols = Math.min((size && size[0]) || 60, 200);  // sanitize
-  textarea.rows = Math.min((size && size[1]) || 1, 20);  // sanitize
-  textarea.id = id;
-  parent.appendChild(textarea);
+function sanitizeWidth(size) {
+  return Math.min((size && size[0]) || 60, 200);
 }
 
-function appendInputParagraph(parent, id, size) {
-  const col = document.createElement("P");
-  appendInput(col, id, size);
-  parent.appendChild(col);
+function sanitizeHeight(size) {
+  return Math.min((size && size[1]) || 1, 20);
+}
+
+function appendTextarea(parent, id, size) {
+  const textarea = document.createElement("TEXTAREA");
+  textarea.cols = sanitizeWidth(size);
+  textarea.rows = sanitizeHeight(size);
+  textarea.id = id;
+  parent.appendChild(textarea);
+  return textarea;
+}
+
+function appendInput(parent, id, size) {
+  const input = document.createElement("INPUT");
+  input.type = "text";
+  input.id = id;
+  input.size = sanitizeWidth(size);
+  parent.appendChild(input);
+  return input;
+}
+
+function appendXParagraph(parent, append, id, size) {
+  const paragraph = document.createElement("P");
+  const element = append(paragraph, id, size);
+  parent.appendChild(paragraph);
+  return element;
 }
 
 function appendButton(parent, id, textId) {
@@ -64,8 +83,8 @@ function appendButtonCol(row, id, textId) {
   row.appendChild(col);
 }
 
-function appendTextNodeCol(parent, id) {
-  const col = document.createElement("TD");
+function appendTextNode(parent, type, id) {
+  const col = document.createElement(type);
   col.id = id;
   const textNode = document.createTextNode("");
   col.appendChild(textNode);
@@ -78,18 +97,38 @@ function changeText(id, text) {
 
 function appendNext(state) {
   const index = String(++state.counter);
-  const row = document.createElement("TR");
-  appendButtonCol(row, "button=" + index, "buttonResult");
-  appendTextNodeCol(row, "output=" + index);
-  const table = document.createElement("TABLE");
-  table.appendChild(row);
-  const paragraph = document.createElement("P");
-  paragraph.appendChild(table);
-  const id = "input=" + index
+  const outputId = "output=" + index;
   const top = getTop();
-  appendInputParagraph(top, id, state.size);
-  top.appendChild(paragraph);
-  document.getElementById(id).focus();
+  let element;
+  if (state.options.inputMode) {
+    element = appendXParagraph(top, appendInput, "input=" + index, state.size);
+    appendTextNode(top, "P", outputId);
+  } else {
+    const row = document.createElement("TR");
+    appendButtonCol(row, "button=" + index, "buttonResult");
+    appendTextNode(row, "TD", outputId);
+    const table = document.createElement("TABLE");
+    table.appendChild(row);
+    const paragraph = document.createElement("P");
+    paragraph.appendChild(table);
+    element = appendXParagraph(top, appendTextarea, "area=" + index,
+      state.size);
+    top.appendChild(paragraph);
+  }
+  element.focus();
+}
+
+function changeInputWidth(parent, width) {
+  if (!parent.hasChildNodes()) {
+    return;
+  }
+  for (let child of parent.childNodes) {
+    if ((child.nodeName == "INPUT") && child.id.startsWith("input=")) {
+      child.size = width;
+    } else {
+      changeInputWidth(child, width);
+    }
+  }
 }
 
 function errorUnexpected(text) {
@@ -97,7 +136,7 @@ function errorUnexpected(text) {
 }
 
 function errorUninitialized(text) {
-    return browser.i18n.getMessage("errorUninitializedVariable", text);
+  return browser.i18n.getMessage("errorUninitializedVariable", text);
 }
 
 function errorNonNumeric(expression) {
@@ -426,7 +465,13 @@ function getTokenArray(state, input) {
   while ((input = input.replace(/^[;\s]+/, ""))) {
     const token = lexToken(input);
     if (token.type === "'") {
-      state.size = token.value;
+      const newSize = token.value;
+      if (state.size !== newSize) {
+        state.size = newSize
+        if (state.options.inputMode) {
+          changeInputWidth(getTop(), sanitizeWidth(newSize));
+        }
+      }
     } else if (token.type === '"') {
       state.base = token.value;
     } else {
@@ -493,6 +538,29 @@ function calculate(state, input) {
   return String(value);
 }
 
+function displayResult(state, id, index) {
+  const input = document.getElementById(id).value;
+  let text;
+  try {
+    text = calculate(state, input);
+  }
+  catch (error) {
+    text = browser.i18n.getMessage("messageError", error);
+  }
+  changeText("output=" + index, text);
+  const numeric = Number.parseInt(index, 10);
+  if (numeric == state.counter) {
+    appendNext(state);
+    return;
+  }
+  const nextIndex = String(numeric + 1);
+  const next = (document.getElementById("area=" + nextIndex) ||
+    document.getElementById("index=" + nextIndex));
+  if (next) {  // should always happen
+    next.focus();
+  }
+}
+
 function clickListener(state, event) {
   if (!event.target || !event.target.id) {
     return;
@@ -501,38 +569,67 @@ function clickListener(state, event) {
   if (!id.startsWith("button=")) {
     return;
   }
-  const current = id.substr(7);  // 7 = "button=".length
-  const input = document.getElementById("input=" + current).value;
-  let text;
-  try {
-    text = calculate(state, input);
-  }
-  catch (error) {
-    text = browser.i18n.getMessage("messageError", error);
-  }
-  changeText("output=" + current, text);
-  if (current === String(state.counter)) {
-    appendNext(state);
+  const index = id.substr(7);  // 7 = "button=".length
+  displayResult(state, "area=" + index, index);
+}
+
+function changeListener(state, event) {
+  if (!event.target || !event.target.id) {
     return;
   }
-  const currentNumeric = Number.parseInt(current, 10);
-  const next = document.getElementById("input=" + String(currentNumeric + 1));
-  if (next) {  // should always happen
-    next.focus();
+  const id = event.target.id;
+  if (!id.startsWith("input=")) {
+    return;
+  }
+  const index = id.substr(6);  // 6 = "input=".length
+  displayResult(state, id, index);
+}
+
+function sendCommand(command) {
+  browser.runtime.sendMessage({
+    command: command
+  });
+}
+
+function setOptions(state, options) {
+  const init = !state.options;
+  state.options = (options || {});
+  if (init) {
+    appendNext(state);
   }
 }
 
-initLayout();
-{
+function messageListener(state, message) {
+  if (!message.command) {
+    return;
+  }
+  switch (message.command) {
+    case "options":
+      setOptions(state, message.options);
+      return;
+  }
+}
+
+function initMain() {
   const state = {
+    options: null,
     counter: 0,
     last: null,
     base: 0,
     size: [0, 0],
     parser: new Parser()
   };
+  document.addEventListener("change", (event) => {
+    changeListener(state, event);
+  })
   document.addEventListener("click", (event) => {
     clickListener(state, event);
   });
-  appendNext(state);
+  browser.runtime.onMessage.addListener((message) => {
+    messageListener(state, message);
+  });
 }
+
+initLayout();  // do this quickly
+initMain();
+sendCommand("sendOptions");

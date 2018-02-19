@@ -8,6 +8,10 @@
   "homepage_url": "https://addons.mozilla.org/en-US/firefox/addon/calc-extension/",
   "default_locale": "en",
 
+  "permissions": [
+    "storage"
+  ],
+
   "background": {
     "scripts": [
       "background.js"
@@ -28,6 +32,11 @@
       "96": "data/icons/48.svg",
       "128": "data/icons/48.svg"
     },
+    "browser_style": true
+  },
+
+  "options_ui": {
+    "page": "data/options/index.html",
     "browser_style": true
   },
 
