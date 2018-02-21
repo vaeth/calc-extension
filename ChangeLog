@@ -1,5 +1,11 @@
 # ChangeLog for calc-extension:
 
+*calc-2.0:
+	Martin Väth <martin at mvath.de>:
+	- Fix activation of next input in non-button mode, see
+	  https://github.com/vaeth/calc-extension/issues/2
+	- Improve description of options
+
 *calc-1.0:
 	Martin Väth <martin at mvath.de>:
 	- Introduce option to change between textarea/button (new default) or

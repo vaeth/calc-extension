@@ -47,7 +47,7 @@ function appendLink(parent) {
   const url = browser.extension.getURL("data/tab/index.html");
   link.href = url;
   link.target = "_blank";
-  link.textContent = browser.i18n.getMessage("extensionName");
+  link.textContent = browser.i18n.getMessage("textLinkOpen");
   link.referrerpolicy = "no-referrer";
   parent.appendChild(link);
 }

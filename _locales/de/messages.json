@@ -8,8 +8,12 @@
     "description": "Description of the extension"
   },
   "checkboxInputMode": {
-    "message": "Ersetzen des „=“-Knopfes durch die Eingabe von Enter oder Verlassen des Eingabefeld. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann. Außerdem wird der Wert von „#“ nur dann aktualisiert, wenn der Ausdruck verändert wurde",
+    "message": "Ersetzen des „=“-Knopfes durch die Eingabe von Enter oder Verlassen des Eingabefeld. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann. Außerdem wird nichts passieren, wenn das Eingabefeld nicht verändert wird: Insbesondere wird das Ergebnis nicht erneut berechnet, der Wert von „#“ nicht aktualisiert und das nächste Eingabefeld nicht aktiviert.",
     "description": "Checkbox for replacing the = button by pressing return or leaving the input field."
+  },
+  "textLinkOpen": {
+    "message": "Öffne eine neue „Rechner“-Sitzung",
+    "description": "Link for opening a new session"
   },
   "announceExamples": {
     "message": "Beispiele",

@@ -8,8 +8,12 @@
     "description": "Description of the extension"
   },
   "checkboxInputMode": {
-    "message": "Replace the “=” button by pressing return or leaving the input field. This is more convenient but less intuitive. A further disadvantage is that it is not possible to break an expression over several lines and that the size of the field cannot be adjusted with the mouse. Moreover, if the expression was not modified, the value of “#” will not be updated.",
+    "message": "Replace the “=” button by pressing return or leaving the input field. This is more convenient but less intuitive. A further disadvantage is that it is not possible to break an expression over several lines and that the size of the field cannot be adjusted with the mouse. Moreover, nothing will happen if the input field was not modified: In particular, the result is not recalculated, the value of “#” is not updated, and the next input field does not become active.",
     "description": "Checkbox for replacing the = button by pressing return or leaving the input field."
+  },
+  "textLinkOpen": {
+    "message": "Open a new “calc-extension” ession",
+    "description": "Link for opening a new session"
   },
   "announceExamples": {
     "message": "Examples",

@@ -123,7 +123,7 @@ function changeInputWidth(parent, width) {
     return;
   }
   for (let child of parent.childNodes) {
-    if ((child.nodeName == "INPUT") && child.id.startsWith("input=")) {
+    if ((child.nodeName === "INPUT") && child.id.startsWith("input=")) {
       child.size = width;
     } else {
       changeInputWidth(child, width);
@@ -555,7 +555,7 @@ function displayResult(state, id, index) {
   }
   const nextIndex = String(numeric + 1);
   const next = (document.getElementById("area=" + nextIndex) ||
-    document.getElementById("index=" + nextIndex));
+    document.getElementById("input=" + nextIndex));
   if (next) {  // should always happen
     next.focus();
   }
