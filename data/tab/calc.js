@@ -37,7 +37,8 @@ function initLayout() {
 }
 
 function sanitizeWidth(size) {
-  return Math.min((size && size[0]) || 60, 200);
+  return Math.min(((typeof(size) == "number") ? size :
+    (size && size[0])) || 60, 200);
 }
 
 function sanitizeHeight(size) {
@@ -62,10 +63,21 @@ function appendInput(parent, id, size) {
   return input;
 }
 
-function appendXParagraph(parent, append, id, size) {
-  const paragraph = document.createElement("P");
-  const element = append(paragraph, id, size);
-  parent.appendChild(paragraph);
+function appendFormInput(parent, formId, id, size) {
+  const form = document.createElement("FORM");
+  form.id = formId;
+  form.autocomplete = "off";
+  const input = appendInput(form, id, size);
+  parent.appendChild(form);
+  return input;
+}
+
+function appendXfunc(parent, type, func) {
+  const item = document.createElement(type);
+  const args = Array.apply(null, arguments);
+  args.splice(0, 3, item);
+  const element = func.apply(null, args);
+  parent.appendChild(item);
   return element;
 }
 
@@ -101,7 +113,8 @@ function appendNext(state) {
   const top = getTop();
   let element;
   if (state.options.inputMode) {
-    element = appendXParagraph(top, appendInput, "input=" + index, state.size);
+    element = appendXfunc(top, "P", appendFormInput,
+      "form=" + index, "input=" + index, state.size);
     appendTextNode(top, "P", outputId);
   } else {
     const row = document.createElement("TR");
@@ -111,8 +124,8 @@ function appendNext(state) {
     table.appendChild(row);
     const paragraph = document.createElement("P");
     paragraph.appendChild(table);
-    element = appendXParagraph(top, appendTextarea, "area=" + index,
-      state.size);
+    element = appendXFunc(top, "P", appendTextarea,
+      "area=" + index, state.size);
     top.appendChild(paragraph);
   }
   element.focus();
@@ -573,16 +586,17 @@ function clickListener(state, event) {
   displayResult(state, "area=" + index, index);
 }
 
-function changeListener(state, event) {
+function submitListener(state, event) {
   if (!event.target || !event.target.id) {
     return;
   }
   const id = event.target.id;
-  if (!id.startsWith("input=")) {
+  if (!id.startsWith("form=")) {
     return;
   }
-  const index = id.substr(6);  // 6 = "input=".length
-  displayResult(state, id, index);
+  event.preventDefault();
+  const index = id.substr(5);  // 5 = "form=".length
+  displayResult(state, "input=" + index, index);
 }
 
 function sendCommand(command) {
@@ -619,8 +633,8 @@ function initMain() {
     size: [0, 0],
     parser: new Parser()
   };
-  document.addEventListener("change", (event) => {
-    changeListener(state, event);
+  document.addEventListener("submit", (event) => {
+    submitListener(state, event);
   })
   document.addEventListener("click", (event) => {
     clickListener(state, event);

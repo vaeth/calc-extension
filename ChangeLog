@@ -1,7 +1,8 @@
 # ChangeLog for calc-extension:
 
-*calc-2.0:
+*calc-1.1:
 	Martin Väth <martin at mvath.de>:
+	- Let enter key work also with unchanged input fields
 	- Fix activation of next input in non-button mode, see
 	  https://github.com/vaeth/calc-extension/issues/2
 	- Improve description of options

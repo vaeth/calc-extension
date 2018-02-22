@@ -107,8 +107,7 @@ There is an option to replace the `=` button by pressing return or
 leaving the input field. This is more convenient but less intuitive.
 A further disadvantage is that it is not possible to break an expression
 over several lines and that the size of the field cannot be adjusted
-with the mouse. Moreover, if the expression was not modified, the value
-of `#` will not be updated.
+with the mouse.
 
 ## Permissions
 
