@@ -9,7 +9,15 @@ function getTop() {
 }
 
 function setTitle(title) {
-  document.getElementById("pageTitle").textContent = title;
+  changeText("pageTitle", title);
+}
+
+function getCheckboxInputMode() {
+  return document.getElementById("checkboxInputMode");
+}
+
+function checkedInputMode() {
+  return getCheckboxInputMode().checked;
 }
 
 function setHead(text) {
@@ -36,99 +44,38 @@ function initLayout() {
   }
 }
 
-function sanitizeWidth(size) {
-  return Math.min(((typeof(size) == "number") ? size :
-    (size && size[0])) || 60, 200);
-}
-
-function sanitizeHeight(size) {
-  return Math.min((size && size[1]) || 1, 20);
-}
-
-function appendTextarea(parent, id, size) {
-  const textarea = document.createElement("TEXTAREA");
-  textarea.cols = sanitizeWidth(size);
-  textarea.rows = sanitizeHeight(size);
-  textarea.id = id;
-  parent.appendChild(textarea);
-  return textarea;
-}
-
-function appendInput(parent, id, size) {
-  const input = document.createElement("INPUT");
-  input.type = "text";
-  input.id = id;
-  input.size = sanitizeWidth(size);
-  parent.appendChild(input);
-  return input;
-}
-
-function appendFormInput(parent, formId, id, size) {
-  const form = document.createElement("FORM");
-  form.id = formId;
-  form.autocomplete = "off";
-  const input = appendInput(form, id, size);
-  parent.appendChild(form);
-  return input;
-}
-
-function appendXfunc(parent, type, func) {
-  const item = document.createElement(type);
-  const args = Array.apply(null, arguments);
-  args.splice(0, 3, item);
-  const element = func.apply(null, args);
-  parent.appendChild(item);
-  return element;
-}
-
-function appendButton(parent, id, textId) {
-  const button = document.createElement("BUTTON");
-  button.type = "button";
-  button.id = id;
-  button.textContent = browser.i18n.getMessage(textId);
-  parent.appendChild(button);
-}
-
-function appendButtonCol(row, id, textId) {
-  const col = document.createElement("TD");
-  appendButton(col, id, textId);
-  row.appendChild(col);
-}
-
-function appendTextNode(parent, type, id) {
-  const col = document.createElement(type);
-  col.id = id;
-  const textNode = document.createTextNode("");
-  col.appendChild(textNode);
-  parent.appendChild(col);
-}
-
-function changeText(id, text) {
-  document.getElementById(id).textContent = text;
-}
-
 function appendNext(state) {
   const index = String(++state.counter);
   const outputId = "output=" + index;
   const top = getTop();
   let element;
-  if (state.options.inputMode) {
-    element = appendXfunc(top, "P", appendFormInput,
+  if (checkedInputMode()) {
+    element = appendX(top, "P", appendFormInput,
       "form=" + index, "input=" + index, state.size);
-    appendTextNode(top, "P", outputId);
+    appendX(top, "P", appendTextNode, null, outputId);
   } else {
     const row = document.createElement("TR");
-    appendButtonCol(row, "button=" + index, "buttonResult");
-    appendTextNode(row, "TD", outputId);
-    const table = document.createElement("TABLE");
-    table.appendChild(row);
+    appendX(row, "TD", appendButton, "button=" + index, "buttonResult");
+    appendX(row, "TD", appendTextNode, null, outputId);
     const paragraph = document.createElement("P");
-    paragraph.appendChild(table);
-    element = appendXFunc(top, "P", appendTextarea,
-      "area=" + index, state.size);
+    appendX(paragraph, "TABLE", row);
+    element = appendX(top, "P", appendTextarea, "area=" + index, state.size);
     top.appendChild(paragraph);
   }
   element.focus();
+}
+
+function initCalc(state, options) {
+  if (getCheckboxInputMode()) {  // already initialized
+    return;
+  }
+  const row = document.createElement("TR");
+  appendCheckboxCol(row, "checkboxInputMode", options.inputMode);
+  const table = document.createElement("TABLE");
+  table.appendChild(row);
+  const top = getTop();
+  appendX(top, "P", table);
+  appendNext(state);
 }
 
 function changeInputWidth(parent, width) {
@@ -140,6 +87,16 @@ function changeInputWidth(parent, width) {
       child.size = width;
     } else {
       changeInputWidth(child, width);
+    }
+  }
+}
+
+function optionChanges(state, changes) {
+  const checkboxInputMode = getCheckboxInputMode();
+  if (checkboxInputMode && changes.inputMode) {
+    const value = !!changes.inputMode.value;
+    if (!!checkboxInputMode.checked != value) {
+      checkboxInputMode.checked = value;
     }
   }
 }
@@ -231,11 +188,17 @@ class Parser {
     if (!token.isName) {
       return null;
     }
-    // register a new variable name as a valid token, yet non-numerical
-    return this.registerPrefix(token.text, () => ({
+    const name = token.text;
+    const returnValue = {
       type: "variable",
-      name: token.text
-    }));
+      name: name
+    };
+    const value = this.variables.get(name);
+    if (value !== null) {  // import externally stored value of variable
+      returnValue.numeric = true,
+      returnValue.value = value
+    }
+    return this.registerPrefix(name, () => returnValue);
   }
 
   // Convenience wrappers for registerPrefix and registerInfix.
@@ -328,8 +291,10 @@ class Parser {
         throw errorNonNumeric(right);
       }
       left.numeric = true;
-      left.value = right.value;
-      this.registerPrefix(left.name, () => left);  // assign for future use
+      const name = left.name;
+      const value = left.value = right.value;
+      this.registerPrefix(name, () => left);  // assign for future use
+      this.variables.set(name, value); //  set value for external storage
       return left;
     });
   }
@@ -353,7 +318,8 @@ class Parser {
     });
   }
 
-  constructor() {
+  constructor(variables) {
+    this.variables = (variables || new Map());
     this.infix = new Map();
     this.prefix = new Map();
 
@@ -481,9 +447,7 @@ function getTokenArray(state, input) {
       const newSize = token.value;
       if (state.size !== newSize) {
         state.size = newSize
-        if (state.options.inputMode) {
-          changeInputWidth(getTop(), sanitizeWidth(newSize));
-        }
+        changeInputWidth(getTop(), sanitizeWidth(newSize));
       }
     } else if (token.type === '"') {
       state.base = token.value;
@@ -599,34 +563,28 @@ function submitListener(state, event) {
   displayResult(state, "input=" + index, index);
 }
 
+function messageListener(state, message) {
+  if (!message.command) {
+    return;
+  }
+  switch (message.command) {
+    case "initCalc":
+      initCalc(state, message.options);
+      return;
+    case "optionChanges":
+      optionChanges(state, message.changes);
+      return;
+  }
+}
+
 function sendCommand(command) {
   browser.runtime.sendMessage({
     command: command
   });
 }
 
-function setOptions(state, options) {
-  const init = !state.options;
-  state.options = (options || {});
-  if (init) {
-    appendNext(state);
-  }
-}
-
-function messageListener(state, message) {
-  if (!message.command) {
-    return;
-  }
-  switch (message.command) {
-    case "options":
-      setOptions(state, message.options);
-      return;
-  }
-}
-
 function initMain() {
   const state = {
-    options: null,
     counter: 0,
     last: null,
     base: 0,
@@ -646,4 +604,4 @@ function initMain() {
 
 initLayout();  // do this quickly
 initMain();
-sendCommand("sendOptions");
+sendCommand("sendInitCalc");

@@ -7,9 +7,13 @@
     "message": "Wertberechnung mathematischer Ausdrücke",
     "description": "Description of the extension"
   },
+  "optionsInputMode": {
+    "message": "Ersetzen des \u21AA-Knopfes durch die Eingabe der \u23CE-Taste. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann.",
+    "description": "Checkbox in the options page for replacing the calculate button by pressing enter"
+  },
   "checkboxInputMode": {
-    "message": "Ersetzen des „=“-Knopfes durch die Eingabe von Enter oder Verlassen des Eingabefeld. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann.",
-    "description": "Checkbox for replacing the = button by pressing return or leaving the input field."
+    "message": "Neue Zeilen ohne \u21AA",
+    "description": "Checkbox for replacing the calculate button by pressing enter"
   },
   "textLinkOpen": {
     "message": "Öffne eine neue „Rechner“-Sitzung",
@@ -52,7 +56,7 @@
     "description": "Announcement of symbol for last result"
   },
   "buttonResult": {
-    "message": "=",
+    "message": "\u21AA",
     "description": "Result button"
   },
   "messageResult": {

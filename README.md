@@ -91,15 +91,15 @@ javascript interpreter.
 ## Example session
 
 - `(1+2)*3-5`
-- = 4
+- ↪ 4
 - `1 - cos(2 * PI) / 2`
-- = 0.5
+- ↪ 0.5
 - `a = (# + 1) * 3`
-- = 4.5
+- ↪ 4.5
 - `# + 4 * a`
-- = 22.5
+- ↪ 22.5
 - `0xF | 0100 "16"`
-- = 4f (in base 16)
+- ↪ 4f (in base 16)
 
 ## Option
 

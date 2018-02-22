@@ -7,12 +7,16 @@
     "message": "Calculate values of mathematical expressions",
     "description": "Description of the extension"
   },
+  "optionsInputMode": {
+    "message": "Replace the \u21AA button by pressing \u23CE. This is more convenient but less intuitive. A further disadvantage is that it is not possible to break an expression over several lines and that the size of the field cannot be adjusted with the mouse.",
+    "description": "Checkbox in the options page for replacing the calculate button by pressing enter"
+  },
   "checkboxInputMode": {
-    "message": "Replace the “=” button by pressing return or leaving the input field. This is more convenient but less intuitive. A further disadvantage is that it is not possible to break an expression over several lines and that the size of the field cannot be adjusted with the mouse.",
-    "description": "Checkbox for replacing the = button by pressing return or leaving the input field."
+    "message": "New lines without \u21AA button",
+    "description": "Checkbox for replacing the calculate button by pressing enter"
   },
   "textLinkOpen": {
-    "message": "Open a new “calc-extension” ession",
+    "message": "Open a new “calc-extension” session",
     "description": "Link for opening a new session"
   },
   "announceExamples": {
@@ -52,7 +56,7 @@
     "description": "Announcement of symbol for last result"
   },
   "buttonResult": {
-    "message": "=",
+    "message": "\u21AA",
     "description": "Result button"
   },
   "messageResult": {

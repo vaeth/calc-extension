@@ -1,11 +1,13 @@
 # ChangeLog for calc-extension:
 
-*calc-1.1:
+*calc-2.0:
 	Martin Väth <martin at mvath.de>:
+	- Add local options in page head
 	- Let enter key work also with unchanged input fields
 	- Fix activation of next input in non-button mode, see
 	  https://github.com/vaeth/calc-extension/issues/2
 	- Improve description of options
+	- Internally: prepare parser for external variable storage
 
 *calc-1.0:
 	Martin Väth <martin at mvath.de>:
