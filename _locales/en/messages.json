@@ -7,13 +7,37 @@
     "message": "Calculate values of mathematical expressions",
     "description": "Description of the extension"
   },
-  "optionsInputMode": {
-    "message": "Replace the \u21AA button by pressing \u23CE. This is more convenient but less intuitive. A further disadvantage is that it is not possible to break an expression over several lines and that the size of the field cannot be adjusted with the mouse.",
-    "description": "Checkbox in the options page for replacing the calculate button by pressing enter"
-  },
   "checkboxInputMode": {
     "message": "New lines without \u21AA button",
-    "description": "Checkbox for replacing the calculate button by pressing enter"
+    "description": "Brief explanation for input mode checkbox"
+  },
+  "titleCheckboxInputMode": {
+    "message": "Replace the \u21AA button by pressing \u23CE. This is more convenient but less intuitive. A further disadvantage is that it is not possible to break an expression over several lines and that the size of the field cannot be adjusted with the mouse.",
+    "description": "Verbose explanation for input mode checkbox in popup and on option page"
+  },
+  "inputSize": {
+    "message": "width:height (0:0 = 60:1)",
+    "description": "Brief explanation for size (60:1 default) in input field"
+  },
+  "titleInputSize": {
+    "message": "The size (“width:height”) of new input fields and the width for non-resizable fields. If “height” (or “:height”) is 0 or omitted, it defaults to 1; if “width” is 0 or omitted, it defaults to 60. The value can be changed by putting 'width:height' somewhere on the input line.",
+    "description": "Verbose explanation for size in popup and on option page"
+  },
+  "inputBase": {
+    "message": "output base (2-36 or default 10)",
+    "description": "Brief explanation for output base (2-36) in input field"
+  },
+  "titleInputBase": {
+    "message": "The number base (2-36) which is used for the output of the resulting numbers. Any other value than 2-36 means that the usual basis 10 is used and that the additional output of the basis itself is omitted.",
+    "description": "Verbose explanation for output base (2-36) in popup and on option page"
+  },
+  "buttonClearStorage": {
+    "message": "Clear Storage",
+    "description": "Clear storage button"
+  },
+  "textClearStorage": {
+    "message": "This clears all stored data of the extension and resets all options to their defaults",
+    "description": "Verbose explanation to clear storage button"
   },
   "textLinkOpen": {
     "message": "Open a new “calc-extension” session",
@@ -35,21 +59,13 @@
     "message": "Constants",
     "description": "Announcement of available constants"
   },
-  "announceSize": {
-    "message": "Input area size",
-    "description": "Announcement of explanation of input area size"
+  "announceInline": {
+    "message": "Option modifiers",
+    "description": "Announcement of inline option modifiers"
   },
-  "textSize": {
-    "message": "'60:1' '60' ':1' (default size 60:1 for new input areas)",
-    "description": "Describe that '60:1' sets size of new input areas; default is 60 or 1, respectively"
-  },
-  "announceBase": {
-    "message": "Output base",
-    "description": "Announcement of explanation of output base"
-  },
-  "textBase": {
-    "message": "\"16\" (base values 2-36 or 0 are valid)",
-    "description": "Describe that \"base\" changes output base; valid bases are 2-36 or 0/empty"
+  "textInline": {
+    "message": "!/? (\u21AA off/on) 'width:height' \"base\"",
+    "description": "Text explaining inline option modifiers (should be short)"
   },
   "announceLast": {
     "message": "Last result",
@@ -58,6 +74,10 @@
   "buttonResult": {
     "message": "\u21AA",
     "description": "Result button"
+  },
+  "textResult": {
+    "message": "\u21AA ",
+    "description": "Substituting text if no result button is used. Should not be empty for clarity"
   },
   "messageResult": {
     "message": "$RESULT$ (in base $BASE$)",

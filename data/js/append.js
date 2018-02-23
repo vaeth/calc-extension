@@ -5,19 +5,30 @@
 "use strict";
 
 function sanitizeWidth(size) {
-  return Math.min(((typeof(size) === "number") ? size :
-    (size && size[0])) || 60, 200);
+  const width = ((typeof(size) === "number") ? size :
+    ((size && Array.isArray(size) && size[0]) || 0));
+  if (width && (width > 0)) {
+    return Math.min(width, 200);
+  }
+  return 60;
 }
 
 function sanitizeHeight(size) {
-  return Math.min((size && size[1]) || 1, 20);
+  const height = ((size && Array.isArray(size) && size[1]) || 0);
+  if (height && (height > 0)) {
+    return Math.min(height, 20);
+  }
+  return 1;
 }
 
-function appendCheckbox(parent, id, checked) {
+function appendCheckbox(parent, id, checked, titleId) {
   const checkbox = document.createElement("INPUT");
   checkbox.type = "checkbox";
   if (checked) {
     checkbox.checked = checked;
+  }
+  if (titleId) {
+    checkbox.title = browser.i18n.getMessage(titleId);
   }
   checkbox.id = id;
   parent.appendChild(checkbox);
@@ -32,11 +43,17 @@ function appendTextarea(parent, id, size) {
   return textarea;
 }
 
-function appendInput(parent, id, size) {
+function appendInput(parent, id, size, value, titleId) {
   const input = document.createElement("INPUT");
   input.type = "text";
   input.id = id;
   input.size = sanitizeWidth(size);
+  if (value) {
+    input.value = value;
+  }
+  if (titleId) {
+    input.title = browser.i18n.getMessage(titleId);
+  }
   parent.appendChild(input);
   return input;
 }
@@ -50,18 +67,24 @@ function appendFormInput(parent, formId, id, size) {
   return input;
 }
 
-function appendButton(parent, id, textId) {
+function appendButton(parent, id, textId, disabled) {
   const button = document.createElement("BUTTON");
   button.type = "button";
   button.id = id;
+  if (disabled) {
+    button.disabled = true;
+  }
   button.textContent = browser.i18n.getMessage(textId);
   parent.appendChild(button);
   return button;
 }
 
-function appendTextNode(parent, textId, id) {
+function appendTextNode(parent, textId, id, titleId) {
   if (id) {
     parent.id = id;
+  }
+  if (titleId) {
+    parent.title = browser.i18n.getMessage(titleId);
   }
   const textNode = document.createTextNode(textId ?
     browser.i18n.getMessage(textId) : "");
@@ -83,9 +106,19 @@ function appendX(parent, type, appendItem) {
   return element;
 }
 
-function appendCheckboxCol(parent, id, checked, textId) {
-  appendX(parent, "TD", appendCheckbox, id, checked);
-  appendX(parent, "TD", appendTextNode, textId || id);
+function appendCheckboxCol(parent, id, checked, textId, titleId) {
+  appendX(parent, "TD", appendCheckbox, id, checked, titleId);
+  appendX(parent, "TD", appendTextNode, textId || id, null, titleId);
+}
+
+function appendInputCol(parent, id, size, value, textId, titleId) {
+  appendX(parent, "TD", appendInput, id, size, value, titleId);
+  appendX(parent, "TD", appendTextNode, textId || id, null, titleId);
+}
+
+function appendButtonTextCol(parent, id, buttonTextId, disabled, textId) {
+  appendX(parent, "TD", appendButton, id, buttonTextId, disabled);
+  appendX(parent, "TD", appendTextNode, textId);
 }
 
 function changeText(id, text) {

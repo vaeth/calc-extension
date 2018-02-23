@@ -7,13 +7,37 @@
     "message": "Wertberechnung mathematischer Ausdrücke",
     "description": "Description of the extension"
   },
-  "optionsInputMode": {
-    "message": "Ersetzen des \u21AA-Knopfes durch die Eingabe der \u23CE-Taste. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann.",
-    "description": "Checkbox in the options page for replacing the calculate button by pressing enter"
-  },
   "checkboxInputMode": {
     "message": "Neue Zeilen ohne \u21AA",
-    "description": "Checkbox for replacing the calculate button by pressing enter"
+    "description": "Brief explanation for input mode checkbox"
+  },
+  "titleCheckboxInputMode": {
+    "message": "Ersetzen des \u21AA-Knopfes durch die Eingabe der \u23CE-Taste. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann.",
+    "description": "Verbose explanation for input mode checkbox in popup and on option page"
+  },
+  "inputSize": {
+    "message": "Breite:Höhe (0:0 = 60:1)",
+    "description": "Brief explanation for size (60:1 default) in input field"
+  },
+  "titleInputSize": {
+    "message": "Die Größe („Breite:Höhe“) neuer Eingabefelder und die Breite für nicht-verstellbare. Wenn „Höhe“ (oder “:Höhe”) 0 ist oder weggelassen wird, wird der Wert 1 genommen; wenn „Breite“ weggelassen wird, wird der Wert 60 genommen. Der Wert kann auch dadurch verändert werden, indem 'Breite:Höhe' irgendwo in die Eingabezeile geschrieben wird.",
+    "description": "Verbose explanation for size in popup and on option page"
+  },
+  "inputBase": {
+    "message": "Ausgabebasis (2-26 oder Vorgabe 10)",
+    "description": "Brief explanation for output base (2-36) in input field"
+  },
+  "titleInputBase": {
+    "message": "Die Zahlenbasis für die Ausgabe der Ergebnisse. Der leere Wert oder die Basis 0 bedeutet die übliche Basis 10 sowie die Unterdrückung der expliziten Ausgabe der Basis.",
+    "description": "Verbose explanation for output base (2-36) in popup and on option page"
+  },
+  "buttonClearStorage": {
+    "message": "Speicher löschen",
+    "description": "Clear storage button"
+  },
+  "textClearStorage": {
+    "message": "Löscht alle gespeicherten Daten der Erweiterung und setzt alle Optionen in den Vorgabezustand zurück",
+    "description": "Verbose explanation to clear storage button"
   },
   "textLinkOpen": {
     "message": "Öffne eine neue „Rechner“-Sitzung",
@@ -35,21 +59,13 @@
     "message": "Konstanten",
     "description": "Announcement of available constants"
   },
-  "announceSize": {
-    "message": "Eingabebereichsgröße",
-    "description": "Announcement of explanation of input area size"
+  "announceInline": {
+    "message": "Option modifiers",
+    "description": "Announcement of inline option modifiers"
   },
-  "textSize": {
-    "message": "'60:1' '60' ':1' (Voreinstellung 60:1 für neue Eingabebereiche)",
-    "description": "Describe that '60:1' sets size of new input areas; default is 60 or 1, respectively"
-  },
-  "announceBase": {
-    "message": "Ausgabebasis",
-    "description": "Announcement of explanation of output base"
-  },
-  "textBase": {
-    "message": "\"16\" (Werte 2-36 oder 0 sind gültig)",
-    "description": "Describe that \"base\" changes output base; valid bases are 2-36 or 0/empty"
+  "textInline": {
+    "message": "!/? (\u21AA aus/an) 'width:height' \"base\"",
+    "description": "Text explaining inline option modifiers (should be short)"
   },
   "announceLast": {
     "message": "letztes Ergebnis",
@@ -58,6 +74,10 @@
   "buttonResult": {
     "message": "\u21AA",
     "description": "Result button"
+  },
+  "textResult": {
+    "message": "\u21AA ",
+    "description": "Substituting text if no result button is used. Should not be empty for clarity"
   },
   "messageResult": {
     "message": "$RESULT$ (zur Basis $BASE$)",

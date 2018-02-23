@@ -2,8 +2,13 @@
 
 *calc-2.0:
 	Martin Väth <martin at mvath.de>:
+	- Make input field width and output base part of options
+	- Introduce a button to clear storage
 	- Add local options in page head
-	- Let enter key work also with unchanged input fields
+	- An empty result now removes the current line
+	- Add new inline tokens ! and ? to set/unset non-button mode
+	- Let enter key work also with unchanged input fields (non-button mode)
+	- Output optical separator in non-button mode
 	- Fix activation of next input in non-button mode, see
 	  https://github.com/vaeth/calc-extension/issues/2
 	- Improve description of options

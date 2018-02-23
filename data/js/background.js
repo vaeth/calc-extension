@@ -10,16 +10,20 @@
 "use strict";
 
 const state = {
-  options: null
+  options: null,
+  haveStorage: false
 };
 
 function sendOptions(reply, changes) {
   const message = {
     command: reply
   };
+  if (state.haveStorage) {
+    message.haveStorage = true;
+  }
   if (changes) {
     message.changes = changes;
-  } else {
+  } else if (changes !== null) {
     message.options = (state.options || {});
   }
   browser.runtime.sendMessage(message);
@@ -54,10 +58,29 @@ function storageOptionChanges(newOptions) {
   }
 }
 
-function storageListener(storageChanges, storageArea) {
+function storageListener(storageChanges) {
+  if (!state.haveStorage) {
+    for (let i in storageChanges) {
+      if (storageChanges.hasOwnProperty(i) &&
+        storageChanges[i].hasOwnProperty("newValue")) {
+        state.haveStorage = true;
+        sendOptions("haveStorageChanges", null);
+        break;
+      }
+    }
+  }
   if (state.options && storageChanges.optionsV1) {
     storageOptionChanges(storageChanges.optionsV1.newValue || {});
   }
+}
+
+function clearStorage() {
+  browser.storage.local.clear(() => {
+    if (state.haveStorage) {
+      delete state.haveStorage;
+      sendOptions("haveStorageChanges", null);
+    }
+  });
 }
 
 function sendInit(reply) {
@@ -66,6 +89,7 @@ function sendInit(reply) {
     return;
   }
   browser.storage.local.get().then((storage) => {
+    state.haveStorage = !!storage;
     state.options = (storage.optionsV1 || {});
     sendOptions(reply);
   }, () => {
@@ -107,6 +131,9 @@ function messageListener(message) {
       return;
     case "optionChanges":
       optionChanges(message.changes);
+      return;
+    case "clearStorage":
+      clearStorage();
       return;
   }
 }

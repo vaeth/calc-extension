@@ -69,19 +69,14 @@ specification. However, the following things are new.
 There is a special variable name `#` which always refers to the result of
 the last (succesful) calculation.
 
-There are also special sequences which can occur anywhere in an expression:
+There are also special sequences which can occur anywhere in an expression
+and which cause options to switch (you can also switch them by the mouse
+and even save the options permanently in the preferences window).
 
-- `"16"` switch to hexadecimal output from now on.
-
-  Instead of 16 any number between 2 and 36 can be used as the number base.
-  Use `""` or `"0"` to reset to the default output (decimal) format.
-
-- `'60:1'` defines the initial size of new input areas to be 60:1.
-
-  Instead of 60 or 1 any other positive integer number can be used.
-  Either number (and the `:` part) can be omitted;
-  the defaults for omitted values are 60 or 1, respectively.
-
+- `'width:height'` default is 60:1
+- `"base"` switch output to base (2-36)
+- `!` Omit the ↪ button
+- `?` Do not omit the ↪ button
 
 The actual calculation of the functions and number conversion occurs
 by javascript calls. Therefore, available precision, error messages,

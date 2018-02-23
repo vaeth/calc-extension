@@ -19,8 +19,66 @@ function getCheckboxInputMode() {
   return document.getElementById("checkboxInputMode");
 }
 
-function checkedInputMode() {
-  return getCheckboxInputMode().checked;
+function getInputSize() {
+  return document.getElementById("inputSize");
+}
+
+function getInputBase() {
+  return document.getElementById("inputBase");
+}
+
+function getButtonClearStorage() {
+  return document.getElementById("buttonClearStorage");
+}
+
+function isCheckedInputMode() {
+  const checkboxInputMode = getCheckboxInputMode();
+  return !!(checkboxInputMode && checkboxInputMode.checked);
+}
+
+function setCheckboxInputMode(checked) {
+  const checkboxInputMode = getCheckboxInputMode();
+  if (checkboxInputMode && (checkboxInputMode.checked != !!checked)) {
+    checkboxInputMode.checked = !!checked;
+  }
+}
+
+function setInputSize(size) {
+  const inputSize = getInputSize();
+  if (!inputSize) {
+    return;
+  }
+  const text = getSizeText(size);
+  if (inputSize.value !== text) {
+    inputSize.value = text;
+  }
+}
+
+function valueInputSize() {
+  return getSize(getInputSize().value);
+}
+
+function setInputBase(base) {
+  const inputBase = getInputBase();
+  if (!inputBase) {
+    return;
+  }
+  const text = getBaseText(base);
+  if (inputBase.value !== text) {
+    inputBase.value = text;
+  }
+}
+
+function valueInputBase() {
+  return getBase(getInputBase().value);
+}
+
+function enableButtonClearStorage(enable) {
+  const buttonClearStorage = getButtonClearStorage();
+  const disabled = (enable ? false : true);
+  if (buttonClearStorage && (!!buttonClearStorage.disabled != disabled)) {
+    buttonClearStorage.disabled = disabled;
+  }
 }
 
 function appendLink(parent) {
@@ -33,21 +91,45 @@ function appendLink(parent) {
   parent.appendChild(link);
 }
 
-function initOptions(state, options) {
-  if (getCheckboxInputMode()) {  // already initialized
-    return;
-  }
-  state.options = (options || {});
+function initPage(options, haveStorage) {
   const table = document.createElement("TABLE");
   appendX(table, "TR", appendCheckboxCol, "checkboxInputMode",
-    state.options.inputMode, "optionsInputMode");
+    options.inputMode, "titleInputMode");
+  appendX(table, "TR", appendInputCol, "inputSize", 3,
+    getSizeText(options.size), "titleInputSize");
+  appendX(table, "TR", appendInputCol, "inputBase", 1,
+    getBaseText(options.base), "titleInputBase");
+  appendX(table, "TR", appendButtonTextCol, "buttonClearStorage",
+    "buttonClearStorage", !haveStorage, "textClearStorage");
   const top = getTop();
   appendX(top, "P", table);
   appendX(top, "P", appendLink, top);
 }
 
+function initOptions(state, options, haveStorage) {
+  if (getCheckboxInputMode()) {  // already initialized
+    return;
+  }
+  const stateOptions = state.options = {};
+  if (options.inputMode) {
+    stateOptions.inputMode = true;
+  }
+  if (options.size) {
+    const size = sanitizeSize(options.size);
+    if (!isDefaultSize(size)) {
+      stateOptions.size = size;
+    }
+  }
+  if (options.base) {
+    const base = sanitizeBase(options.base);
+    if (!isDefaultBase(base)) {
+      stateOptions.base = base;
+    }
+  }
+  initPage(stateOptions, haveStorage);
+}
+
 function optionChanges(state, changes) {
-  const checkboxInputMode = getCheckboxInputMode();
   if (!state.options) {
     state.options = {};
   }
@@ -56,16 +138,34 @@ function optionChanges(state, changes) {
     if (changes.inputMode.value) {
       if (!options.inputMode) {
         options.inputMode = true;
-        if (checkboxInputMode) {
-          checkboxInputMode.checked = true;
-        }
+        setCheckboxInputMode(true);
       }
     } else {
       delete options.inputMode;
-      if (checkboxInputMode) {
-        checkboxInputMode.checked = false;
+      setCheckboxInputMode(false);
+    }
+  }
+  if (changes.size) {
+    const size = sanitizeSize(changes.size.value);
+    if (!equalSize(sanitizeSize(options.size), size)) {
+      if (isDefaultSize(size)) {
+        delete options.size;
+      } else {
+        options.size = size;
+      }
+      setInputSize(size);
+    }
+  }
+  if (changes.base) {
+    const base = sanitizeBase(changes.base.value);
+    if (sanitizeBase(options.base) !== base) {
+      if (isDefaultBase(base)) {
+        delete options.base;
+      } else {
+        options.base = base;
       }
     }
+    setInputBase(base);
   }
 }
 
@@ -83,9 +183,8 @@ function sendChanges(changes) {
   sendCommand("optionChanges", changes);
 }
 
-function changeInputMode(state) {
-  const value = !!checkedInputMode();
-  const options = state.options;
+function changeInputMode(options) {
+  const value = !!isCheckedInputMode();
   if (value == !!options.inputMode) {
     return;
   }
@@ -101,14 +200,64 @@ function changeInputMode(state) {
   sendChanges(changes);
 }
 
-function checkboxListener(state, event) {
+function changeSize(options) {
+  const size = valueInputSize();
+  if (!equalSize(sanitizeSize(options.size), size)) {
+    const sizeChange = {};
+    const changes = {
+      size: sizeChange
+    }
+    if (isDefaultSize(size)) {
+      delete options.size;
+    } else {
+      sizeChange.value = options.size = size;
+    }
+    sendChanges(changes);
+  }
+  setInputSize(size);
+}
+
+function changeBase(options) {
+  const base = valueInputBase();
+  if (sanitizeBase(options.base) != base) {
+    const baseChange = {};
+    const changes = {
+      base: baseChange
+    }
+    if (isDefaultBase(base)) {
+      delete options.base;
+    } else {
+      baseChange.value = options.base = base;
+    }
+    sendChanges(changes);
+  }
+  setInputBase(base);
+}
+
+function changeListener(state, event) {
   if (!event.target || !event.target.id) {
     return;
   }
-  const options = state.options;
   switch (event.target.id) {
     case "checkboxInputMode":
-      changeInputMode(state);
+      changeInputMode(state.options);
+      return;
+    case "inputSize":
+      changeSize(state.options);
+      return;
+    case "inputBase":
+      changeBase(state.options);
+      return;
+  }
+}
+
+function clickListener(state, event) {
+  if (!event.target || !event.target.id) {
+    return;
+  }
+  switch (event.target.id) {
+    case "buttonClearStorage":
+      sendCommand("clearStorage");
       return;
   }
 }
@@ -119,10 +268,13 @@ function messageListener(state, message) {
   }
   switch (message.command) {
     case "initOptions":
-      initOptions(state, message.options);
+      initOptions(state, message.options, message.haveStorage);
       return;
     case "optionChanges":
       optionChanges(state, message.changes);
+      return;
+    case "haveStorageChanges":
+      enableButtonClearStorage(message.haveStorage);
       return;
   }
 }
@@ -131,8 +283,11 @@ function initMain() {
   const state = {
     options: null
   };
-  document.addEventListener("CheckboxStateChange", (event) => {
-    checkboxListener(state, event);
+  document.addEventListener("change", (event) => {
+    changeListener(state, event);
+  })
+  document.addEventListener("click", (event) => {
+    clickListener(state, event);
   });
   browser.runtime.onMessage.addListener((message) => {
     messageListener(state, message);
