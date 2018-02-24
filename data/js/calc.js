@@ -37,20 +37,48 @@ function addContent(seed, counter) {
   return seed;
 }
 
+function restoreSessionLast(state, checkOnly) {
+  const storedLast = state.storedLast;
+  if (!Array.isArray(storedLast)) {
+    return false;
+  }
+  const lastString = storedLast[1];
+  if ((typeof(lastString) == "string") && lastString) {
+    if (checkOnly) {
+      return true;
+    }
+    state.lastString = lastString;
+    enableButtonClipboard();
+  }
+  if (checkOnly) {
+    return false;
+  }
+  const last = storedLast[0];
+  if (typeof(last) == "number") {
+    state.last = last;
+  }
+}
+
+function addSessionPrepare(state) {
+  // Setting the clipboard cannot be done in the messageListener,
+  // since otherwise we would need clipboard permissions
+  if (restoreSessionLast(state, true)) {
+    toClipboard(state.storedLast[1]);
+  }
+  sendCommand("sendSession");
+}
+
 function addSession(state, session) {
   if (!session) {
     return;
   }
-  const last = session.last;
-  if (typeof(last) == "number") {
-    state.last = last;
-  }
+  restoreSessionLast(state);
   const variables = session.variables;
-  if (variables && Array.isArray(variables)) {
+  if (Array.isArray(variables)) {
     state.parser.setVariables(variables);
   }
   const content = session.content;
-  if (content && Array.isArray(content)) {
+  if (Array.isArray(content)) {
     const indexString = String(state.counter);  // end of current session
     for (let [input, output] of content) {
       appendNext(state, input, output);
@@ -76,12 +104,19 @@ function optionsChanges(state, changes) {
 
 function displayResult(state, id, indexString) {
   const input = document.getElementById(id).value;
+  let last = false;
   let text;
   try {
-    text = calculate(state, input);
+    if ((text = calculate(state, input))) {
+      last = true;
+    }
   }
   catch (error) {
     text = browser.i18n.getMessage("messageError", error);
+  }
+  if (last) {
+    enableButtonClipboard();
+    toClipboard(state.lastString);
   }
   let current = Number.parseInt(indexString, 10);
   if (text != null) {
@@ -105,13 +140,11 @@ function displayResult(state, id, indexString) {
   appendNext(state);
 }
 
-function sendCommand(command, session) {
-  const message = {
-    command: command,
-  };
-  if (session) {
-    message.session = session;
+function sendCommand(command, message) {
+  if (!message) {
+    message = {};
   }
+  message.command = command;
   browser.runtime.sendMessage(message);
 }
 
@@ -120,14 +153,19 @@ function storeSession(state) {
     content: addContent([], state.counter)
   };
   const last = state.last;
-  if (typeof(last) == "number") {
-    session.last = last;
+  const lastString = state.lastString;
+  const sessionLast = [
+    (typeof(last) == "number") ? last : null,
+    ((typeof(lastString) == "string") && lastString) || null
+  ];
+  if ((sessionLast[0] !== null) || (sessionLast[1] !== null)) {
+    session.last = sessionLast;
   }
   const variables = state.parser.pushVariables([]);
   if (variables.length) {
     session.variables = variables;
   }
-  sendCommand("storeSession", session);
+  sendCommand("storeSession", { session: session });
 }
 
 function clickListener(state, event) {
@@ -136,11 +174,20 @@ function clickListener(state, event) {
   }
   const id = event.target.id;
   switch (id) {
+    case "buttonClipboard":
+      toClipboard(state.lastString);
+      return;
+    case "buttonAllClipboard":
+      toClipboard(addContent("", state.counter));
+      return;
+    case "buttonClear":
+      clearAll(state);
+      return;
     case "buttonStoreSession":
       storeSession(state);
       return;
     case "buttonAddSession":
-      sendCommand("sendSession");
+      addSessionPrepare(state);
       return;
     case "buttonClearStored":
       sendCommand("clearSession");
@@ -186,14 +233,15 @@ function messageListener(state, message) {
   }
   switch (message.command) {
     case "initCalc":
-      initCalc(state, message.options, message.session);
+      state.storedLast = message.last;
+      initCalc(state, message.options);
       return;
     case "optionsChanges":
     case "storageOptionsChanges":
       optionsChanges(state, message.changes);
       return;
-    case "storageSessionChanges":
-      enableStorageButtons(message.session);
+    case "storedLastChanges":
+      enableStorageButtons((state.storedLast = message.last));
       return;
     case "session":
       addSession(state, message.session);
@@ -205,6 +253,8 @@ function initMain() {
   const state = {
     counter: 0,
     last: null,
+    lastString: null,
+    storedLast: null,
     base: 0,
     size: [0, 0],
     parser: new Parser()

@@ -17,8 +17,8 @@ function setHead(text) {
   head.appendChild(document.createTextNode("\xa0" + text));
 }
 
-function getLastRow() {
-  return document.getElementById("lastRow");
+function getLastCol() {
+  return document.getElementById("lastCol");
 }
 
 function getCheckboxInputMode() {
@@ -31,6 +31,14 @@ function getInputSize() {
 
 function getInputBase() {
   return document.getElementById("inputBase");
+}
+
+function getLastHead() {
+  return document.getElementById("lastHead");
+}
+
+function enableButtonClipboard() {
+  enableButton(document.getElementById("buttonClipboard"), true);
 }
 
 function enableStorageButtons(enable) {
@@ -74,14 +82,22 @@ function initLayout() {
     "announceFunctions",
     "announceConstants",
     "announceInline", "textInline",
-    "announceLast"
+    "announceLast", "textLast"
   ];
   for (let id of translateId) {
     const translation = browser.i18n.getMessage(id);
     document.getElementById(id).textContent = translation;
   }
-  const row = getLastRow();
-  appendX(row, "TD", appendTextNode, null, null, null, "#");
+  const col = getLastCol();
+  appendButton(col, "buttonClipboard", null, true);
+}
+
+function clearWindow() {
+  const top = getTop();
+  const lastHead = getLastHead();
+  while (top.lastChild != lastHead) {
+    top.removeChild(top.lastChild);
+  }
 }
 
 function appendNext(state, input, output) {
@@ -90,21 +106,19 @@ function appendNext(state, input, output) {
   const top = getTop();
   let element;
   if (isChecked(getCheckboxInputMode())) {
-    element = appendX(top, "P", appendFormInput,
-      "form=" + index, "input=" + index, state.size, input);
     const row = document.createElement("TR");
     appendX(row, "TD", appendTextNode, "textResult");
     appendX(row, "TD", appendTextNode, null, outputId, null, output);
-    appendX(top, "P", appendX, "TABLE", row);
+    element = appendX(top, "P", appendFormInput,
+      "form=" + index, "input=" + index, state.size, input);
+    appendX(top, "TABLE", row);
   } else {
     const row = document.createElement("TR");
     appendX(row, "TD", appendButton, "button=" + index, "buttonResult");
     appendX(row, "TD", appendTextNode, null, outputId, null, output);
-    const paragraph = document.createElement("P");
-    appendX(paragraph, "TABLE", row);
     element = appendX(top, "P", appendTextarea, "area=" + index,
       state.size, input);
-    top.appendChild(paragraph);
+    appendX(top, "TABLE", row);
   }
   element.focus();
 }
@@ -136,25 +150,34 @@ function addOptionLine(parent, options) {
   appendX(parent, "TABLE", row);
 }
 
-function addStorageLine(parent, session) {
+function addStorageLine(parent, disabled) {
   const row = document.createElement("TR");
-  appendX(row, "TD", appendButton, "buttonStoreSession");
-  appendX(row, "TD", appendButton, "buttonAddSession", null, !session);
-  appendX(row, "TD", appendButton, "buttonClearStored", null, !session);
+  appendX(row, "TD", appendButton, "buttonAllClipboard");
+  appendX(row, "TD", appendButton, "buttonStoreSession", null);
+  appendX(row, "TD", appendButton, "buttonAddSession", null, disabled);
+  appendX(row, "TD", appendButton, "buttonClearStored", null, disabled);
+  appendX(row, "TD", appendButton, "buttonClear");
   appendX(parent, "TABLE", row);
 }
 
-function initCalc(state, options, session) {
+function initCalc(state, options) {
   if (getCheckboxInputMode()) {  // already initialized
     return;
   }
   const optionLine = document.createElement("P");
   addOptionLine(optionLine, options);
   const storageLine = document.createElement("P");
-  addStorageLine(storageLine, session);
+  addStorageLine(storageLine, !state.storedLast);
   const top = getTop();
   top.appendChild(optionLine);
+  storageLine.id = "lastHead";
   top.appendChild(storageLine);
+  appendNext(state);
+}
+
+function clearAll(state) {
+  clearWindow();
+  state.count = 0;
   appendNext(state);
 }
 
@@ -189,9 +212,27 @@ function changeBase(state, base, forceRedisplay) {
    state.base = base;
 }
 
-function toClipboard(text) {
+function toClipboardUnsafe(text) {
   const textarea = document.createElement("TEXTAREA");
   textarea.value = (text || "");
+  const top = getTop();
+  top.appendChild(textarea);
   textarea.select();
   document.execCommand("copy");
+  top.removeChild(textarea);
+}
+
+function toClipboard(text) {
+  try {
+    toClipboardUnsafe(text);
+  }
+  catch (error) {  // tacitly ignore clipboard issues
+  }
+}
+
+function lastToClipboard(state) {
+  const lastString = state.lastString;
+  if (typeof(lastString) == "string") {
+    toClipboard(lastString);
+  }
 }

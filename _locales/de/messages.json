@@ -8,7 +8,7 @@
     "description": "Description of the extension"
   },
   "checkboxInputMode": {
-    "message": "Neue Zeilen ohne \u21AA",
+    "message": "Neue Zeilen ohne \u21AA-Knopf",
     "description": "Brief explanation for input mode checkbox"
   },
   "titleCheckboxInputMode": {
@@ -68,8 +68,20 @@
     "description": "Text explaining inline option modifiers (should be short)"
   },
   "announceLast": {
-    "message": "letztes Ergebnis",
+    "message": "Letztes Ergebnis",
     "description": "Announcement of symbol for last result"
+  },
+  "textLast": {
+    "message": "# (automatisch \u21E8 Clipboard)",
+    "description": "Announcement of symbol for last result"
+  },
+  "buttonClipboard": {
+    "message": "# \u21E8 Clipboard",
+    "description": "Button to copy last result to clipboard anew"
+  },
+  "buttonAllClipboard": {
+    "message": "Sitzung \u21E8 Clipboard",
+    "description": "Button to copy the whole session to clipboard"
   },
   "buttonStoreSession": {
     "message": "Sitzung speichern",
@@ -82,6 +94,10 @@
   "buttonClearStored": {
     "message": "Gespeicherte Sitzung löschen",
     "description": "Button to clear the stored session"
+  },
+  "buttonClear": {
+    "message": "Clear window",
+    "description": "Button to clear the current session"
   },
   "buttonResult": {
     "message": "\u21AA",

@@ -22,7 +22,7 @@ function enableButton(button, enable) {
 
 function sanitizeWidth(size) {
   const width = ((typeof(size) === "number") ? size :
-    ((size && Array.isArray(size) && size[0]) || 0));
+    ((Array.isArray(size) && size[0]) || 0));
   if (width && (width > 0)) {
     return Math.min(width, 200);
   }
@@ -30,7 +30,7 @@ function sanitizeWidth(size) {
 }
 
 function sanitizeHeight(size) {
-  const height = ((size && Array.isArray(size) && size[1]) || 0);
+  const height = ((Array.isArray(size) && size[1]) || 0);
   if (height && (height > 0)) {
     return Math.min(height, 20);
   }

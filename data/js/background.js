@@ -13,36 +13,35 @@ const state = {
   virgin: true,
   options: {},
   session: null,
+  last: null,
   haveStorage: false
 };
 
-function sendCommand(reply, changes, session) {
-  const message = {
-    command: reply
-  };
-  if (state.haveStorage) {
-    message.haveStorage = true;
+function sendCommand(command, message) {
+  if (!message) {
+    message = {
+      options: state.options
+    };
+    if (state.haveStorage) {
+      message.haveStorage = true;
+    }
+    if (state.last) {
+      message.last = state.last;
+    }
   }
-  if (changes) {
-    message.changes = changes;
-  } else if (changes !== null) {
-    message.options = state.options;
-    message.session = !!state.session;
-  } else if (session !== undefined) {
-    message.session = session;
-  }
+  message.command = command;
   browser.runtime.sendMessage(message);
 }
 
 function storageOptionsChanges(newOptions) {
   const options = state.options;
   const changes = {};
-  let send = false;
+  let changed = false;
   for (let i in options) {
     if (newOptions.hasOwnProperty(i) || !options.hasOwnProperty(i)) {
       continue;
     }
-    send = true;
+    changed = true;
     changes[i] = {};
   }
   for (let i in newOptions) {
@@ -53,21 +52,46 @@ function storageOptionsChanges(newOptions) {
     if(options.hasOwnProperty(i) && (options[i] === value)) {
       continue;
     }
-    send = true;
+    changed = true;
     changes[i] = {
         value: value
     };
   }
-  if (send) {
-    sendCommand("storageOptionsChanges", changes);
+  if (changed) {
+    state.options = newOptions;
+    sendCommand("storageOptionsChanges", { changes: changes });
   }
 }
 
+function splitLast(session) {  // returns session.last, deleting from session
+  if (!session) {
+    return null;
+  }
+  const last = session.last;
+  delete session.last;
+  if (!Array.isArray(last) || (last.length != 2)) {
+     return [ null, null ];
+  }
+  return last;
+}
+
+
 function storageSessionChanges(newSession) {
-  const send = (!state.session != !newSession);
-  state.session = newSession;
-  if (send) {
-    sendCommand("storageSessionChanges", null, !!newSession);
+  let changedLast = false;
+  const last = splitLast(newSession);
+  const oldLast = state.last;
+  if (newSession) {
+    if (!oldLast || !Object.is(oldLast[0], last[0]) ||
+      !Object.is(oldLast[1], last[1])) {
+      state.last = last;
+      changedLast = true;
+    }
+  } else if (oldLast) {
+    state.last = state.session = null;
+    changedLast = true;
+  }
+  if (changedLast) {
+    sendCommand("storedLastChanges", { last: last });
   }
 }
 
@@ -75,7 +99,7 @@ function flagSendHaveStorage() {
   const send = !state.haveStorage;
   state.haveStorage = true;
   if (send) {
-    sendCommand("haveStorageChanges", null);
+    sendCommand("haveStorageChanges", { haveStorage: true });
   }
 }
 
@@ -125,10 +149,11 @@ function clearSession() {
 function clearStorage() {
   browser.storage.local.clear().then(() => {
     if (state.haveStorage) {
+      state.haveStorage = false;
+      sendCommand("haveStorageChanges", {});
+      // in case the handler does not apply for self-invoked:
       storageOptionsChanges({});
       storageSessionChanges(null);
-      state.haveStorage = false;
-      sendCommand("haveStorageChanges", null);
     }
   });
 }
@@ -142,7 +167,9 @@ function sendInit(reply) {
     delete state.virgin;
     state.haveStorage = !!storage;
     state.options = (storage.optionsV1 || {});
-    state.session = (storage.sessionV1 || null);
+    const session = (storage.sessionV1 || null);
+    state.last = splitLast(session);
+    state.session = session;
     sendCommand(reply);
   }, () => {
     sendCommand(reply);
@@ -184,7 +211,7 @@ function messageListener(message) {
       sendInit("initOptions");
       return;
     case "sendSession":
-      sendCommand("session", null, state.session);
+      sendCommand("session", { session: state.session });
       return;
     case "storeSession":
       storeSession(message.session);

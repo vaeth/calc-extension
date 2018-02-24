@@ -119,6 +119,9 @@ class Parser {
   }
 
   setVariable(name, value) {  // return true in case of success
+    if (typeof(name) != "string") {  // sanity check
+      return false;
+    }
     {  // Make sure to not re-register non-variable tokens (like sin)
       const previous = this.prefix.get(name);
       if (previous && !previous.isVariable) {
@@ -468,8 +471,9 @@ function calculate(state, input) {
   const value = state.last = result.value;
   const base = state.base;
   if (isBase(base)) {
+    const resultString = state.lastString = value.toString(base);
     return browser.i18n.getMessage("messageResult",
-      [value.toString(base), String(base)]);
+      [resultString, String(base)]);
   }
-  return String(value);
+  return ((state.lastString = String(value)));
 }

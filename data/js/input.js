@@ -13,7 +13,7 @@ function numberOrZero(text) {
     return 0;
   }
   const result = Number.parseInt(plain, 10);
-  if (result === NaN) {
+  if (isNaN(result)) {
     return 0;
   }
   return result;
@@ -36,7 +36,7 @@ function isDefaultBase(base) {
 }
 
 function isDefaultSize(size) {
-  if (!size || !Array.isArray(size)) {
+  if (!Array.isArray(size)) {
     return true;
   }
   return (!isPositive(size[0]) && !isPositive(size[1]));
@@ -47,7 +47,7 @@ function equalSize(sizeA, sizeB) {
 }
 
 function sanitizeSize(size) {
-  if (!size || !Array.isArray(size)) {
+  if (!Array.isArray(size)) {
     return [0, 0];
   }
   if (!isPositive(size[0])) {
@@ -65,7 +65,7 @@ function getSize(text) {
 }
 
 function getSizeText(size) {
-  if (!size || !Array.isArray(size)) {
+  if (!Array.isArray(size)) {
     return "0:0";
   }
   return getPositiveText(size[0], "0") + ":" + getPositiveText(size[1], "0");

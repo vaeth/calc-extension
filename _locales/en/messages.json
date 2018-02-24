@@ -71,6 +71,18 @@
     "message": "Last result",
     "description": "Announcement of symbol for last result"
   },
+  "textLast": {
+    "message": "# (automatically \u21E8 Clipboard)",
+    "description": "Announcement of symbol for last result"
+  },
+  "buttonClipboard": {
+    "message": "# \u21E8 Clipboard",
+    "description": "Button to copy last result to clipboard anew"
+  },
+  "buttonAllClipboard": {
+    "message": "Session \u21E8 Clipboard",
+    "description": "Button to copy the whole session to clipboard"
+  },
   "buttonStoreSession": {
     "message": "Store session",
     "description": "Button to store the session"
@@ -82,6 +94,10 @@
   "buttonClearStored": {
     "message": "Clear stored session",
     "description": "Button to clear the stored session"
+  },
+  "buttonClear": {
+    "message": "Clear window",
+    "description": "Button to clear the current session"
   },
   "buttonResult": {
     "message": "\u21AA",

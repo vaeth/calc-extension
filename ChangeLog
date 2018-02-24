@@ -7,9 +7,12 @@
 	  cbrt trunc sign fround clz32
 	- Add new constant EPSILON
 	- Add buttons to store session locally (and to add such a storage)
+	- Copy result automatically to the clipboard
+	- Add button to copy the whole session to the clipboard
+	- Add button to clear the window
 	- Make input field width and output base part of options
-	- Introduce a button to clear storage
 	- Add local options in page head
+	- Introduce buttons to clear storage and to clear a stored session
 	- An empty result now removes the current line
 	- Add new inline tokens ! and ? to set/unset non-button mode
 	- Let enter key work also with unchanged input fields (non-button mode)
@@ -17,7 +20,7 @@
 	- Fix activation of next input in non-button mode, see
 	  https://github.com/vaeth/calc-extension/issues/2
 	- Improve description of options
-	- Bugfix: variable "number" can be used now
+	- Bugfix: variable "number" can be used now (bug in token handling)
 
 *calc-1.0:
 	Martin Väth <martin at mvath.de>:

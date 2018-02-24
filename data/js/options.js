@@ -80,7 +80,7 @@ function initPage(options, haveStorage) {
   appendX(table, "TR", appendButtonTextCol, "buttonClearStorage", null,
     !haveStorage, "textClearStorage");
   const top = getTop();
-  appendX(top, "P", table);
+  top.appendChild(table);
   appendX(top, "P", appendLink, top);
 }
 

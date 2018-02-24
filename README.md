@@ -9,8 +9,12 @@ A WebExtension: Calculate values of mathematical expressions
 After installing __calc-extension__, it can be used as follows.
 
 Click the __calc-extension__ symbol `1+2` or the link on the options page.
-Then a page opens where you can enter a formula which will be calculated
-when you press the solver button (`=`).
+Then a page opens where you can enter a formula (see below) which will be
+calculated when you press the solver button (`↪`).
+The result is shown and copied to the clipboard.
+Then you can enter the next formula.
+The page also contains buttons to store/restore sessions, to copy a
+whole session to the clipboard, etc.
 
 A simple formula is a usual mathematical expression which consists of numbers,
 the usual operators `+` `-` `*` `/` and braces `(` `)`.
