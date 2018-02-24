@@ -71,6 +71,18 @@
     "message": "letztes Ergebnis",
     "description": "Announcement of symbol for last result"
   },
+  "buttonStoreSession": {
+    "message": "Sitzung speichern",
+    "description": "Button to store the session"
+  },
+  "buttonAddSession": {
+    "message": "Gespeicherte Sitzung hinzufügen",
+    "description": "Button to add the stored session"
+  },
+  "buttonClearStored": {
+    "message": "Gespeicherte Sitzung löschen",
+    "description": "Button to clear the stored session"
+  },
   "buttonResult": {
     "message": "\u21AA",
     "description": "Result button"

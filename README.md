@@ -35,30 +35,46 @@ There are further operators which can be used in expressions:
 There are also some mathematical functions available.
 Note that the arguments of these functions have to be in braces.
 
+- `log10(x)` the base 10 logarithm of x
+- `log2(x)` the base 2 logarithm of x
 - `log(x)` the natural logarithm (base E) of x
+- `log1p(x)` = log(1+x)
 - `exp(x)` the exponential function (base E) of x
+- `expm1(x)` = exp(x) - 1
 - `sin(x)` the sine of x (x is in radians)
 - `cos(x)` the cosine of x (x is in radians)
-- `tan(x)` the tangent of an angle
-- `acos(x)` the arccosine of x, in radians
+- `tan(x)` the tangent of x (x is in radians)
 - `asin(x)` the arcsine of x, in radians
+- `acos(x)` the arccosine of x, in radians
 - `atan(x)` the arctangent of x, in radians
-- `sqrt(x)` the square root of x
+- `sinh(x)` the hyperbolic sine of x
+- `cosh(x)` the hyperbolic cosine of x
+- `tanh(x)` the hyperbolic tangent of x
+- `asinh(x)` the hyperbolic arccosine of x
+- `acosh(x)` the hyperbolic arccosine of x
+- `atanh(x)` the hyperbolic arctangent of x
+- `sqrt(x)` the square root of x, that is `x ** (1/2)`
+- `cbrt(x)` the cube root of x, that is `x ** (1/3)`
 - `abs(x)` the absolute value of x
+- `sign(x)` the signum of x (1, 0, or -1)
 - `floor(x)` the value of x rounded down to its nearest integer
 - `ceil(x)` the value of x rounded up to its nearest integer
+- `trunc(x)` the value of x rounded to the integer of smaller absolute value
 - `round(x)` the value of x rounded to its nearest integer
+- `fround(x)` the value of x rounded to the nearest 32 bit float
+- `clz32(x)` the number of leading zero bits in a 32 bit representation
 
 Furthermore, there are constants available:
 
 - `E` Euler's number exp(1)
-- `PI` the circle number
-- `SQRT2` the square root of 2
-- `SQRT1_2` the square root of 1/2
-- `LN2` the natural logarithm of 2
-- `LN10` the natural logarithm of 10
-- `LOG2E` base 2 logarithm of E
-- `LOG10E` base 10 logarithm of E
+- `PI` the circle number acos(-1)
+- `SQRT2` sqrt(2)
+- `SQRT1_2` sqrt(1/2)
+- `LN2` log(2)
+- `LN10` log(10)
+- `LOG2E` log2(E)
+- `LOG10E` log10(E)
+- `EPSILON` the difference from 1 to the smallest larger floating point number
 
 Finally, it is possible to define variables with e.g. `a=...` and to use them.
 Variable names must only consist of English characters, numbers, or `_`.
@@ -96,17 +112,10 @@ javascript interpreter.
 - `0xF | 0100 "16"`
 - ↪ 4f (in base 16)
 
-## Option
-
-There is an option to replace the `=` button by pressing return or
-leaving the input field. This is more convenient but less intuitive.
-A further disadvantage is that it is not possible to break an expression
-over several lines and that the size of the field cannot be adjusted
-with the mouse.
-
 ## Permissions
 
-The extension requires storage permissions in order to set the options locally.
+The extension requires storage permissions in order to store the options
+(and possibly a session) locally.
 
 ## Languages
 

@@ -10,11 +10,13 @@
 "use strict";
 
 const state = {
-  options: null,
+  virgin: true,
+  options: {},
+  session: null,
   haveStorage: false
 };
 
-function sendOptions(reply, changes) {
+function sendCommand(reply, changes, session) {
   const message = {
     command: reply
   };
@@ -24,12 +26,15 @@ function sendOptions(reply, changes) {
   if (changes) {
     message.changes = changes;
   } else if (changes !== null) {
-    message.options = (state.options || {});
+    message.options = state.options;
+    message.session = !!state.session;
+  } else if (session !== undefined) {
+    message.session = session;
   }
   browser.runtime.sendMessage(message);
 }
 
-function storageOptionChanges(newOptions) {
+function storageOptionsChanges(newOptions) {
   const options = state.options;
   const changes = {};
   let send = false;
@@ -54,68 +59,117 @@ function storageOptionChanges(newOptions) {
     };
   }
   if (send) {
-    sendOptions("optionChanges", changes);
+    sendCommand("storageOptionsChanges", changes);
   }
 }
 
-function storageListener(storageChanges) {
+function storageSessionChanges(newSession) {
+  const send = (!state.session != !newSession);
+  state.session = newSession;
+  if (send) {
+    sendCommand("storageSessionChanges", null, !!newSession);
+  }
+}
+
+function flagSendHaveStorage() {
+  const send = !state.haveStorage;
+  state.haveStorage = true;
+  if (send) {
+    sendCommand("haveStorageChanges", null);
+  }
+}
+
+function storageListener(changes) {
   if (!state.haveStorage) {
-    for (let i in storageChanges) {
-      if (storageChanges.hasOwnProperty(i) &&
-        storageChanges[i].hasOwnProperty("newValue")) {
-        state.haveStorage = true;
-        sendOptions("haveStorageChanges", null);
+    for (let i in changes) {
+      if (changes.hasOwnProperty(i) &&
+        changes[i].hasOwnProperty("newValue")) {
+        flagSendHaveStorage();
         break;
       }
     }
   }
-  if (state.options && storageChanges.optionsV1) {
-    storageOptionChanges(storageChanges.optionsV1.newValue || {});
+  if (changes.optionsV1) {
+    storageOptionsChanges(changes.optionsV1.newValue || {});
+  }
+  if (changes.sessionV1) {
+    storageSessionChanges(changes.sessionV1.newValue || null);
   }
 }
 
+function storeSession(session) {
+  browser.storage.local.set({
+    sessionV1: session
+  }).then(() => {  // in case the handler does not apply for self-invoked
+    flagSendHaveStorage();
+    storageSessionChanges(session);
+  });
+}
+
+function storeOptions(options) {
+  browser.storage.local.set({
+    optionsV1: options
+  }).then(() => {  // in case the handler does not apply for self-invoked
+    flagSendHaveStorage();
+    storageOptionsChanges(options);
+  });
+}
+
+function clearSession() {
+  browser.storage.local.remove("sessionV1").then(() => {
+    // in case the handler does not apply for self-invoked
+    storageSessionChanges(null);
+  });
+}
+
 function clearStorage() {
-  browser.storage.local.clear(() => {
+  browser.storage.local.clear().then(() => {
     if (state.haveStorage) {
-      delete state.haveStorage;
-      sendOptions("haveStorageChanges", null);
+      storageOptionsChanges({});
+      storageSessionChanges(null);
+      state.haveStorage = false;
+      sendCommand("haveStorageChanges", null);
     }
   });
 }
 
 function sendInit(reply) {
-  if (state.options) {
-    sendOptions(reply);
+  if (!state.virgin) {
+    sendCommand(reply);
     return;
   }
   browser.storage.local.get().then((storage) => {
+    delete state.virgin;
     state.haveStorage = !!storage;
     state.options = (storage.optionsV1 || {});
-    sendOptions(reply);
+    state.session = (storage.sessionV1 || null);
+    sendCommand(reply);
   }, () => {
-    sendOptions(reply);
+    sendCommand(reply);
   });
 }
 
-function optionChanges(changes) {
-  if (!state.options) {
-    state.options = {};
-  }
-  const options = state.options;
+function optionsChanges(changes) {
+  const options = Object.assign({}, state.options);
+  let store = false;
   for (let i in changes) {
     if (!changes.hasOwnProperty(i)) {
       continue;
     }
     const change = changes[i];
     if (change.hasOwnProperty("value")) {
-      options[i] = change.value;
-    } else {
-      delete options[i];
+      if (!options.hasOwnProperty(i) || options[i] !== change.value) {
+        store = true;
+        options[i] = change.value;
+      }
+    } else if (options.hasOwnProperty(i)) {
+        store = true;
+        delete options[i];
     }
   }
-  browser.storage.local.set({
-    optionsV1: options
-  });
+  if (store) {
+    storeOptions(options);
+  }
 }
 
 function messageListener(message) {
@@ -129,8 +183,17 @@ function messageListener(message) {
     case "sendInitOptions":
       sendInit("initOptions");
       return;
-    case "optionChanges":
-      optionChanges(message.changes);
+    case "sendSession":
+      sendCommand("session", null, state.session);
+      return;
+    case "storeSession":
+      storeSession(message.session);
+      return;
+    case "optionsChanges":
+      optionsChanges(message.changes);
+      return;
+    case "clearSession":
+      clearSession();
       return;
     case "clearStorage":
       clearStorage();

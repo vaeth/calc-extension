@@ -81,9 +81,15 @@ class ParserState {
 // This is loosely inspired by https://github.com/munificent/bantam
 
 class Parser {
-  registerPrefix(name, action) {
-    this.prefix.set(name, action);
-    return action;
+  registerPrefix(name, action, isVariable) {
+    const prefix = {
+      action: action
+    };
+    if (isVariable) {
+      prefix.isVariable = true;
+    }
+    this.prefix.set(name, prefix);
+    return prefix;
   }
 
   registerInfix(name, precedence, action) {
@@ -106,16 +112,52 @@ class Parser {
       return null;
     }
     const name = token.text;
+    return this.registerPrefix(name, () => ({
+      type: "variable",
+      name: name
+    }), true);
+  }
+
+  setVariable(name, value) {  // return true in case of success
+    {  // Make sure to not re-register non-variable tokens (like sin)
+      const previous = this.prefix.get(name);
+      if (previous && !previous.isVariable) {
+        return false;
+      }
+    }
     const returnValue = {
       type: "variable",
       name: name
     };
-    const value = this.variables.get(name);
-    if (typeof(value) == "numeric") {  // import externally stored value
-      returnValue.numeric = true,
-      returnValue.value = value
+    if (typeof(value) == "number") {
+      returnValue.numeric = true;
+      returnValue.value = value;
     }
-    return this.registerPrefix(name, () => returnValue);
+    this.registerPrefix(name, () => returnValue, true);
+    return true;
+  }
+
+  setVariables(variables) {  // return array of failures
+    const failures = [];
+    for (let [name, value] of variables) {
+      if (!this.setVariable(name, value)) {
+        failures.push(i);
+      }
+    }
+    return failures;
+  }
+
+  pushVariables(variables) {
+    for (let [name, prefix] of this.prefix) {
+      if (!prefix.isVariable) {
+        continue;
+      }
+      const returnValue = prefix.action();
+      if (returnValue.numeric) {  // push only variables with a numerical value
+        variables.push([name, returnValue.value]);
+      }
+    }
+    return variables;
   }
 
   // Convenience wrappers for registerPrefix and registerInfix.
@@ -208,10 +250,8 @@ class Parser {
         throw errorNonNumeric(right);
       }
       left.numeric = true;
-      const name = left.name;
-      const value = left.value = right.value;
-      this.registerPrefix(name, () => left);  // assign for future use
-      this.variables.set(name, value); //  set value for external storage
+      left.value = right.value;  // the assignments return value
+      this.registerPrefix(left.name, () => left, true);  // set variable
       return left;
     });
   }
@@ -235,8 +275,7 @@ class Parser {
     });
   }
 
-  constructor(variables) {
-    this.variables = (variables || new Map());
+  constructor() {
     this.infix = new Map();
     this.prefix = new Map();
 
@@ -248,21 +287,36 @@ class Parser {
     this.registerConstant("LN10", Math.LN10);
     this.registerConstant("LOG2E", Math.LOG2E);
     this.registerConstant("LOG10E", Math.LOG10E);
-    this.registerNumber("number");
+    this.registerConstant("EPSILON", Math.EPISOLON);
+    this.registerNumber("#number");
     this.registerLast("#");
-    this.registerFunction("log", Math.log);
+    this.registerFunction("log10", Math.log10);
+    this.registerFunction("log2", Math.log2);
+    this.registerFunction("log1p", Math.log1p);
     this.registerFunction("exp", Math.exp);
+    this.registerFunction("expm1", Math.expm1);
     this.registerFunction("sin", Math.sin);
     this.registerFunction("cos", Math.cos);
     this.registerFunction("tan", Math.tan);
     this.registerFunction("asin", Math.asin);
     this.registerFunction("acos", Math.acos);
     this.registerFunction("atan", Math.atan);
+    this.registerFunction("sinh", Math.sinh);
+    this.registerFunction("cosh", Math.cosh);
+    this.registerFunction("tanh", Math.tanh);
+    this.registerFunction("asinh", Math.asinh);
+    this.registerFunction("acosh", Math.acosh);
+    this.registerFunction("atanh", Math.atanh);
     this.registerFunction("sqrt", Math.sqrt);
+    this.registerFunction("cbrt", Math.cbrt);
     this.registerFunction("abs", Math.abs);
+    this.registerFunction("sign", Math.sign);
     this.registerFunction("floor", Math.floor);
     this.registerFunction("ceil", Math.ceil);
     this.registerFunction("round", Math.round);
+    this.registerFunction("trunc", Math.trunc);
+    this.registerFunction("fround", Math.fround);
+    this.registerFunction("clz32", Math.clz32);
     this.registerAssign("=", 3, true);
     this.registerBinary("|", 7, (a, b) => (a | b));
     this.registerBinary("^", 8, (a, b) => (a ^ b));
@@ -287,12 +341,12 @@ function lexToken(input) {
     if (first === "!") {
       token.text = first;
       token.value = true;
-      token.type = "inline";
+      token.type = "#inline";
       token.inline = "inputMode";
     } else if (first === "?") {
       token.text = first;
       token.value = false;
-      token.type = "inline";
+      token.type = "#inline";
       token.inline = "inputMode";
     } else if (first === "'") {
       const quote = /^\'([\s\d]*[^\s\d]?[\s\d]*)\'/.exec(input);
@@ -301,7 +355,7 @@ function lexToken(input) {
       }
       token.text = quote[0];
       token.value = getSize(quote[1]);
-      token.type = "inline";
+      token.type = "#inline";
       token.inline = "size";
     } else if (first === '"') {
       const quote = /^\"([\s\d]*)\"/.exec(input);
@@ -310,7 +364,7 @@ function lexToken(input) {
       }
       token.text = quote[0];
       token.value = getBase(quote[1]);
-      token.type = "inline";
+      token.type = "#inline";
       token.inline = "base";
     } else if (input.startsWith("**")) {
       token.text = token.type = "**";
@@ -330,7 +384,7 @@ function lexToken(input) {
     }
     return token;
   }
-  token.type = "number";
+  token.type = "#number";
   if (first == "0") {
     const hex = /^0[xX][0-9a-fA-F]+/.exec(input);
     if (hex) {
@@ -354,7 +408,7 @@ function getTokenArray(state, input) {
   const tokens = [];
   while ((input = input.replace(/^[;\s]+/, ""))) {
     const token = lexToken(input);
-    if (token.type === "inline") {
+    if (token.type === "#inline") {
       handleInlineToken(state, token);
     } else {
       tokens.push(token);
@@ -380,7 +434,7 @@ function calculate(state, input) {
       if (!prefix) {  // token is neither prefix nor new variable name
         throw errorUnexpected(token.text);
       }
-      parserState.left = prefix(parserState);
+      parserState.left = prefix.action(parserState);
     }
     for (;;) {  // while (precedence - 0.5*right  < getToken().precedence)
       const token = parserState.token = parserState.getToken();

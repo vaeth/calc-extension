@@ -4,6 +4,22 @@
 
 "use strict";
 
+function isChecked(checkbox) {
+    return !!(checkbox && checkbox.checked);
+}
+
+function setChecked(checkbox, checked) {
+  if (checkbox && (!checkbox.checked != !checked)) {
+    checkboxInputMode.checked = !!checked;
+  }
+}
+
+function enableButton(button, enable) {
+  if (button && (!button.disabled == !enable)) {
+    button.disabled = !enable;
+  }
+}
+
 function sanitizeWidth(size) {
   const width = ((typeof(size) === "number") ? size :
     ((size && Array.isArray(size) && size[0]) || 0));
@@ -34,11 +50,14 @@ function appendCheckbox(parent, id, checked, titleId) {
   parent.appendChild(checkbox);
 }
 
-function appendTextarea(parent, id, size) {
+function appendTextarea(parent, id, size, value) {
   const textarea = document.createElement("TEXTAREA");
   textarea.cols = sanitizeWidth(size);
   textarea.rows = sanitizeHeight(size);
   textarea.id = id;
+  if (value) {
+    textarea.value = value;
+  }
   parent.appendChild(textarea);
   return textarea;
 }
@@ -74,12 +93,12 @@ function appendButton(parent, id, textId, disabled) {
   if (disabled) {
     button.disabled = true;
   }
-  button.textContent = browser.i18n.getMessage(textId);
+  button.textContent = browser.i18n.getMessage(textId || id);
   parent.appendChild(button);
   return button;
 }
 
-function appendTextNode(parent, textId, id, titleId) {
+function appendTextNode(parent, textId, id, titleId, text) {
   if (id) {
     parent.id = id;
   }
@@ -87,7 +106,7 @@ function appendTextNode(parent, textId, id, titleId) {
     parent.title = browser.i18n.getMessage(titleId);
   }
   const textNode = document.createTextNode(textId ?
-    browser.i18n.getMessage(textId) : "");
+    browser.i18n.getMessage(textId) : (text || ""));
   parent.appendChild(textNode);
   return textNode;
 }

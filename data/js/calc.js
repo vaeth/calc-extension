@@ -4,7 +4,65 @@
 
 "use strict";
 
-function optionChanges(state, changes) {
+function getInput(indexString) {
+  return document.getElementById("area=" + indexString) ||
+      document.getElementById("input=" + indexString);
+}
+
+function addContent(seed, counter) {
+  let textResult;
+  if (!Array.isArray(seed)) {
+    textResult = browser.i18n.getMessage("textResult");
+  }
+  for (let i = 0; i <= counter; ++i) {
+    const indexString = String(i);
+    const output = document.getElementById("output=" + indexString);
+    if (!output) {
+      continue;
+    }
+    const inputValue = getInput(indexString).value;
+    if (!inputValue) {
+      continue;
+    }
+    if (Array.isArray(seed)) {
+      seed.push([inputValue, output.textContent]);
+    } else {
+      seed += inputValue;
+      seed += "\n";
+      seed += textResult;
+      seed += output.textContent;
+      seed += "\n";
+    }
+  }
+  return seed;
+}
+
+function addSession(state, session) {
+  if (!session) {
+    return;
+  }
+  const last = session.last;
+  if (typeof(last) == "number") {
+    state.last = last;
+  }
+  const variables = session.variables;
+  if (variables && Array.isArray(variables)) {
+    state.parser.setVariables(variables);
+  }
+  const content = session.content;
+  if (content && Array.isArray(content)) {
+    const indexString = String(state.counter);  // end of current session
+    for (let [input, output] of content) {
+      appendNext(state, input, output);
+    }
+    const input = getInput(indexString);
+    if (input) {  // focus end of original session
+      input.focus();
+    }
+  }
+}
+
+function optionsChanges(state, changes) {
   if (changes.inputMode) {
     setCheckboxInputMode(changes.inputMode.value);
   }
@@ -16,7 +74,7 @@ function optionChanges(state, changes) {
   }
 }
 
-function displayResult(state, id, index) {
+function displayResult(state, id, indexString) {
   const input = document.getElementById(id).value;
   let text;
   try {
@@ -25,11 +83,11 @@ function displayResult(state, id, index) {
   catch (error) {
     text = browser.i18n.getMessage("messageError", error);
   }
-  let current = Number.parseInt(index, 10);
+  let current = Number.parseInt(indexString, 10);
   if (text != null) {
-    changeText("output=" + index, text);
+    changeText("output=" + indexString, text);
   } else {
-    removeLine("output=" + index);
+    removeLine("output=" + indexString);
     removeLine(id);
     if (current == state.counter) {  // We removed last: next becomes counter
       state.counter = --current;
@@ -38,8 +96,7 @@ function displayResult(state, id, index) {
   while (current < state.counter) {
     ++current;
     const nextIndex = String(current);
-    const nextNode = (document.getElementById("area=" + nextIndex) ||
-      document.getElementById("input=" + nextIndex));
+    const nextNode = getInput(nextIndex);
     if (nextNode) {
       nextNode.focus();
       return;
@@ -48,16 +105,52 @@ function displayResult(state, id, index) {
   appendNext(state);
 }
 
+function sendCommand(command, session) {
+  const message = {
+    command: command,
+  };
+  if (session) {
+    message.session = session;
+  }
+  browser.runtime.sendMessage(message);
+}
+
+function storeSession(state) {
+  const session = {
+    content: addContent([], state.counter)
+  };
+  const last = state.last;
+  if (typeof(last) == "number") {
+    session.last = last;
+  }
+  const variables = state.parser.pushVariables([]);
+  if (variables.length) {
+    session.variables = variables;
+  }
+  sendCommand("storeSession", session);
+}
+
 function clickListener(state, event) {
   if (!event.target || !event.target.id) {
     return;
   }
   const id = event.target.id;
+  switch (id) {
+    case "buttonStoreSession":
+      storeSession(state);
+      return;
+    case "buttonAddSession":
+      sendCommand("sendSession");
+      return;
+    case "buttonClearStored":
+      sendCommand("clearSession");
+      return;
+  }
   if (!id.startsWith("button=")) {
     return;
   }
-  const index = id.substr(7);  // 7 = "button=".length
-  displayResult(state, "area=" + index, index);
+  const indexString = id.substr(7);  // 7 = "button=".length
+  displayResult(state, "area=" + indexString, indexString);
 }
 
 function submitListener(state, event) {
@@ -69,8 +162,8 @@ function submitListener(state, event) {
     return;
   }
   event.preventDefault();
-  const index = id.substr(5);  // 5 = "form=".length
-  displayResult(state, "input=" + index, index);
+  const indexString = id.substr(5);  // 5 = "form=".length
+  displayResult(state, "input=" + indexString, indexString);
 }
 
 function changeListener(state, event) {
@@ -79,10 +172,10 @@ function changeListener(state, event) {
   }
   switch (event.target.id) {
     case "inputSize":
-      changeSize(state, valueInputSize(), true);
+      changeSize(state, getSize(getInputSize().value), true);
       return;
     case "inputBase":
-      changeBase(state, valueInputBase(), true);
+      changeBase(state, getBase(getInputBase().value), true);
       return;
   }
 }
@@ -93,18 +186,19 @@ function messageListener(state, message) {
   }
   switch (message.command) {
     case "initCalc":
-      initCalc(state, message.options);
+      initCalc(state, message.options, message.session);
       return;
-    case "optionChanges":
-      optionChanges(state, message.changes);
+    case "optionsChanges":
+    case "storageOptionsChanges":
+      optionsChanges(state, message.changes);
+      return;
+    case "storageSessionChanges":
+      enableStorageButtons(message.session);
+      return;
+    case "session":
+      addSession(state, message.session);
       return;
   }
-}
-
-function sendCommand(command) {
-  browser.runtime.sendMessage({
-    command: command
-  });
 }
 
 function initMain() {

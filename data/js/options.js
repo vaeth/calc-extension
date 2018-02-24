@@ -2,6 +2,8 @@
  * This project is under the GNU public license 2.0
 */
 
+"use strict"
+
 function getTop() {
   return document.getElementById("top");
 }
@@ -31,16 +33,8 @@ function getButtonClearStorage() {
   return document.getElementById("buttonClearStorage");
 }
 
-function isCheckedInputMode() {
-  const checkboxInputMode = getCheckboxInputMode();
-  return !!(checkboxInputMode && checkboxInputMode.checked);
-}
-
 function setCheckboxInputMode(checked) {
-  const checkboxInputMode = getCheckboxInputMode();
-  if (checkboxInputMode && (checkboxInputMode.checked != !!checked)) {
-    checkboxInputMode.checked = !!checked;
-  }
+  setChecked(getCheckboxInputMode(), checked);
 }
 
 function setInputSize(size) {
@@ -54,10 +48,6 @@ function setInputSize(size) {
   }
 }
 
-function valueInputSize() {
-  return getSize(getInputSize().value);
-}
-
 function setInputBase(base) {
   const inputBase = getInputBase();
   if (!inputBase) {
@@ -66,18 +56,6 @@ function setInputBase(base) {
   const text = getBaseText(base);
   if (inputBase.value !== text) {
     inputBase.value = text;
-  }
-}
-
-function valueInputBase() {
-  return getBase(getInputBase().value);
-}
-
-function enableButtonClearStorage(enable) {
-  const buttonClearStorage = getButtonClearStorage();
-  const disabled = (enable ? false : true);
-  if (buttonClearStorage && (!!buttonClearStorage.disabled != disabled)) {
-    buttonClearStorage.disabled = disabled;
   }
 }
 
@@ -94,13 +72,13 @@ function appendLink(parent) {
 function initPage(options, haveStorage) {
   const table = document.createElement("TABLE");
   appendX(table, "TR", appendCheckboxCol, "checkboxInputMode",
-    options.inputMode, "titleInputMode");
+    options.inputMode, "titleCheckboxInputMode");
   appendX(table, "TR", appendInputCol, "inputSize", 3,
     getSizeText(options.size), "titleInputSize");
   appendX(table, "TR", appendInputCol, "inputBase", 1,
     getBaseText(options.base), "titleInputBase");
-  appendX(table, "TR", appendButtonTextCol, "buttonClearStorage",
-    "buttonClearStorage", !haveStorage, "textClearStorage");
+  appendX(table, "TR", appendButtonTextCol, "buttonClearStorage", null,
+    !haveStorage, "textClearStorage");
   const top = getTop();
   appendX(top, "P", table);
   appendX(top, "P", appendLink, top);
@@ -129,7 +107,7 @@ function initOptions(state, options, haveStorage) {
   initPage(stateOptions, haveStorage);
 }
 
-function optionChanges(state, changes) {
+function optionsChanges(state, changes) {
   if (!state.options) {
     state.options = {};
   }
@@ -180,11 +158,11 @@ function sendCommand(command, changes) {
 }
 
 function sendChanges(changes) {
-  sendCommand("optionChanges", changes);
+  sendCommand("optionsChanges", changes);
 }
 
 function changeInputMode(options) {
-  const value = !!isCheckedInputMode();
+  const value = isChecked(getCheckboxInputMode());
   if (value == !!options.inputMode) {
     return;
   }
@@ -201,7 +179,7 @@ function changeInputMode(options) {
 }
 
 function changeSize(options) {
-  const size = valueInputSize();
+  const size = getSize(getInputSize().value);
   if (!equalSize(sanitizeSize(options.size), size)) {
     const sizeChange = {};
     const changes = {
@@ -218,7 +196,7 @@ function changeSize(options) {
 }
 
 function changeBase(options) {
-  const base = valueInputBase();
+  const base = getBase(getInputBase().value);
   if (sanitizeBase(options.base) != base) {
     const baseChange = {};
     const changes = {
@@ -270,11 +248,12 @@ function messageListener(state, message) {
     case "initOptions":
       initOptions(state, message.options, message.haveStorage);
       return;
-    case "optionChanges":
-      optionChanges(state, message.changes);
+    case "optionsChanges":
+    case "storageOptionsChanges":
+      optionsChanges(state, message.changes);
       return;
     case "haveStorageChanges":
-      enableButtonClearStorage(message.haveStorage);
+      enableButton(getButtonClearStorage(), message.haveStorage);
       return;
   }
 }

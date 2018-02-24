@@ -17,6 +17,10 @@ function setHead(text) {
   head.appendChild(document.createTextNode("\xa0" + text));
 }
 
+function getLastRow() {
+  return document.getElementById("lastRow");
+}
+
 function getCheckboxInputMode() {
   return document.getElementById("checkboxInputMode");
 }
@@ -29,16 +33,13 @@ function getInputBase() {
   return document.getElementById("inputBase");
 }
 
-function isCheckedInputMode() {
-  const checkboxInputMode = getCheckboxInputMode();
-  return !!(checkboxInputMode && checkboxInputMode.checked);
+function enableStorageButtons(enable) {
+  enableButton(document.getElementById("buttonAddSession"), enable);
+  enableButton(document.getElementById("buttonClearStored"), enable);
 }
 
 function setCheckboxInputMode(checked) {
-  const checkboxInputMode = getCheckboxInputMode();
-  if (checkboxInputMode && (checkboxInputMode.checked != !!checked)) {
-    checkboxInputMode.checked = !!checked;
-  }
+  setChecked(getCheckboxInputMode(), checked);
 }
 
 function setInputSize(size) {
@@ -52,10 +53,6 @@ function setInputSize(size) {
   }
 }
 
-function valueInputSize() {
-  return getSize(getInputSize().value);
-}
-
 function setInputBase(base) {
   const inputBase = getInputBase();
   if (!inputBase) {
@@ -65,10 +62,6 @@ function setInputBase(base) {
   if (inputBase.value !== text) {
     inputBase.value = text;
   }
-}
-
-function valueInputBase() {
-  return getBase(getInputBase().value);
 }
 
 function initLayout() {
@@ -87,27 +80,30 @@ function initLayout() {
     const translation = browser.i18n.getMessage(id);
     document.getElementById(id).textContent = translation;
   }
+  const row = getLastRow();
+  appendX(row, "TD", appendTextNode, null, null, null, "#");
 }
 
-function appendNext(state) {
+function appendNext(state, input, output) {
   const index = String(++state.counter);
   const outputId = "output=" + index;
   const top = getTop();
   let element;
-  if (isCheckedInputMode()) {
+  if (isChecked(getCheckboxInputMode())) {
     element = appendX(top, "P", appendFormInput,
-      "form=" + index, "input=" + index, state.size);
+      "form=" + index, "input=" + index, state.size, input);
     const row = document.createElement("TR");
     appendX(row, "TD", appendTextNode, "textResult");
-    appendX(row, "TD", appendTextNode, null, outputId);
+    appendX(row, "TD", appendTextNode, null, outputId, null, output);
     appendX(top, "P", appendX, "TABLE", row);
   } else {
     const row = document.createElement("TR");
     appendX(row, "TD", appendButton, "button=" + index, "buttonResult");
-    appendX(row, "TD", appendTextNode, null, outputId);
+    appendX(row, "TD", appendTextNode, null, outputId, null, output);
     const paragraph = document.createElement("P");
     appendX(paragraph, "TABLE", row);
-    element = appendX(top, "P", appendTextarea, "area=" + index, state.size);
+    element = appendX(top, "P", appendTextarea, "area=" + index,
+      state.size, input);
     top.appendChild(paragraph);
   }
   element.focus();
@@ -129,10 +125,7 @@ function removeLine(id) {
   topNode.removeChild(node);
 }
 
-function initCalc(state, options) {
-  if (getCheckboxInputMode()) {  // already initialized
-    return;
-  }
+function addOptionLine(parent, options) {
   const row = document.createElement("TR");
   appendCheckboxCol(row, "checkboxInputMode", options.inputMode,
     "checkboxInputMode", "titleCheckboxInputMode");
@@ -140,10 +133,28 @@ function initCalc(state, options) {
     "inputSize", "titleInputSize");
   appendInputCol(row, "inputBase", 1, getBaseText(options.base),
     "inputBase", "titleinputBase");
-  const table = document.createElement("TABLE");
-  table.appendChild(row);
+  appendX(parent, "TABLE", row);
+}
+
+function addStorageLine(parent, session) {
+  const row = document.createElement("TR");
+  appendX(row, "TD", appendButton, "buttonStoreSession");
+  appendX(row, "TD", appendButton, "buttonAddSession", null, !session);
+  appendX(row, "TD", appendButton, "buttonClearStored", null, !session);
+  appendX(parent, "TABLE", row);
+}
+
+function initCalc(state, options, session) {
+  if (getCheckboxInputMode()) {  // already initialized
+    return;
+  }
+  const optionLine = document.createElement("P");
+  addOptionLine(optionLine, options);
+  const storageLine = document.createElement("P");
+  addStorageLine(storageLine, session);
   const top = getTop();
-  appendX(top, "P", table);
+  top.appendChild(optionLine);
+  top.appendChild(storageLine);
   appendNext(state);
 }
 
@@ -176,4 +187,11 @@ function changeBase(state, base, forceRedisplay) {
      setInputBase(base);
    }
    state.base = base;
+}
+
+function toClipboard(text) {
+  const textarea = document.createElement("TEXTAREA");
+  textarea.value = (text || "");
+  textarea.select();
+  document.execCommand("copy");
 }
