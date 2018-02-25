@@ -1,6 +1,10 @@
 # ChangeLog for calc-extension:
 
-*calc-2.0:
+*calc-extension-2.1:
+	Martin Väth <martin at mvath.de>:
+	- Bugfix: EPSILON and log now work (again)
+
+*calc-extension-2.0:
 	Martin Väth <martin at mvath.de>:
 	- Add new functions:
 	  log10 log2 log1p expm1 cosh sinh tanh acosh asinh atanh
@@ -22,7 +26,7 @@
 	- Improve description of options
 	- Bugfix: variable "number" can be used now (bug in token handling)
 
-*calc-1.0:
+*calc-extension-1.0:
 	Martin Väth <martin at mvath.de>:
 	- Introduce option to change between textarea/button (new default) or
 	  input element (previously only way)
@@ -34,7 +38,7 @@
 	- For all above, see https://github.com/vaeth/calc-extension/issues/1
 	- Typo fixes in German translation
 
-*calc-0.2:
+*calc-extension-0.2:
 	Martin Väth <martin at mvath.de>:
 	- Provide brief description on top of page
 	- Output in hexadecimal and octal only if number is larger than 7
@@ -44,6 +48,6 @@
 	- Refer to # as "last" result (instead of "previous")
 	- Simplify background.js
 
-*calc-0.1:
+*calc-extension-0.1:
 	Martin Väth <martin at mvath.de>:
 	- Initial implementation

@@ -316,12 +316,13 @@ class Parser {
     this.registerConstant("LN10", Math.LN10);
     this.registerConstant("LOG2E", Math.LOG2E);
     this.registerConstant("LOG10E", Math.LOG10E);
-    this.registerConstant("EPSILON", Math.EPISOLON);
+    this.registerConstant("EPSILON", (Math.EPSILON || Math.pow(2, -52)));
     this.registerNumber("#number");
     this.registerLast("#");
     this.registerFunction("log10", Math.log10);
     this.registerFunction("log2", Math.log2);
     this.registerFunction("log1p", Math.log1p);
+    this.registerFunction("log", Math.log);
     this.registerFunction("exp", Math.exp);
     this.registerFunction("expm1", Math.expm1);
     this.registerFunction("sin", Math.sin);
