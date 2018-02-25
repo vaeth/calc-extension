@@ -163,6 +163,7 @@ function addStorageLine(parent, disabled) {
   appendX(row, "TD", appendButton, "buttonAddSession", null, disabled);
   appendX(row, "TD", appendButton, "buttonClearStored", null, disabled);
   appendX(row, "TD", appendButton, "buttonClear");
+  appendX(row, "TD", appendTextNode, "textClear", null, "titleTextClear");
   appendX(parent, "TABLE", row);
 }
 

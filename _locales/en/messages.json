@@ -103,13 +103,21 @@
     "message": "Clear window",
     "description": "Button to clear the current session"
   },
+  "textClear": {
+    "message": "An empty expression removes its line",
+    "description": "Brief explanation how to remove a line"
+  },
+  "titleTextClear": {
+    "message": "If an expression contains nothing but spaces and option modifiers, evaluating it will remove the line in which it is placed. You can use that feature to remove a line from a session by clearing the expression manually and re-evaluating it",
+    "description": "Verbose explanation how to remove a line"
+  },
   "buttonResult": {
     "message": "~>",
     "description": "Result button"
   },
   "textResult": {
     "message": "~> ",
-    "description": "Substituting text if no result button is used. Should not be empty or usable in an expression for clarity"
+    "description": "Substituting text if no result button is used. Should probably not be empty or usable in an expression for clarity and coincide with the result button, followed by a space"
   },
   "messageResult": {
     "message": "$RESULT$ (in base $BASE$)",
