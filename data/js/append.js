@@ -77,11 +77,11 @@ function appendInput(parent, id, size, value, titleId) {
   return input;
 }
 
-function appendFormInput(parent, formId, id, size) {
+function appendFormInput(parent, formId, id, size, value) {
   const form = document.createElement("FORM");
   form.id = formId;
   form.autocomplete = "off";
-  const input = appendInput(form, id, size);
+  const input = appendInput(form, id, size, value);
   parent.appendChild(form);
   return input;
 }
