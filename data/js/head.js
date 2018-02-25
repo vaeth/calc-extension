@@ -145,13 +145,13 @@ function removeLine(id) {
   topNode.removeChild(node);
 }
 
-function addOptionLine(parent, options) {
+function addOptionLine(parent, state, options) {
   const row = document.createElement("TR");
   appendCheckboxCol(row, "checkboxInputMode", options.inputMode,
     "checkboxInputMode", "titleCheckboxInputMode");
-  appendInputCol(row, "inputSize", 3, getSizeText(options.size),
+  appendInputCol(row, "inputSize", 3, getSizeText(state.size),
     "inputSize", "titleInputSize");
-  appendInputCol(row, "inputBase", 1, getBaseText(options.base),
+  appendInputCol(row, "inputBase", 1, getBaseText(state.base),
     "inputBase", "titleinputBase");
   appendX(parent, "TABLE", row);
 }
@@ -166,16 +166,13 @@ function addStorageLine(parent, disabled) {
   appendX(parent, "TABLE", row);
 }
 
-function initCalc(state, options) {
-  if (getCheckboxInputMode()) {  // already initialized
-    return;
-  }
+function initWindow(state, options) {
   const row = getLastRow();
   appendCheckboxCol(row, "checkboxClipboard", options.clipboard, null,
     "titleCheckboxClipboard");
   appendX(row, "TD", appendButton, "buttonClipboard", null, true);
   const optionLine = document.createElement("P");
-  addOptionLine(optionLine, options);
+  addOptionLine(optionLine, state, options);
   const storageLine = document.createElement("P");
   addStorageLine(storageLine, !state.storedLast);
   const top = getTop();

@@ -145,6 +145,15 @@ function displayResult(state, id, indexString) {
   appendNext(state);
 }
 
+function initCalc(state, options) {
+  if (getCheckboxInputMode()) {  // already initialized
+    return;
+  }
+  state.size = sanitizeSize(options.size)
+  state.base = sanitizeBase(options.base);
+  initWindow(state, options);
+}
+
 function sendCommand(command, message) {
   if (!message) {
     message = {};
@@ -260,8 +269,8 @@ function initMain() {
     last: null,
     lastString: null,
     storedLast: null,
-    base: 0,
     size: [0, 0],
+    base: 0,
     parser: new Parser()
   };
   document.addEventListener("submit", (event) => {
