@@ -6,15 +6,29 @@ This project is under the GNU Public License 2.0.
 
 A WebExtension: Calculate values of mathematical expressions
 
+The extension is supposed to be useful for everybody quickly needing
+brief or mid-long calculations: in daily “browser” life, as a
+mathematician, or as a programmer - there is support for all needs.
+Since version 2.0, quite some usability features have been added to support
+more lengthy sessions (saving, exporting to Clipboard, etc).
+
+The original motivation was to experiment with a Pratt parser.
+Thus, although currently only “simple” formulas of javascript type are
+implemented, it would be relatively easy to extend it to a full-blown
+programming language.
+(Readers interested in the parser implementation can check data/js/parser.js).
+
 After installing __calc-extension__, it can be used as follows.
 
 Click the __calc-extension__ symbol `1+2` or the link on the options page.
 Then a page opens where you can enter a formula (see below) which will be
 calculated when you press the solver button (`↪`).
-The result is shown and copied to the clipboard.
-Then you can enter the next formula.
-The page also contains buttons to store/restore sessions, to copy a
-whole session to the clipboard, etc.
+(There is an option to use the enter key instead if you prefer.)
+The result is then shown and copied to the clipboard, and you can enter
+the next formula. You can also go back to an earlier entered formula and
+“recalculate” it (e.g. after you modified some variables).
+To remove a formula from your list, simply remove the main formula text
+and press the solver button.
 
 A simple formula is a usual mathematical expression which consists of numbers,
 the usual operators `+` `-` `*` `/` and braces `(` `)`.
@@ -83,15 +97,16 @@ Furthermore, there are constants available:
 Finally, it is possible to define variables with e.g. `a=...` and to use them.
 Variable names must only consist of English characters, numbers, or `_`.
 
-The whole syntax and operator precedence is inspired by the javascript
-specification. However, the following things are new.
+The whole syntax and operator precedence is inspired by javascript.
+However, the following things are new.
 
 There is a special variable name `#` which always refers to the result of
 the last (succesful) calculation.
 
 There are also special sequences which can occur anywhere in an expression
-and which cause options to switch (you can also switch them by the mouse
-and even save the options permanently in the preferences window).
+and which cause options to switch (you can also switch them by the mouse).
+To modify options more permanently (also for future sessions even across
+browser restarts), you have to set them in the preferences window.
 
 - `'width:height'` default is 60:1
 - `"base"` switch output to base (2-36)
@@ -99,9 +114,9 @@ and even save the options permanently in the preferences window).
 - `?` Do not omit the ↪ button
 
 The actual calculation of the functions and number conversion occurs
-by javascript calls. Therefore, available precision, error messages,
-number limitations, and possible inaccuracies are inherited from the
-javascript interpreter.
+by javascript calls. Therefore, mathematical properties like available
+precision, error messages, number limitations, and possible inaccuracies
+(and possibly even bugs) are inherited from the javascript interpreter.
 
 ## Example session
 

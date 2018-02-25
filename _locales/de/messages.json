@@ -12,7 +12,7 @@
     "description": "Brief explanation for input mode checkbox"
   },
   "titleCheckboxInputMode": {
-    "message": "Ersetzen des \u21AA-Knopfes durch die Eingabe der \u23CE-Taste. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann.",
+    "message": "Ersetzen des \u21AA-Knopfes durch Benutzung der Eingabeteste \u23CE. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann.",
     "description": "Verbose explanation for input mode checkbox in popup and on option page"
   },
   "inputSize": {
@@ -64,7 +64,7 @@
     "description": "Announcement of inline option modifiers"
   },
   "textInline": {
-    "message": "!/? (\u21AA aus/an) 'width:height' \"base\"",
+    "message": "! (ohne \u21AA-Knopf) ? (mit \u21AA-Knopf) 'width:height' \"base\"",
     "description": "Text explaining inline option modifiers (should be short)"
   },
   "announceLast": {

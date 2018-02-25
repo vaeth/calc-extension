@@ -4,6 +4,8 @@
 
 "use strict";
 
+// Handling of the special tokens ! ? '...' "...":
+
 function handleInlineToken(state, token) {
   switch (token.inline) {
     case "inputMode":
@@ -17,6 +19,8 @@ function handleInlineToken(state, token) {
       return;
   }
 }
+
+// Frequent parser errors:
 
 function errorUnexpected(text) {
   return browser.i18n.getMessage("errorUnexpectedToken", text);
@@ -37,13 +41,22 @@ function errorNonNumeric(expression) {
   return browser.i18n.getMessage("errorParse");  // should not happen
 }
 
+/*
+The ParserState contains all relevant options needed for the lexer
+(and also "last" from state needed to interpret #).
+The ParserState is the argument given to the actions of the parselets
+(see below for the latter).
+As such it will also contain current parser data like the current result
+of the "left" side and a callback to the recursive parser.
+*/
+
 class ParserState {
   constructor(tokens, last) {
     this.tokens = tokens;
     this.tokenIndex = 0;
     this.last = last;
-    // this.left   // serves as parameter to parser actions
-    // this.token  // serves as parameter to parser actions
+    // this.left   // serves as parameter to parselet actions
+    // this.token  // serves as parameter to parselet actions
     // this.getExpression // main recursive function; needs context variables
   }
 
@@ -77,8 +90,18 @@ class ParserState {
   }
 }
 
-// We use a Pratt type parser, registering functions in 2 token maps.
-// This is loosely inspired by https://github.com/munificent/bantam
+/*
+We use a Pratt type parser, registering parselets in prefix and infix maps.
+This is loosely inspired by https://github.com/munificent/bantam
+However, our parselets immediately do the calculation and return a result
+object, and we store precedence and binding (right-to-left? which
+corresponds to a lookup with an implicitly lowered precedence of EPSILON
+on the right-hand side) as properties of the "infix" parselets.
+The tokens of variables/functions are the names themselves in order to
+safe an additional lookup in a table. The disadvantage is that for variable
+import/export (when storing/restoring a session), we have to mark those
+parselets referring to variables explicitly and execute/modify them.
+*/
 
 class Parser {
   registerPrefix(name, action, isVariable) {
@@ -118,7 +141,8 @@ class Parser {
     }), true);
   }
 
-  setVariable(name, value) {  // return true in case of success
+  // Add/modify a variable parselet for import
+  setVariable(name, value) {  // return true in case of successful setting
     if (typeof(name) != "string") {  // sanity check
       return false;
     }
@@ -140,6 +164,7 @@ class Parser {
     return true;
   }
 
+  // Call setVariable with an array of objects [variable, value]
   setVariables(variables) {  // return array of failures
     const failures = [];
     for (let [name, value] of variables) {
@@ -150,6 +175,7 @@ class Parser {
     return failures;
   }
 
+  // Export an array of objects [variable, value] for each numeric variable
   pushVariables(variables) {
     for (let [name, prefix] of this.prefix) {
       if (!prefix.isVariable) {
@@ -164,7 +190,7 @@ class Parser {
   }
 
   // Convenience wrappers for registerPrefix and registerInfix.
-  // They are needed only in the constructor
+  // They are needed only in the Parser constructor
 
   registerConstant(name, value) {
     this.registerPrefix(name, () => ({
@@ -337,6 +363,13 @@ class Parser {
   }
 }
 
+/*
+Our lexer. Simplicity is preferred over speed: We use regular expressions.
+For the list of char symbols in the beginning, this is probably faster than
+anything else (even than a Set lookup), if the regular expression
+precompilation of the javascript interpreter is sane.
+*/
+
 function lexToken(input) {
   const token = {};
   const first = input.charAt(0);
@@ -407,6 +440,11 @@ function lexToken(input) {
   return token;
 }
 
+/*
+For simplicity, we first scan the whole expression and handle
+the inline tokens already in this step to keep them off the parser.
+*/
+
 function getTokenArray(state, input) {
   const tokens = [];
   while ((input = input.replace(/^[;\s]+/, ""))) {
@@ -420,6 +458,13 @@ function getTokenArray(state, input) {
   }
   return tokens;
 }
+
+/*
+The main function which returns the output by getting "input".
+state is only needed to get/set the last result for #
+(and to set the corresponding lastString for copying to clipboard).
+In the error case, we just throw.
+*/
 
 function calculate(state, input) {
   const tokens = getTokenArray(state, input);
