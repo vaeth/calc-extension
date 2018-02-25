@@ -17,12 +17,16 @@ function setHead(text) {
   head.appendChild(document.createTextNode("\xa0" + text));
 }
 
-function getLastCol() {
-  return document.getElementById("lastCol");
+function getLastRow() {
+  return document.getElementById("lastRow");
 }
 
 function getCheckboxInputMode() {
   return document.getElementById("checkboxInputMode");
+}
+
+function getCheckboxClipboard() {
+  return document.getElementById("checkboxClipboard");
 }
 
 function getInputSize() {
@@ -48,6 +52,10 @@ function enableStorageButtons(enable) {
 
 function setCheckboxInputMode(checked) {
   setChecked(getCheckboxInputMode(), checked);
+}
+
+function setCheckboxClipboard(checked) {
+  setChecked(getCheckboxClipboard(), checked);
 }
 
 function setInputSize(size) {
@@ -82,14 +90,12 @@ function initLayout() {
     "announceFunctions",
     "announceConstants",
     "announceInline", "textInline",
-    "announceLast", "textLast"
+    "announceLast"
   ];
   for (let id of translateId) {
     const translation = browser.i18n.getMessage(id);
     document.getElementById(id).textContent = translation;
   }
-  const col = getLastCol();
-  appendButton(col, "buttonClipboard", null, true);
 }
 
 function clearWindow() {
@@ -164,6 +170,10 @@ function initCalc(state, options) {
   if (getCheckboxInputMode()) {  // already initialized
     return;
   }
+  const row = getLastRow();
+  appendCheckboxCol(row, "checkboxClipboard", options.clipboard, null,
+    "titleCheckboxClipboard");
+  appendX(row, "TD", appendButton, "buttonClipboard", null, true);
   const optionLine = document.createElement("P");
   addOptionLine(optionLine, options);
   const storageLine = document.createElement("P");

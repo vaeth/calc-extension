@@ -10,7 +10,7 @@ function isChecked(checkbox) {
 
 function setChecked(checkbox, checked) {
   if (checkbox && (!checkbox.checked != !checked)) {
-    checkboxInputMode.checked = !!checked;
+    checkbox.checked = !!checked;
   }
 }
 

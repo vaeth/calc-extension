@@ -10,7 +10,7 @@ The extension is supposed to be useful for everybody quickly needing
 brief or mid-long calculations: in daily “browser” life, as a
 mathematician, or as a programmer - there is support for all needs.
 Since version 2.0, quite some usability features have been added to support
-more lengthy sessions (saving, exporting to Clipboard, etc).
+more lengthy sessions (saving/restoring, exporting to clipboard, etc).
 
 The original motivation was to experiment with a Pratt parser.
 Thus, although currently only “simple” formulas of javascript type are
@@ -24,9 +24,9 @@ Click the __calc-extension__ symbol `1+2` or the link on the options page.
 Then a page opens where you can enter a formula (see below) which will be
 calculated when you press the solver button (`↪`).
 (There is an option to use the enter key instead if you prefer.)
-The result is then shown and copied to the clipboard, and you can enter
-the next formula. You can also go back to an earlier entered formula and
-“recalculate” it (e.g. after you modified some variables).
+The result is then shown and you can enter the next formula.
+You can also go back to an earlier entered formula and “recalculate” it
+(e.g. after you modified some variables).
 To remove a formula from your list, simply remove the main formula text
 and press the solver button.
 

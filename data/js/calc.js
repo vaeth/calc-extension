@@ -62,7 +62,7 @@ function restoreSessionLast(state, checkOnly) {
 function addSessionPrepare(state) {
   // Setting the clipboard cannot be done in the messageListener,
   // since otherwise we would need clipboard permissions
-  if (restoreSessionLast(state, true)) {
+  if (restoreSessionLast(state, true) && isChecked(getCheckboxClipboard())) {
     toClipboard(state.storedLast[1]);
   }
   sendCommand("sendSession");
@@ -91,6 +91,9 @@ function addSession(state, session) {
 }
 
 function optionsChanges(state, changes) {
+  if (changes.clipboard) {
+    setCheckboxClipboard(changes.clipboard.value);
+  }
   if (changes.inputMode) {
     setCheckboxInputMode(changes.inputMode.value);
   }
@@ -116,12 +119,14 @@ function displayResult(state, id, indexString) {
   }
   if (last) {
     enableButtonClipboard();
-    toClipboard(state.lastString);
+    if (isChecked(getCheckboxClipboard())) {
+      toClipboard(state.lastString);
+    }
   }
   let current = Number.parseInt(indexString, 10);
   if (text != null) {
     changeText("output=" + indexString, text);
-  } else {
+  } else {  // null means to remove the line
     removeLine("output=" + indexString);
     removeLine(id);
     if (current == state.counter) {  // We removed last: next becomes counter

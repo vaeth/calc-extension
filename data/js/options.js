@@ -21,6 +21,10 @@ function getCheckboxInputMode() {
   return document.getElementById("checkboxInputMode");
 }
 
+function getCheckboxClipboard() {
+  return document.getElementById("checkboxClipboard");
+}
+
 function getInputSize() {
   return document.getElementById("inputSize");
 }
@@ -35,6 +39,10 @@ function getButtonClearStorage() {
 
 function setCheckboxInputMode(checked) {
   setChecked(getCheckboxInputMode(), checked);
+}
+
+function setCheckboxClipboard(checked) {
+  setChecked(getCheckboxClipboard(), checked);
 }
 
 function setInputSize(size) {
@@ -77,6 +85,8 @@ function initPage(options, haveStorage) {
     getSizeText(options.size), "titleInputSize");
   appendX(table, "TR", appendInputCol, "inputBase", 1,
     getBaseText(options.base), "titleInputBase");
+  appendX(table, "TR", appendCheckboxCol, "checkboxClipboard",
+    options.clipboard, "titleCheckboxClipboard");
   appendX(table, "TR", appendButtonTextCol, "buttonClearStorage", null,
     !haveStorage, "textClearStorage");
   const top = getTop();
@@ -91,6 +101,9 @@ function initOptions(state, options, haveStorage) {
   const stateOptions = state.options = {};
   if (options.inputMode) {
     stateOptions.inputMode = true;
+  }
+  if (options.clipboard) {
+    stateOptions.clipboard = true;
   }
   if (options.size) {
     const size = sanitizeSize(options.size);
@@ -145,6 +158,17 @@ function optionsChanges(state, changes) {
     }
     setInputBase(base);
   }
+  if (changes.clipboard) {
+    if (changes.clipboard.value) {
+      if (!options.clipboard) {
+        options.clipboard = true;
+        setCheckboxClipboard(true);
+      }
+    } else {
+      delete options.clipboard;
+      setCheckboxClipboard(false);
+    }
+  }
 }
 
 function sendCommand(command, changes) {
@@ -174,6 +198,23 @@ function changeInputMode(options) {
     inputModeChange.value = options.inputMode = true;
   } else {
     delete options.inputMode;
+  }
+  sendChanges(changes);
+}
+
+function changeClipboard(options) {
+  const value = isChecked(getCheckboxClipboard());
+  if (value == !!options.clipboard) {
+    return;
+  }
+  const clipboardChange = {};
+  const changes = {
+    clipboard: clipboardChange
+  };
+  if (value) {
+    clipboardChange.value = options.clipboard = true;
+  } else {
+    delete options.clipboard;
   }
   sendChanges(changes);
 }
@@ -219,6 +260,9 @@ function changeListener(state, event) {
   switch (event.target.id) {
     case "checkboxInputMode":
       changeInputMode(state.options);
+      return;
+    case "checkboxClipboard":
+      changeClipboard(state.options);
       return;
     case "inputSize":
       changeSize(state.options);

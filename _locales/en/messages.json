@@ -15,6 +15,14 @@
     "message": "Replace the calculate (\u21AA) button by pressing the enter key \u23CE. This is more convenient but less intuitive. A further disadvantage is that it is not possible to break an expression over several lines and that the size of the field cannot be adjusted with the mouse.",
     "description": "Verbose explanation for input mode checkbox in popup and on option page"
   },
+  "checkboxClipboard": {
+    "message": "Automatic \u21E8 Clipboard",
+    "description": "Brief explanation for clipboard checkbox"
+  },
+  "titleCheckboxClipboard": {
+    "message": "Automatically copy the result to the clipboard for calculations or when adding a stored session",
+    "description": "Verbose explanation for clipboard checkbox in popup and on option page"
+  },
   "inputSize": {
     "message": "width:height (0:0 = 60:1)",
     "description": "Brief explanation for size (60:1 default) in input field"
@@ -69,10 +77,6 @@
   },
   "announceLast": {
     "message": "Last result",
-    "description": "Announcement of symbol for last result"
-  },
-  "textLast": {
-    "message": "# (automatically \u21E8 Clipboard)",
     "description": "Announcement of symbol for last result"
   },
   "buttonClipboard": {

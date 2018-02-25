@@ -34,17 +34,19 @@ function sendCommand(command, message) {
 }
 
 function storageOptionsChanges(newOptions) {
-  const options = state.options;
   const changes = {};
   let changed = false;
-  for (let i in options) {
-    if (newOptions.hasOwnProperty(i) || !options.hasOwnProperty(i)) {
+  const options = state.options;
+  const optionsProperties = Object.getOwnPropertyNames(options);
+  for (let i of optionsProperties) {
+    if (newOptions.hasOwnProperty(i)) {
       continue;
     }
     changed = true;
     changes[i] = {};
   }
-  for (let i in newOptions) {
+  const newOptionsProperties = Object.getOwnPropertyNames(newOptions);
+  for (let i of newOptionsProperties) {
     if (!newOptions.hasOwnProperty(i)) {
       continue;
     }
@@ -105,9 +107,9 @@ function flagSendHaveStorage() {
 
 function storageListener(changes) {
   if (!state.haveStorage) {
-    for (let i in changes) {
-      if (changes.hasOwnProperty(i) &&
-        changes[i].hasOwnProperty("newValue")) {
+    const changesProperties = Object.getOwnPropertyNames(changes);
+    for (let i of changesProperties) {
+      if (changes[i].hasOwnProperty("newValue")) {
         flagSendHaveStorage();
         break;
       }
@@ -165,11 +167,13 @@ function sendInit(reply) {
   }
   browser.storage.local.get().then((storage) => {
     delete state.virgin;
-    state.haveStorage = !!storage;
-    state.options = (storage.optionsV1 || {});
-    const session = (storage.sessionV1 || null);
-    state.last = splitLast(session);
-    state.session = session;
+    if (storage && Object.getOwnPropertyNames(storage).length) {
+      state.haveStorage = true;
+      state.options = (storage.optionsV1 || {});
+      const session = (storage.sessionV1 || null);
+      state.last = splitLast(session);
+      state.session = session;
+    }
     sendCommand(reply);
   }, () => {
     sendCommand(reply);
@@ -179,10 +183,8 @@ function sendInit(reply) {
 function optionsChanges(changes) {
   const options = Object.assign({}, state.options);
   let store = false;
-  for (let i in changes) {
-    if (!changes.hasOwnProperty(i)) {
-      continue;
-    }
+  const changesProperties = Object.getOwnPropertyNames(changes);
+  for (let i of changesProperties) {
     const change = changes[i];
     if (change.hasOwnProperty("value")) {
       if (!options.hasOwnProperty(i) || options[i] !== change.value) {
