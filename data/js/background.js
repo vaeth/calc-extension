@@ -79,18 +79,18 @@ function splitLast(session) {  // returns session.last, deleting from session
 function storageSessionChanges(newSession) {
   let changedLast = false;
   const last = splitLast(newSession);
+  state.session = newSession;
   const oldLast = state.last;
   if (newSession) {
     if (!oldLast || !Object.is(oldLast[0], last[0]) ||
       !Object.is(oldLast[1], last[1])) {
-      state.last = last;
       changedLast = true;
     }
   } else if (oldLast) {
-    state.last = state.session = null;
     changedLast = true;
   }
   if (changedLast) {
+    state.last = last;
     sendCommand("storedLastChanges", { last: last });
   }
 }
