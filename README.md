@@ -22,7 +22,7 @@ After installing __calc-extension__, it can be used as follows.
 
 Click the __calc-extension__ symbol `1+2` or the link on the options page.
 Then a page opens where you can enter a formula (see below) which will be
-calculated when you press the solver button (`↪`).
+calculated when you press the solver button (`~>`).
 (There is an option to use the enter key instead if you prefer.)
 The result is then shown and you can enter the next formula.
 You can also go back to an earlier entered formula and “recalculate” it
@@ -110,8 +110,8 @@ browser restarts), you have to set them in the preferences window.
 
 - `'width:height'` default is 60:1
 - `"base"` switch output to base (2-36)
-- `!` Omit the ↪ button
-- `?` Do not omit the ↪ button
+- `!` Omit the ~> button
+- `?` Do not omit the ~> button
 
 The actual calculation of the functions and number conversion occurs
 by javascript calls. Therefore, mathematical properties like available
@@ -121,15 +121,15 @@ precision, error messages, number limitations, and possible inaccuracies
 ## Example session
 
 - `(1+2)*3-5`
-- ↪ 4
+- ~> 4
 - `1 - cos(2 * PI) / 2`
-- ↪ 0.5
+- ~> 0.5
 - `a = (# + 1) * 3`
-- ↪ 4.5
+- ~> 4.5
 - `# + 4 * a`
-- ↪ 22.5
+- ~> 22.5
 - `0xF | 0100 "16"`
-- ↪ 4f (in base 16)
+- ~> 4f (in base 16)
 
 ## Permissions
 

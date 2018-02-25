@@ -8,11 +8,11 @@
     "description": "Description of the extension"
   },
   "checkboxInputMode": {
-    "message": "Neue Zeilen ohne \u21AA-Knopf",
+    "message": "Neue Zeilen ohne „~>”-Knopf",
     "description": "Brief explanation for input mode checkbox"
   },
   "titleCheckboxInputMode": {
-    "message": "Ersetzen des Berechnungsknopfes (\u21AA) durch die Benutzung der Eingabeteste \u23CE. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann.",
+    "message": "Ersetzen des Berechnungsknopfes („~>”) durch die Benutzung der Eingabeteste \u23CE. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann.",
     "description": "Verbose explanation for input mode checkbox in popup and on option page"
   },
   "checkboxClipboard": {
@@ -72,7 +72,7 @@
     "description": "Announcement of inline option modifiers"
   },
   "textInline": {
-    "message": "! (ohne \u21AA-Knopf) ? (mit \u21AA-Knopf) 'width:height' \"base\"",
+    "message": "! (ohne „~>”-Knopf) ? (mit „~>”-Knopf) 'width:height' \"base\"",
     "description": "Text explaining inline option modifiers (should be short)"
   },
   "announceLast": {
@@ -104,12 +104,12 @@
     "description": "Button to clear the current session"
   },
   "buttonResult": {
-    "message": "\u21AA",
+    "message": "~>",
     "description": "Result button"
   },
   "textResult": {
-    "message": "\u21AA ",
-    "description": "Substituting text if no result button is used. Should not be empty for clarity"
+    "message": "~> ",
+    "description": "Substituting text if no result button is used. Should not be empty or usable in an expression for clarity"
   },
   "messageResult": {
     "message": "$RESULT$ (zur Basis $BASE$)",
