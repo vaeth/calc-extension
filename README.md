@@ -6,18 +6,21 @@ This project is under the GNU Public License 2.0.
 
 A WebExtension: Calculate values of mathematical expressions
 
-The extension is supposed to be useful for everybody quickly needing
+The extension strives to be useful for everybody quickly needing
 brief or mid-long calculations: in daily “browser” life, as a
 mathematician, or as a programmer - there is support for all needs.
-Since version 2.0, quite some usability features have been added to support
-more lengthy sessions (saving/restoring, exporting to clipboard, etc).
+
+Formulas can be entered in the typical mathematician's or
+programmer's syntax - both is understood.
+There is also support for lengthy sessions
+(saving/restoring, exporting to clipboard, etc).
 
 The original motivation was to experiment with a Pratt parser.
 There is already a much richer expression syntax than in most languages
 (implicit multiplication signs, no braces necessary for function calls),
 and it would be simple to extend the syntax to a more full-blown “language”.
-(In fact, earlier versions of _calc-extension_ had a simpler syntax.
-Readers interested in the parser implementation can check data/js/parser.js).
+(In fact, earlier versions of __calc-extension__ had a simpler syntax.
+Readers interested in the parser implementation can check `data/js/parser.js`).
 
 After installing __calc-extension__, it can be used as follows.
 
@@ -41,7 +44,7 @@ __Be aware that `x` means the variable x and not a multiplication sign__!
 
 For multiplication use instead one of the symbols `*` `·` `×` or simply omit it
 (a space can be used to separate adjacent tokens).
-The division symbol is `/` or `:`
+The division symbol is `/` or `:`.
 
 Numbers have the usual floating-point format, e.g. `17`  `0.1` `1.2e-3`,
 or they can be octal or hexadecimal: For an octal number start with `0`,
