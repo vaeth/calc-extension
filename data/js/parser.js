@@ -123,7 +123,7 @@ class Parser {
   }
 
   getInfix(token) {
-    return this.infix.get(token)
+    return this.infix.get(token.type);
   }
 
   getPrefixOrRegister(token) {
@@ -221,23 +221,13 @@ class Parser {
     });
   }
 
-  registerFunction(name, action) {
-    this.registerPrefix(name, () => ({
-      type: "function",
-      name: name,
-      value: action
-    }));
-  }
-
   registerUnary(name, precedence, action) {
     this.registerPrefix(name, (parserState)  => {
       const right = parserState.getExpression(precedence);
       if (!right.numeric) {
         throw errorNonNumeric(right);
       }
-      if (action) {
-        right.value = action(right.value);
-      }
+      right.value = action(right.value);
       return right;
     });
   }
@@ -285,25 +275,6 @@ class Parser {
     });
   }
 
-  registerCall(name, precedence) {
-    this.registerInfix(name, precedence, (parserState) => {
-      const left = parserState.left;
-      if (left.type !== "function") {
-        throw browser.i18n.getMessage("errorCallNonFunction");
-      }
-      const arg = parserState.getExpression();
-      if (!arg.numeric) {
-        throw errorNonNumeric(arg);
-      }
-      parserState.gobble(")");
-      return {
-        type: "result",
-        numeric: true,
-        value: left.value(arg.value)
-      };
-    });
-  }
-
   constructor() {
     this.infix = new Map();
     this.prefix = new Map();
@@ -319,34 +290,6 @@ class Parser {
     this.registerConstant("EPSILON", (Math.EPSILON || Math.pow(2, -52)));
     this.registerNumber("#number");
     this.registerLast("#");
-    this.registerFunction("log10", Math.log10);
-    this.registerFunction("log2", Math.log2);
-    this.registerFunction("log1p", Math.log1p);
-    this.registerFunction("log", Math.log);
-    this.registerFunction("exp", Math.exp);
-    this.registerFunction("expm1", Math.expm1);
-    this.registerFunction("sin", Math.sin);
-    this.registerFunction("cos", Math.cos);
-    this.registerFunction("tan", Math.tan);
-    this.registerFunction("asin", Math.asin);
-    this.registerFunction("acos", Math.acos);
-    this.registerFunction("atan", Math.atan);
-    this.registerFunction("sinh", Math.sinh);
-    this.registerFunction("cosh", Math.cosh);
-    this.registerFunction("tanh", Math.tanh);
-    this.registerFunction("asinh", Math.asinh);
-    this.registerFunction("acosh", Math.acosh);
-    this.registerFunction("atanh", Math.atanh);
-    this.registerFunction("sqrt", Math.sqrt);
-    this.registerFunction("cbrt", Math.cbrt);
-    this.registerFunction("abs", Math.abs);
-    this.registerFunction("sign", Math.sign);
-    this.registerFunction("floor", Math.floor);
-    this.registerFunction("ceil", Math.ceil);
-    this.registerFunction("round", Math.round);
-    this.registerFunction("trunc", Math.trunc);
-    this.registerFunction("fround", Math.fround);
-    this.registerFunction("clz32", Math.clz32);
     this.registerAssign("=", 3, true);
     this.registerBinary("|", 7, (a, b) => (a | b));
     this.registerBinary("^", 8, (a, b) => (a ^ b));
@@ -354,12 +297,40 @@ class Parser {
     this.registerBinary("+", 13, (a, b) => (a + b));
     this.registerBinary("-", 13, (a, b) => (a - b));
     this.registerBinary("*", 14, (a, b) => (a * b));
+    this.registerBinary("#empty", 14, (a, b) => (a * b));
     this.registerBinary("/", 14, (a, b) => (a / b));
     this.registerBinary("%", 14, (a, b) => (a % b));
     this.registerBinary("**", 15, (a, b) => (a ** b), true);
-    this.registerUnary("+", 16);
+    this.registerUnary("log10", 16, Math.log10);
+    this.registerUnary("log2", 16, Math.log2);
+    this.registerUnary("log1p", 16, Math.log1p);
+    this.registerUnary("log", 16, Math.log);
+    this.registerUnary("exp", 16, Math.exp);
+    this.registerUnary("expm1", 16, Math.expm1);
+    this.registerUnary("sin", 16, Math.sin);
+    this.registerUnary("cos", 16, Math.cos);
+    this.registerUnary("tan", 16, Math.tan);
+    this.registerUnary("asin", 16, Math.asin);
+    this.registerUnary("acos", 16, Math.acos);
+    this.registerUnary("atan", 16, Math.atan);
+    this.registerUnary("sinh", 16, Math.sinh);
+    this.registerUnary("cosh", 16, Math.cosh);
+    this.registerUnary("tanh", 16, Math.tanh);
+    this.registerUnary("asinh", 16, Math.asinh);
+    this.registerUnary("acosh", 16, Math.acosh);
+    this.registerUnary("atanh", 16, Math.atanh);
+    this.registerUnary("sqrt", 16, Math.sqrt);
+    this.registerUnary("cbrt", 16, Math.cbrt);
+    this.registerUnary("abs", 16, Math.abs);
+    this.registerUnary("sign", 16, Math.sign);
+    this.registerUnary("floor", 16, Math.floor);
+    this.registerUnary("ceil", 16, Math.ceil);
+    this.registerUnary("round", 16, Math.round);
+    this.registerUnary("trunc", 16, Math.trunc);
+    this.registerUnary("fround", 16, Math.fround);
+    this.registerUnary("clz32", 16, Math.clz32);
+    this.registerUnary("+", 16, (a) => a);
     this.registerUnary("-", 16, (a) => (-a));
-    this.registerCall("(", 20);
     this.registerGroup("(");
   }
 }
@@ -374,7 +345,7 @@ precompilation of the javascript interpreter is sane.
 function lexToken(input) {
   const token = {};
   const first = input.charAt(0);
-  if (/[\!\?\'\"\(\)\+\-\*\/\%\=\#\|\&\^]/.test(first)) {
+  if (/[\!\?\'\"\(\)\+\-\*\xB7\xD7\/\:\%\=\#\|\&\^]/.test(first)) {
     if (first === "!") {
       token.text = first;
       token.value = true;
@@ -386,7 +357,7 @@ function lexToken(input) {
       token.type = "#inline";
       token.inline = "inputMode";
     } else if (first === "'") {
-      const quote = /^\'([\s\d]*[^\s\d]?[\s\d]*)\'/.exec(input);
+      const quote = /^\'\s*(\d*(?:\s*\D\s*\d*)?)\s*\'/.exec(input);
       if (!quote) {
         throw browser.i18n.getMessage("errorBadSingleQuote");
       }
@@ -395,7 +366,7 @@ function lexToken(input) {
       token.type = "#inline";
       token.inline = "size";
     } else if (first === '"') {
-      const quote = /^\"([\s\d]*)\"/.exec(input);
+      const quote = /^\"\s*(\d*)\s*\"/.exec(input);
       if (!quote) {
         throw  browser.i18n.getMessage("errorBadDoubleQuote");
       }
@@ -405,14 +376,37 @@ function lexToken(input) {
       token.inline = "base";
     } else if (input.startsWith("**")) {
       token.text = token.type = "**";
+    } else if (/[\xB7\xD7]/.test(first)) {  // &middot; &times;
+      token.text = first;
+      token.type = "*";
+    } else if (first === ':') {
+      token.text = first;
+      token.type = "/";
     } else {
       token.text = token.type = first;
     }
     return token;
   }
-  const number = /^\d*\.?\d+([eE][+-]?\d+)?/.exec(input);
+  if (input.startsWith("\u2191")) { // &uarr;
+    token.text = "\u2191";
+    token.type = "**";
+    return token;
+  }
+  if (input.startsWith("\u03B5")) { // &epsilon;
+    token.text = "\u03B5";
+    token.type = "EPSILON";
+    token.isName = true;
+    return token;
+  }
+  if (input.startsWith("\u03C0")) { // &pi;
+    token.text = "\u03C0";
+    token.type = "PI";
+    token.isName = true;
+    return token;
+  }
+  const number = /^\d*\.?\d+(?:[eE][+-]?\d+)?/.exec(input);
   if (!number) {
-    const identifier = /\w+/.exec(input);
+    const identifier = /^\w+/.exec(input);
     if (!identifier) {
       throw browser.i18n.getMessage("errorIllegalCharacter", first);
     } else {
@@ -425,18 +419,18 @@ function lexToken(input) {
   if (first == "0") {
     const hex = /^0[xX][0-9a-fA-F]+/.exec(input);
     if (hex) {
-      token.value = Number.parseInt(hex[0].substr(2), 16);
+      token.value = (Number.parseInt || parseInt)(hex[0].substr(2), 16);
       token.text = hex[0];
       return token;
     }
     const octal = /^0[0-7]+/.exec(input);
     if (octal && (octal[0].length >= number[0].length)) {
-      token.value = Number.parseInt(octal[0].substr(1), 8);
+      token.value = (Number.parseInt || parseInt)(octal[0].substr(1), 8);
       token.text = octal[0];
       return token;
     }
   }
-  token.value = Number.parseFloat(number[0]);
+  token.value = (Number.parseFloat || parseFloat)(number[0]);
   token.text = number[0];
   return token;
 }
@@ -468,6 +462,10 @@ In the error case, we just throw.
 */
 
 function calculate(state, input) {
+  const emptyToken = {
+    type: "#empty",
+    text: browser.i18n.getMessage("textImplicit")
+  };
   const tokens = getTokenArray(state, input);
   if (!tokens.length) {
     return null;
@@ -480,19 +478,26 @@ function calculate(state, input) {
     {  // prefix first
       const token = parserState.token = parserState.gobble();
       const prefix = parser.getPrefixOrRegister(token);
-      if (!prefix) {  // token is neither prefix nor new variable name
+      if (!prefix) {  // token is neither prefix nor new identifier
         throw errorUnexpected(token.text);
       }
       parserState.left = prefix.action(parserState);
     }
-    for (;;) {  // while (precedence - 0.5*right  < getToken().precedence)
+    for (;;) {  // while (precedence - EPSILON*right  < getToken().precedence)
       const token = parserState.token = parserState.getToken();
       if (!token) {  // EOF has precedence 0
         break;
       }
-      const infix = parser.getInfix(token.type);
-      if (!infix) {  // non-infix tokens have precedence 0
-        break;
+      let infix = parser.getInfix(token);
+      let gobble = true;  // normally, we gobble the infix token
+      if (!infix) {
+        // We have the "#empty" infix operator if token can be used as prefix
+        const prefix = parser.getPrefixOrRegister(token);
+        if (!prefix) {  // Token is not of infix (incl. #empty) type (e.g. ")")
+          break;  // such tokens have precedence 0
+        }
+        infix = parser.getInfix(emptyToken);  // Token is implicit infix
+        gobble = false;  // do not gobble the nonexistent emptyToken
       }
       if (precedence > infix.precedence) {
         break;
@@ -500,7 +505,9 @@ function calculate(state, input) {
       if (!rightToLeft && (precedence == infix.precedence)) {
         break;  // equal precedence only continues loop in case left to right
       }
-      parserState.gobbleQuick();
+      if (gobble) {
+        parserState.gobbleQuick();
+      }
       parserState.left = infix.action(parserState);
     }
     return parserState.left;
@@ -513,6 +520,9 @@ function calculate(state, input) {
   }
   if (!result.numeric) {
     throw errorNonNumeric(result);
+  }
+  if (Number.isNaN(result)) {
+    throw browser.i18n.getMessage("errorNaN");
   }
   const value = state.last = result.value;
   const base = state.base;

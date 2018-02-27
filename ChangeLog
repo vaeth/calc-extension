@@ -1,5 +1,15 @@
 # ChangeLog for calc-extension:
 
+*calc-extension-3.0:
+	Martin Väth <martin at mvath.de>:
+	- Extend syntax (easy game with the Pratt parser!):
+	- Multiplication symbol can be omitted now
+	- Function calls do not require braces () now
+	- Alternative symbols for *, ** and / (namely × or ·, ↑ and :)
+	- Alternative symbols for PI and EPSILON: π and ε
+	- Fix token lexing bug which could give confusing error messages
+	- Icon has full width now
+
 *calc-extension-2.1:
 	Martin Väth <martin at mvath.de>:
 	- Bugfix: EPSILON and log now work (again)

@@ -3,7 +3,7 @@
   "short_name": "calc-extension",
   "description": "__MSG_extensionDescription__",
   "author": "Martin Väth",
-  "version": "2.1",
+  "version": "3.0",
   "manifest_version": 2,
   "homepage_url": "https://addons.mozilla.org/en-US/firefox/addon/calc-extension/",
   "default_locale": "en",

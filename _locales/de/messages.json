@@ -213,12 +213,16 @@
     "message": "Versuch einer Zuweisung an eine Nicht-Variable",
     "description": "error for an attempt to assign to a non-variable"
   },
-  "errorCallNonFunction": {
-    "message": "Versuch des Aufrufs einer Nicht-Funktion",
-    "description": "error for an attempt to call a non-function"
-  },
   "errorParse": {
     "message": "Fehler beim Parsen",
     "description": "error for an unspecified parse error"
+  },
+  "errorNaN": {
+    "message": "Eine mathematische Operation erhielt ungültige Argumente",
+    "description": "error if result of expression is NaN"
+  },
+  "textImplicit": {
+    "message": "Implizites *",
+    "description": "Name of token for an implicit multiplikation"
   }
 }

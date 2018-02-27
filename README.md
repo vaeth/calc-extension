@@ -13,10 +13,11 @@ Since version 2.0, quite some usability features have been added to support
 more lengthy sessions (saving/restoring, exporting to clipboard, etc).
 
 The original motivation was to experiment with a Pratt parser.
-Thus, although currently only “simple” formulas of javascript type are
-implemented, it would be relatively easy to extend it to a full-blown
-programming language.
-(Readers interested in the parser implementation can check data/js/parser.js).
+There is already a much richer expression syntax than in most languages
+(implicit multiplication signs, no braces necessary for function calls),
+and it would be simple to extend the syntax to a more full-blown “language”.
+(In fact, earlier versions of _calc-extension_ had a simpler syntax.
+Readers interested in the parser implementation can check data/js/parser.js).
 
 After installing __calc-extension__, it can be used as follows.
 
@@ -32,11 +33,15 @@ and press the solver button.
 
 A simple formula is a usual mathematical expression which consists of numbers,
 the usual operators `+` `-` `*` `/` and braces `(` `)`.
+As usual in mathematics (though not in most computer languages),
+it is possible to omit the multiplication sign `*`.
+However:
 
-**Note that `*` must be used for multiplication (not `x`)**
+__Be aware that `x` means the variable x and not a multiplication sign__!
 
-_As usual in computer notation (but unlike to mathematical convention),_
-_ellipsis of the multiplication operator_ `*` _is not supported._
+For multiplication use instead one of the symbols `*` `·` `×` or simply omit it
+(a space can be used to separate adjacent tokens).
+The division symbol is `/` or `:`
 
 Numbers have the usual floating-point format, e.g. `17`  `0.1` `1.2e-3`,
 or they can be octal or hexadecimal: For an octal number start with `0`,
@@ -45,60 +50,64 @@ for a hexadecimal number start with `0x`.
 There are further operators which can be used in expressions:
 
 - `%` remainder (“modulo”)
-- `**` exponentiation (binds from right to left)
+- `**`or `↑` exponentiation (binds from right to left)
 - `&` bitwise AND
 - `|` bitwise OR
 - `^` bitwise XOR
 
 There are also some mathematical functions available.
-Note that the arguments of these functions have to be in braces.
+Note that functions bind stronger than all binary operators, i.e.
+`sin PI/2` is the same as `sin(PI)/2` but differs from `sin(PI/2)`.
 
-- `log10(x)` the base 10 logarithm of x
-- `log2(x)` the base 2 logarithm of x
-- `log(x)` the natural logarithm (base E) of x
-- `log1p(x)` = log(1+x)
-- `exp(x)` the exponential function (base E) of x
-- `expm1(x)` = exp(x) - 1
-- `sin(x)` the sine of x (x is in radians)
-- `cos(x)` the cosine of x (x is in radians)
-- `tan(x)` the tangent of x (x is in radians)
-- `asin(x)` the arcsine of x, in radians
-- `acos(x)` the arccosine of x, in radians
-- `atan(x)` the arctangent of x, in radians
-- `sinh(x)` the hyperbolic sine of x
-- `cosh(x)` the hyperbolic cosine of x
-- `tanh(x)` the hyperbolic tangent of x
-- `asinh(x)` the hyperbolic arccosine of x
-- `acosh(x)` the hyperbolic arccosine of x
-- `atanh(x)` the hyperbolic arctangent of x
-- `sqrt(x)` the square root of x, that is `x ** (1/2)`
-- `cbrt(x)` the cube root of x, that is `x ** (1/3)`
-- `abs(x)` the absolute value of x
-- `sign(x)` the signum of x (1, 0, or -1)
-- `floor(x)` the value of x rounded down to its nearest integer
-- `ceil(x)` the value of x rounded up to its nearest integer
-- `trunc(x)` the value of x rounded to the integer of smaller absolute value
-- `round(x)` the value of x rounded to its nearest integer
-- `fround(x)` the value of x rounded to the nearest 32 bit float
-- `clz32(x)` the number of leading zero bits in a 32 bit representation
+- `sin` the sine, argument is in radians
+- `cos` the cosine, argument is in radians
+- `tan` the tangent, argument is in radians
+- `asin` the arcsine, in radians
+- `acos` the arccosine, in radians
+- `atan` the arctangent, in radians
+- `sinh` the hyperbolic sine
+- `cosh` the hyperbolic cosine
+- `tanh` the hyperbolic tangent
+- `asinh` the hyperbolic arccosine
+- `acosh` the hyperbolic arccosine
+- `atanh` the hyperbolic arctangent
+- `log10` the base 10 logarithm
+- `log2` the base 2 logarithm
+- `log` the natural logarithm (base E)
+- `log1p` `log(1+x)` where `x` is the argument
+- `exp` the exponential function (base E)
+- `expm1` `exp x - 1` where `x` is the argument
+- `sqrt` the square root, that is `sqrt x = x ** (1/2)`
+- `cbrt` the cube root, that is `cbrt x = x ** (1/3)`
+- `abs` the absolute value
+- `sign` the signum (1, 0, or -1)
+- `floor` the value rounded down to its nearest integer
+- `ceil` the value rounded up to its nearest integer
+- `trunc` the value rounded to the integer of smaller absolute value
+- `round` the value rounded to its nearest integer
+- `fround` the value rounded to the nearest 32 bit float
+- `clz32` the number of leading zero bits in a 32 bit representation
 
 Furthermore, there are constants available:
 
-- `E` Euler's number exp(1)
-- `PI` the circle number acos(-1)
-- `SQRT2` sqrt(2)
-- `SQRT1_2` sqrt(1/2)
-- `LN2` log(2)
-- `LN10` log(10)
-- `LOG2E` log2(E)
-- `LOG10E` log10(E)
-- `EPSILON` the difference from 1 to the smallest larger floating point number
+- `E` Euler's number exp 1
+- `PI` or `π` the circle number acos -1
+- `SQRT2` sqrt 2
+- `SQRT1_2` sqrt 1/2
+- `LN2` log 2
+- `LN10` log 10
+- `LOG2E` log2 E
+- `LOG10E` log10 E
+- `EPSILON` or `ε` the distance of 1 to the smallest larger floating point number
 
 Finally, it is possible to define variables with e.g. `a=...` and to use them.
 Variable names must only consist of English characters, numbers, or `_`.
 
-The whole syntax and operator precedence is inspired by javascript.
-However, the following things are new.
+The names of the functions and constants and operator precedence is similar to
+that of javascript. However, functions in javascript require braces, and the
+multiplication sign must not omitted.
+
+The following things are further extensions:
 
 There is a special variable name `#` which always refers to the result of
 the last (succesful) calculation.
@@ -120,14 +129,18 @@ precision, error messages, number limitations, and possible inaccuracies
 
 ## Example session
 
-- `(1+2)*3-5`
+- `1 + 2(1+1) + (2-1)(3-2)`
+- ~> 6
+- `1·1 + 1×1 + 1 1 + 1*1`
 - ~> 4
-- `1 - cos(2 * PI) / 2`
-- ~> 0.5
-- `a = (# + 1) * 3`
-- ~> 4.5
-- `# + 4 * a`
-- ~> 22.5
+- `2↑2↑3 - 2**8 + 4/3 - 1:3`
+- -> 1
+- `1 - cos π/2 + cos(PI/2)`
+- ~> 1.5
+- `a = 3(# + 1)`
+- ~> 7.5
+- `# + 4a`
+- ~> 37.5
 - `0xF | 0100 "16"`
 - ~> 4f (in base 16)
 

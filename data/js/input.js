@@ -8,12 +8,8 @@ function numberOrZero(text) {
   if (!text) {
     return 0;
   }
-  const plain = text.replace(/\s+/g, "");
-  if (!plain) {
-    return 0;
-  }
-  const result = Number.parseInt(plain, 10);
-  if (isNaN(result)) {
+  const result = (Number.parseInt || parseInt)(text, 10);
+  if (Number.isNaN(result)) {
     return 0;
   }
   return result;
@@ -60,8 +56,8 @@ function sanitizeSize(size) {
 }
 
 function getSize(text) {
-  const quote = /([\s\d]*)[^\s\d]?([\s\d]*)/.exec(text);
-  return [ numberOrZero(quote[1]), numberOrZero(quote[2]) ];
+  const parse = /^\s*(\d*)(?:\s*\D\s*(\d*))?/.exec(text);
+  return [ numberOrZero(parse[1]), numberOrZero(parse[2]) ];
 }
 
 function getSizeText(size) {
@@ -72,7 +68,7 @@ function getSizeText(size) {
 }
 
 function getBase(text) {
-  return numberOrZero(text);
+  return numberOrZero(text && text.replace(/^\s+/, ""));
 }
 
 function isBase(base) {
