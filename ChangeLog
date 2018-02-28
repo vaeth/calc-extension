@@ -1,5 +1,9 @@
 # ChangeLog for calc-extension:
 
+*calc-extension-3.1:
+	Martin Väth <martin at mvath.de>:
+	- Attempt to keep result scrolled in
+
 *calc-extension-3.0:
 	Martin Väth <martin at mvath.de>:
 	- Extend syntax (easy game with the Pratt parser!):

@@ -110,6 +110,7 @@ function appendNext(state, input, output) {
   const index = String(++state.counter);
   const outputId = "output=" + index;
   const top = getTop();
+  let second;
   let element;
   if (isChecked(getCheckboxInputMode())) {
     const row = document.createElement("TR");
@@ -117,14 +118,21 @@ function appendNext(state, input, output) {
     appendX(row, "TD", appendTextNode, null, outputId, null, output);
     element = appendX(top, "P", appendFormInput,
       "form=" + index, "input=" + index, state.size, input);
-    appendX(top, "TABLE", row);
+    second = appendX(top, "TABLE", row);
   } else {
     const row = document.createElement("TR");
-    appendX(row, "TD", appendButton, "button=" + index, "buttonResult");
+    second = appendX(row, "TD", appendButton, "button=" + index,
+      "buttonResult");
     appendX(row, "TD", appendTextNode, null, outputId, null, output);
     element = appendX(top, "P", appendTextarea, "area=" + index,
       state.size, input);
     appendX(top, "TABLE", row);
+  }
+  if (second.focus) {
+    second.focus();
+  }
+  if (second.scrollIntoView) {
+    second.scrollIntoView(false);
   }
   element.focus();
 }
