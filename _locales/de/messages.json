@@ -55,9 +55,13 @@
     "message": "Beispiele",
     "description": "Announcement of some examples"
   },
-  "announceOperators": {
-    "message": "Operatoren",
-    "description": "Announcement of available operators"
+  "announceBinaryOperators": {
+    "message": "Binäre Operatoren und Ihre Rangfolge",
+    "description": "Announcement of available binary operators"
+  },
+  "textRightToLeft": {
+    "message": "Von rechts nach links",
+    "description": "Text for operators with right-to-left precedence"
   },
   "announceFunctions": {
     "message": "Funktionen",
@@ -67,25 +71,37 @@
     "message": "Konstanten",
     "description": "Announcement of available constants"
   },
-  "announceInline": {
-    "message": "Optionen setzen",
-    "description": "Announcement of inline option modifiers"
-  },
-  "textInline": {
-    "message": "! (ohne „~>”-Knopf) ? (mit „~>”-Knopf) 'width:height' \"base\"",
-    "description": "Text explaining inline option modifiers (should be short)"
+  "announceNumbers": {
+    "message": "Zahlen, einige Variablen und anderes",
+    "description": "Announcement of numbers, some variables and others"
   },
   "announceLast": {
-    "message": "Letztes Ergebnis",
+    "message": "Letztes Ergebnis und Clipboard",
     "description": "Announcement of symbol for last result"
   },
   "buttonClipboard": {
     "message": "# \u21E8 Clipboard",
-    "description": "Button to copy last result to clipboard anew"
+    "description": "Button to copy last result to clipboard"
   },
   "buttonAllClipboard": {
     "message": "Sitzung \u21E8 Clipboard",
     "description": "Button to copy the whole session to clipboard"
+  },
+  "announceOptions": {
+    "message": "Optionen",
+    "description": "Announcement of options"
+  },
+  "textOptionOn": {
+    "message": "an",
+    "description": "Explain that option will be switched on (should be short)"
+  },
+  "textOptionOff": {
+    "message": "aus",
+    "description": "Explain that option will be switched off (should be short)"
+  },
+  "announceSession": {
+    "message": "Sitzung",
+    "description": "Announcement of session"
   },
   "buttonStoreSession": {
     "message": "Sitzung speichern",
@@ -98,6 +114,10 @@
   "buttonClearStored": {
     "message": "Gespeicherte Sitzung löschen",
     "description": "Button to clear the stored session"
+  },
+  "announceEditing": {
+    "message": "Editieren",
+    "description": "Announcement of editing"
   },
   "buttonClear": {
     "message": "Fenster leeren",

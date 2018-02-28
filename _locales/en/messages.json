@@ -55,9 +55,13 @@
     "message": "Examples",
     "description": "Announcement of some examples"
   },
-  "announceOperators": {
-    "message": "Operators",
-    "description": "Announcement of available operators"
+  "announceBinaryOperators": {
+    "message": "Binary Operators and their Precedence",
+    "description": "Announcement of available binary operators"
+  },
+  "textRightToLeft": {
+    "message": "right to left",
+    "description": "Text for operators with right-to-left precedence"
   },
   "announceFunctions": {
     "message": "Functions",
@@ -67,25 +71,37 @@
     "message": "Constants",
     "description": "Announcement of available constants"
   },
-  "announceInline": {
-    "message": "Option modifiers",
-    "description": "Announcement of inline option modifiers"
-  },
-  "textInline": {
-    "message": "! (omit “~>” button) ? (use “~>” button) 'width:height' \"base\"",
-    "description": "Text explaining inline option modifiers (should be short)"
+  "announceNumbers": {
+    "message": "Numbers, some Variables, and others",
+    "description": "Announcement of numbers, braces, variables"
   },
   "announceLast": {
-    "message": "Last result",
+    "message": "Last Result and Clipboard",
     "description": "Announcement of symbol for last result"
   },
   "buttonClipboard": {
     "message": "# \u21E8 Clipboard",
-    "description": "Button to copy last result to clipboard anew"
+    "description": "Button to copy last result to clipboard"
   },
   "buttonAllClipboard": {
     "message": "Session \u21E8 Clipboard",
     "description": "Button to copy the whole session to clipboard"
+  },
+  "announceOptions": {
+    "message": "Options",
+    "description": "Announcement of options"
+  },
+  "textOptionOn": {
+    "message": "on",
+    "description": "Explain that option will be switched on (should be short)"
+  },
+  "textOptionOff": {
+    "message": "off",
+    "description": "Explain that option will be switched off (should be short)"
+  },
+  "announceSession": {
+    "message": "Session",
+    "description": "Announcement of session"
   },
   "buttonStoreSession": {
     "message": "Store session",
@@ -98,6 +114,10 @@
   "buttonClearStored": {
     "message": "Clear stored session",
     "description": "Button to clear the stored session"
+  },
+  "announceEditing": {
+    "message": "Editing",
+    "description": "Announcement of editing"
   },
   "buttonClear": {
     "message": "Clear window",

@@ -86,14 +86,14 @@ function appendFormInput(parent, formId, id, size, value) {
   return input;
 }
 
-function appendButton(parent, id, textId, disabled) {
+function appendButton(parent, id, textId, disabled, text) {
   const button = document.createElement("BUTTON");
   button.type = "button";
   button.id = id;
   if (disabled) {
     button.disabled = true;
   }
-  button.textContent = browser.i18n.getMessage(textId || id);
+  button.textContent = (text || browser.i18n.getMessage(textId || id));
   parent.appendChild(button);
   return button;
 }
@@ -141,5 +141,8 @@ function appendButtonTextCol(parent, id, buttonTextId, disabled, textId) {
 }
 
 function changeText(id, text) {
-  document.getElementById(id).textContent = text;
+  const element = document.getElementById(id);
+  if (element) {
+    element.textContent = text;
+  }
 }

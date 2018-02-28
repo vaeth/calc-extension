@@ -1,8 +1,13 @@
 # ChangeLog for calc-extension:
 
-*calc-extension-3.1:
+*calc-extension-4.0:
 	Martin Väth <martin at mvath.de>:
+	- New layout of pagehead: Hide details first
+	- Buttons for all operators, variables, constants, numbers, etc
+	- Display current value of #
+	- Alternative symbols for sqrt and cbrt: √ and ∛
 	- Attempt to keep result scrolled in
+	- Bugfix: resetting to default width works now in non-button mode
 
 *calc-extension-3.0:
 	Martin Väth <martin at mvath.de>:

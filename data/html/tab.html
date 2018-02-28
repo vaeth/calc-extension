@@ -5,42 +5,240 @@
     <link rel="icon" sizes="any" type="image/svg+xml" href="/data/icons/48.svg" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
-  <body id="top">
+  <body>
     <h1 id="headTitle"><img src="/data/icons/48.svg" width="48" height="48" alt="" /></h1>
-    <table>
-      <tr>
-        <th id="announceExamples" valign="top"></th>
-        <td>
-          <table>
-            <tr><td>1&times;7:7 + 2(1+2&middot;3)(3+2 2)/7&uarr;2 + 4*7%3&nbsp;1.5 + -.5 + 1e2 + 2&uarr;2&uarr;3 - 2**8</td></tr>
-            <tr><td>a=#</td></tr>
-            <tr><td>2a + cos &pi; + sin(PI/2)log E + log 100/LN10 + sqrt 4</td></tr>
-            <tr><td>0x2F | 021 "16"</td></tr>
-            <tr><td>Variable_1a = (c=d=#) + c^d^a</td></tr>
-          </table>
-          </td>
-      </tr>
-      <tr>
-        <th id="announceOperators" valign="top"></th>
-        <td>+&nbsp;&nbsp;-&nbsp;&nbsp;*&middot;&times;&nbsp;&nbsp;/:&nbsp;&nbsp;%&nbsp;&nbsp;**&uarr;&nbsp;&nbsp;&amp;&nbsp;&nbsp;|&nbsp;&nbsp;^</td>
-      </tr>
-      <tr>
-        <th id="announceFunctions" valign="top"></th>
-        <td>sin cos tan acos asin atan sinh cosh tanh acosh asinh atanh log10 log2 log1p(x)=log(1+x) expm1(x)=exp(x)-1 sqrt cbrt(x)&uarr;3=x abs sign floor ceil round trunc fround clz32</td>
-      </tr>
-      <tr>
-        <th id="announceConstants" valign="top"></th>
-        <td>E=exp 1, PI=&pi;=acos -1, SQRT2=sqrt 2, SQRT1_2=sqrt(1/2), LN2=log 2, LN10=log 10, LOG2E=log2 E, LOG10E=log10 E, EPSILON=&epsilon;</td>
-      </tr>
-      <tr>
-        <th id="announceInline" valign="top"></th>
-        <td id="textInline"></td>
-      </tr>
-      <tr>
-        <th id="announceLast" valign="top"></th>
-        <td><table><tr id="lastRow"><td>#</td></tr></table></td>
-      </tr>
-    </table>
+    <details id="detailsExamples">
+      <summary id="announceExamples"></summary>
+      <p>1 + 2(1+1) + (2-1)(3-2)</p>
+      <table><tr><td>6</td></tr></table>
+      <p>1·1 + 1×1 + 1 1 + 1*1</p>
+      <table><tr><td>4</td></tr></table>
+      <p>2↑2↑3 - 2**8 + 4/3 - 1:3</p>
+      <table><tr><td>1</td></tr></table>
+      <p>1 - cos π/2 + cos(PI/2)</p>
+      <table><tr><td>1.5</td></tr></table>
+      <p># + 1000</p>
+      <table><tr><td>1001.5</td></tr></table>
+      <p>a = #</p>
+      <table><tr><td>1001.5</td></tr></table>
+      <p>2a + 3</p>
+      <table><tr><td>2006</td></tr></table>
+      <p>sin(PI/2)log E + log 100/LN10 + &radic;4 + sqrt 4</p>
+      <table><tr><td>7</td></tr></table>
+      <p>0x2F | 021 "16"</p>
+      <table><tr><td id="textResult1">3f</td></tr></table>
+      <p>Variable_1a = (c=d=#)+c ^ d</p>
+      <table><tr><td id="textResult2">41</td></tr></table>
+    </details>
+    <details>
+      <summary id="announceBinaryOperators"></summary>
+      <table>
+        <tr>
+          <td><div style="border:solid"><button
+            id="buttonAbbrUarr">&uarr;</button><button
+            id="buttonAbbrDoubleAst">**</button></div></td>
+          <td id="textRightToLeft1"></td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td><div style="border:solid"><button
+            id="buttonAbbrTimes">&times;</button><button
+            id="buttonAbbrMiddot">&middot;</button><button
+            id="buttonAbbrAst">*</button></div></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrSlash">/</button><button
+            id="buttonAbbrColon">:</button></div></td>
+          <td><button id="buttonAbbrPercentage">%</button></div></td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td><button id="buttonAbbrPlus">+</button></div></td>
+          <td><button id="buttonAbbrMinus">-</button></div></td>
+        </tr>
+      </table>
+      <table>
+        <tr><td><button id="buttonAbbrAmp">&amp;</button></div></td></tr>
+      </table>
+      <table>
+        <tr><td><button id="buttonAbbrPow">^</button></td></tr>
+      </table>
+      <table>
+        <tr><td><button id="buttonAbbrVert">|</button></div></td></tr>
+      </table>
+      <table>
+        <tr>
+          <td><button id="buttonAbbrAssign">=</button></div></td>
+          <td id="textRightToLeft2"></td>
+        </tr>
+      </table>
+    </details>
+    <details>
+      <summary id="announceFunctions"></summary>
+      <table>
+        <tr>
+          <td><button id="buttonAbbrSin">sin</button></td>
+          <td><button id="buttonAbbrCos">cos</button></td>
+          <td><button id="buttonAbbrTan">tan</button></td>
+          <td><button id="buttonAbbrAsin">asin</button></td>
+          <td><button id="buttonAbbrAcos">acos</button></td>
+          <td><button id="buttonAbbrAtan">atan</button></td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td><button id="buttonAbbrSinh">sinh</button></td>
+          <td><button id="buttonAbbrCosh">cosh</button></td>
+          <td><button id="buttonAbbrTanh">tanh</button></td>
+          <td><button id="buttonAbbrAsinh">asinh</button></td>
+          <td><button id="buttonAbbrAcosh">acosh</button></td>
+          <td><button id="buttonAbbrAtanh">atanh</button></td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td><button id="buttonAbbrLog10">log10</button></td>
+          <td><button id="buttonAbbrLog2">log2</button></td>
+          <td><button id="buttonAbbrLog">log</button></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrLog1p">log1p</button>x&mapsto;log(1+x)</div></td>
+          <td><button id="buttonAbbrExp">exp</button></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrExpm1">expm1</button>x&mapsto;exp x - 1</div></td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td><div style="border:solid"><button
+            id="buttonAbbrRadic">&radic;</button><button
+            id="buttonAbbrSqrt">sqrt</button></div></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrCuberoot">&#x221B;</button><button
+            id="buttonAbbrCbrt">cbrt</button></div></td>
+          <td><button
+            id="buttonAbbrClz32">clz32</button>Count Leading Zeroes (32 Bit)</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td><button id="buttonAbbrAbs">abs</button></td>
+          <td><button id="buttonAbbrSign">sign</button></td>
+          <td><button id="buttonAbbrFloor">floor</button></td>
+          <td><button id="buttonAbbrCeil">ceil</button></td>
+          <td><button id="buttonAbbrRound">round</button></td>
+          <td><button id="buttonAbbrTrunc">trunc</button></td>
+          <td><button id="buttonAbbrFround">fround</button></td>
+        </tr>
+      </table>
+    </details>
+    <details>
+      <summary id="announceConstants"></summary>
+      <table>
+        <tr>
+          <td><div style="border:solid"><button
+            id="buttonAbbrE">E</button>exp&nbsp;1</div></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrPi">&pi;</button><button
+            id="buttonAbbrPI">PI</button>acos-1</div></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrSQRT2">SQRT2</button>&radic;<span
+              style="text-decoration:overline;">2</span></div></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrSQRT1_2">SQRT1_2</button>&radic;<span
+              style="text-decoration:overline;">&frac12;</span></div></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrEpsilon">&epsilon;</button><button
+            id="buttonAbbrEPSILON">EPSILON</button></td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td><div style="border:solid"><button
+            id="buttonAbbrLN2">LN2</button>log&nbsp;2</div></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrLN10">LN10</button>log&nbsp;10</div></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrLOG2E">LOG2E</button>log2&nbsp;E</div></td>
+          <td><div style="border:solid"><button
+            id="buttonAbbrLOG10E">LOG10E</button>log10&nbsp;E</div></td>
+        </tr>
+      </table>
+    </details>
+    <details>
+      <summary id="announceNumbers"></summary>
+      <table>
+        <tr>
+          <td><button id="buttonAbbrUnaryPlus">+</button></td>
+          <td><button id="buttonAbbrUnaryMinus">-</button></td>
+          <td><button id="buttonAbbrOpen">(</button></td>
+          <td><button id="buttonAbbrClose">)</button></td>
+          <td><button id="buttonAbbrA">a</button></td>
+          <td><button id="buttonAbbrB">b</button></td>
+          <td><button id="buttonAbbrC">c</button></td>
+        </tr>
+        <tr>
+          <td><button id="buttonAbbr7">7</button></td>
+          <td><button id="buttonAbbr8">8</button></td>
+          <td><button id="buttonAbbr9">9</button></td>
+          <td></td>
+          <td><button id="buttonAbbrI">i</button></td>
+          <td><button id="buttonAbbrJ">j</button></td>
+          <td><button id="buttonAbbrK">k</button></td>
+        </tr>
+        <tr>
+          <td><button id="buttonAbbr4">4</button></td>
+          <td><button id="buttonAbbr5">5</button></td>
+          <td><button id="buttonAbbr6">6</button></td>
+          <td></td>
+          <td><button id="buttonAbbrL">l</button></td>
+          <td><button id="buttonAbbrM">m</button></td>
+          <td><button id="buttonAbbrN">n</button></td>
+        </tr>
+        <tr>
+          <td><button id="buttonAbbr1">1</button></td>
+          <td><button id="buttonAbbr2">2</button></td>
+          <td><button id="buttonAbbr3">3</button></td>
+          <td></td>
+          <td><button id="buttonAbbrU">u</button></td>
+          <td><button id="buttonAbbrV">v</button></td>
+          <td><button id="buttonAbbrW">w</button></td>
+        </tr>
+        <tr>
+          <td><button id="buttonAbbr0">0</button></td>
+          <td><button id="buttonAbbrDot">.</button></td>
+          <td><button id="buttonAbbrNumericE">e</button></td>
+          <td><button id="buttonAbbrSpace">&nbsp;</button></td>
+          <td><button id="buttonAbbrX">x</button></td>
+          <td><button id="buttonAbbrY">y</button></td>
+          <td><button id="buttonAbbrZ">z</button></td>
+        </tr>
+      </table>
+    </details>
+    <details>
+      <summary id="announceLast"></summary>
+      <table>
+        <tr id="lastRow">
+          <td><button id="buttonAbbrLast">#</button></td>
+          <td id="lastString"></td>
+        </tr>
+      </table>
+    </details>
+    <details>
+      <summary id="announceOptions"></summary>
+      <table><tr id="rowInputMode"></tr></table>
+      <table><tr id="rowSize"></tr></table>
+      <table><tr id="rowBase"></tr></table>
+    </details>
+    <details>
+      <summary id="announceSession"></summary>
+      <table><tr id="rowSession"></tr></table>
+    </details>
+    <details>
+      <summary id="announceEditing"></summary>
+      <table><tr id="rowEditing"></tr></table>
+    </details>
+    <div id="top"></div>
     <script src="/data/js/append.js" type="text/javascript"></script>
     <script src="/data/js/input.js" type="text/javascript"></script>
     <script src="/data/js/head.js" type="text/javascript"></script>

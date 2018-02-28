@@ -48,7 +48,7 @@ function restoreSessionLast(state, checkOnly) {
       return true;
     }
     state.lastString = lastString;
-    enableButtonClipboard();
+    displayLastString();
   }
   if (checkOnly) {
     return false;
@@ -118,7 +118,7 @@ function displayResult(state, id, indexString) {
     text = browser.i18n.getMessage("messageError", error);
   }
   if (last) {
-    enableButtonClipboard();
+    displayLastString(state);
     if (isChecked(getCheckboxClipboard())) {
       toClipboard(state.lastString);
     }
@@ -182,6 +182,28 @@ function storeSession(state) {
   sendCommand("storeSession", { session: session });
 }
 
+function insertButtonAbbr(state, id) {
+  const inputId = state.inputId;
+  if (!inputId) {
+    return;
+  }
+  const text = state.buttonsAbbr[id];
+  if (!text) {
+    return;
+  }
+  const input = document.getElementById(inputId);
+  if (!input) {
+    return;
+  }
+  if (typeof(input.selectionStart) == "number") {
+    input.value = input.value.substr(0, input.selectionStart) +
+      text + input.value.substr(input.selectionEnd);
+  } else {
+    input.value += text;
+  }
+  input.focus();
+}
+
 function clickListener(state, event) {
   if (!event.target || !event.target.id) {
     return;
@@ -206,6 +228,11 @@ function clickListener(state, event) {
     case "buttonClearStored":
       sendCommand("clearSession");
       return;
+    default:
+      if (id.startsWith("buttonAbbr")) {
+        insertButtonAbbr(state, id);
+        return;
+      }
   }
   if (!id.startsWith("button=")) {
     return;
@@ -241,6 +268,32 @@ function changeListener(state, event) {
   }
 }
 
+function focusinListener(state, event) {
+  let target = event.target;
+  if (!target) {
+    return;
+  }
+  while (!target.id && target.hasChildNodes()) {
+    target = target.firstChild;
+  }
+  if (!target.id) {
+    return;
+  }
+  const id = target.id;
+  if (id.startsWith("area=") || id.startsWith("input")) {
+    state.inputId = id;
+    return;
+  }
+  if (id.startsWith("form=")) {
+    state.inputId = id.replace(/^form/, "input");
+    return;
+  }
+  if (id.startsWith("button=")) {
+    state.inputId = id.replace(/^button/, "area");
+    return;
+  }
+}
+
 function messageListener(state, message) {
   if (!message.command) {
     return;
@@ -265,22 +318,123 @@ function messageListener(state, message) {
 
 function initMain() {
   const state = {
+    inputId: null,
     counter: 0,
     last: null,
     lastString: null,
     storedLast: null,
     size: [0, 0],
     base: 0,
-    parser: new Parser()
+    parser: new Parser(),
+    buttonsAbbr: {
+      buttonAbbrUarr: "\u2191",
+      buttonAbbrDoubleAst: "**",
+      buttonAbbrTimes: "\xD7",
+      buttonAbbrMiddot: "\xB7",
+      buttonAbbrAst: "*",
+      buttonAbbrSlash: "/",
+      buttonAbbrColon: ":",
+      buttonAbbrPercentage: "%",
+      buttonAbbrPlus: " + ",
+      buttonAbbrMinus: " - ",
+      buttonAbbrAmp: " & ",
+      buttonAbbrPow: " ^ ",
+      buttonAbbrVert: " | ",
+      buttonAbbrAssign: " = ",
+      buttonAbbrSin: "sin ",
+      buttonAbbrCos: "cos ",
+      buttonAbbrTan: "tan ",
+      buttonAbbrAsin: "asin ",
+      buttonAbbrAcos: "acos ",
+      buttonAbbrAtan: "atan ",
+      buttonAbbrSinh: "sinh ",
+      buttonAbbrCosh: "cosh ",
+      buttonAbbrTanh: "tanh ",
+      buttonAbbrAsinh: "asinh ",
+      buttonAbbrAcosh: "acosh ",
+      buttonAbbrAtanh: "atanh ",
+      buttonAbbrLog10: "log10 ",
+      buttonAbbrLog2: "log2 ",
+      buttonAbbrLog: "log ",
+      buttonAbbrLog1p: "log1p ",
+      buttonAbbrExp: "exp ",
+      buttonAbbrExpm1: "expm1 ",
+      buttonAbbrSqrt: "sqrt ",
+      buttonAbbrRadic: "\u221A",
+      buttonAbbrCbrt: "cbrt ",
+      buttonAbbrCuberoot: "\u221B",
+      buttonAbbrClz32: "clz32 ",
+      buttonAbbrAbs: "abs ",
+      buttonAbbrSign: "sign ",
+      buttonAbbrFloor: "floor ",
+      buttonAbbrCeil: "ceil ",
+      buttonAbbrRound: "round ",
+      buttonAbbrTrunc: "trunc ",
+      buttonAbbrFround: "fround ",
+      buttonAbbrE: "E ",
+      buttonAbbrPi: "\u03C0",
+      buttonAbbrPI: "PI ",
+      buttonAbbrSQRT2: "SQRT2 ",
+      buttonAbbrSQRT1_2: "SQRT1_2 ",
+      buttonAbbrLN2: "LN2 ",
+      buttonAbbrLN10: "LN10 ",
+      buttonAbbrLOG2E: "LOG2E ",
+      buttonAbbrLOG10E: "LOG10E ",
+      buttonAbbrEPSILON: "EPSILON ",
+      buttonAbbrEpsilon: "\u03B5",
+      buttonAbbrUnaryPlus: "+",
+      buttonAbbrUnaryMinus: "-",
+      buttonAbbrOpen: "(",
+      buttonAbbrClose: ")",
+      buttonAbbr0: "0",
+      buttonAbbr1: "1",
+      buttonAbbr2: "2",
+      buttonAbbr3: "3",
+      buttonAbbr4: "4",
+      buttonAbbr5: "5",
+      buttonAbbr6: "6",
+      buttonAbbr7: "7",
+      buttonAbbr8: "8",
+      buttonAbbr9: "9",
+      buttonAbbrDot: ".",
+      buttonAbbrNumericE: "e",
+      buttonAbbrSpace: " ",
+      buttonAbbrA: "a ",
+      buttonAbbrB: "b ",
+      buttonAbbrC: "c ",
+      buttonAbbrI: "i ",
+      buttonAbbrJ: "j ",
+      buttonAbbrK: "k ",
+      buttonAbbrL: "l ",
+      buttonAbbrM: "m ",
+      buttonAbbrN: "n ",
+      buttonAbbrU: "u ",
+      buttonAbbrV: "v ",
+      buttonAbbrW: "w ",
+      buttonAbbrX: "x ",
+      buttonAbbrY: "y ",
+      buttonAbbrZ: "z ",
+      buttonAbbrLast: "#",
+      buttonAbbrExclam: "!",
+      buttonAbbrQuestion: "?",
+      buttonAbbrSize805: "'80:5'",
+      buttonAbbrSize00: "'0:0'",
+      buttonAbbrBase16: '"16"',
+      buttonAbbrBase8: '"8"',
+      buttonAbbrBaseEmpty: '""'
+    }
   };
   document.addEventListener("submit", (event) => {
     submitListener(state, event);
   });
   document.addEventListener("change", (event) => {
     changeListener(state, event);
-  })
+  });
   document.addEventListener("click", (event) => {
     clickListener(state, event);
+  });
+  document.addEventListener("focusin", (event) => {
+    focusinListener(state, event);
   });
   browser.runtime.onMessage.addListener((message) => {
     messageListener(state, message);

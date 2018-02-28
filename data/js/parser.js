@@ -392,6 +392,16 @@ function lexToken(input) {
     token.type = "**";
     return token;
   }
+  if (input.startsWith("\u221A")) { // &radic;
+    token.text = "\u221A";
+    token.type = "sqrt";
+    return token;
+  }
+  if (input.startsWith("\u221B")) { // cube root
+    token.text = "\u221B";
+    token.type = "cbrt";
+    return token;
+  }
   if (input.startsWith("\u03B5")) { // &epsilon;
     token.text = "\u03B5";
     token.type = "EPSILON";

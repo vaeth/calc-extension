@@ -17,10 +17,6 @@ function setHead(text) {
   head.appendChild(document.createTextNode("\xa0" + text));
 }
 
-function getLastRow() {
-  return document.getElementById("lastRow");
-}
-
 function getCheckboxInputMode() {
   return document.getElementById("checkboxInputMode");
 }
@@ -43,6 +39,11 @@ function getLastHead() {
 
 function enableButtonClipboard() {
   enableButton(document.getElementById("buttonClipboard"), true);
+}
+
+function displayLastString(state) {
+  changeText("lastString", state.lastString);
+  enableButtonClipboard();
 }
 
 function enableStorageButtons(enable) {
@@ -80,28 +81,64 @@ function setInputBase(base) {
   }
 }
 
+function translateExamples() {
+  const examples = document.getElementById("detailsExamples");
+  const td = document.createElement("TD");
+  appendTextNode(td, "textResult");
+  for (let table of examples.children) {
+    if (table.nodeName !== "TABLE") {
+      continue;
+    }
+    let row = table;
+    while (row.nodeName !== "TR") {
+      row = row.firstChild;
+    }
+    row.insertBefore(td.cloneNode(true), row.firstChild);
+  }
+  const baseResults = [
+    "textResult1",
+    "textResult2"
+  ];
+  for (let id of baseResults) {
+    const element = document.getElementById(id);
+    element.textContent =
+      browser.i18n.getMessage("messageResult", [element.textContent, "16"]);
+  }
+}
+
 function initLayout() {
   const title = browser.i18n.getMessage("extensionName");
   setTitle(title);
   setHead(title);
   const translateId = [
     "announceExamples",
-    "announceOperators",
+    "announceBinaryOperators",
     "announceFunctions",
     "announceConstants",
-    "announceInline", "textInline",
-    "announceLast"
+    "announceNumbers",
+    "announceLast",
+    "announceOptions",
+    "announceSession",
+    "announceEditing"
   ];
   for (let id of translateId) {
     const translation = browser.i18n.getMessage(id);
     document.getElementById(id).textContent = translation;
   }
+  translateExamples();
+  const rightToLeftId = [
+    "textRightToLeft1",
+    "textRightToLeft2"
+  ];
+  const textRightToLeft = browser.i18n.getMessage("textRightToLeft");
+  for (let id of rightToLeftId) {
+    document.getElementById(id).textContent = textRightToLeft;
+  }
 }
 
 function clearWindow() {
   const top = getTop();
-  const lastHead = getLastHead();
-  while (top.lastChild != lastHead) {
+  while (top.lastChild) {
     top.removeChild(top.lastChild);
   }
 }
@@ -153,41 +190,58 @@ function removeLine(id) {
   topNode.removeChild(node);
 }
 
-function addOptionLine(parent, state, options) {
-  const row = document.createElement("TR");
-  appendCheckboxCol(row, "checkboxInputMode", options.inputMode,
-    "checkboxInputMode", "titleCheckboxInputMode");
-  appendInputCol(row, "inputSize", 3, getSizeText(state.size),
-    "inputSize", "titleInputSize");
-  appendInputCol(row, "inputBase", 1, getBaseText(state.base),
-    "inputBase", "titleinputBase");
-  appendX(parent, "TABLE", row);
+function initWindowLast(clipboard) {
+  const row = document.getElementById("lastRow");
+  appendCheckboxCol(row, "checkboxClipboard", clipboard, null,
+    "titleCheckboxClipboard");
+  appendX(row, "TD", appendButton, "buttonClipboard", null, true);
+  appendX(row, "TD", appendButton, "buttonAllClipboard");
 }
 
-function addStorageLine(parent, disabled) {
-  const row = document.createElement("TR");
-  appendX(row, "TD", appendButton, "buttonAllClipboard");
+function initWindowOptions(inputMode, size, base) {
+  const rowInputMode = document.getElementById("rowInputMode");
+  const rowSize = document.getElementById("rowSize");
+  const rowBase = document.getElementById("rowBase");
+  appendCheckboxCol(rowInputMode, "checkboxInputMode", inputMode,
+    null, "titleCheckboxInputMode");
+  appendX(rowInputMode, "TD", appendButton, "buttonAbbrExclam",
+    null, null, "!");
+  appendX(rowInputMode, "TD", appendTextNode, "textOptionOn");
+  appendX(rowInputMode, "TD", appendButton, "buttonAbbrQuestion",
+    null, null, "?");
+  appendX(rowInputMode, "TD", appendTextNode, "textOptionOff");
+  appendInputCol(rowSize, "inputSize", 3, getSizeText(size),
+    "inputSize", "titleInputSize");
+  appendX(rowSize, "TD", appendButton, "buttonAbbrSize805",
+    null, null, "'80:5'");
+  appendX(rowSize, "TD", appendButton, "buttonAbbrSize00",
+    null, null, "'0:0'");
+  appendInputCol(rowBase, "inputBase", 1, getBaseText(base),
+    "inputBase", "titleinputBase");
+  appendX(rowBase, "TD", appendButton, "buttonAbbrBase16", null, null, '"16"');
+  appendX(rowBase, "TD", appendButton, "buttonAbbrBase8", null, null, '"8"');
+  appendX(rowBase, "TD", appendButton, "buttonAbbrBaseEmpty",
+    null, null, '""');
+}
+
+function initWindowSession(disabled) {
+  const row = document.getElementById("rowSession");
   appendX(row, "TD", appendButton, "buttonStoreSession", null);
   appendX(row, "TD", appendButton, "buttonAddSession", null, disabled);
   appendX(row, "TD", appendButton, "buttonClearStored", null, disabled);
+}
+
+function initWindowEditing() {
+  const row = document.getElementById("rowEditing");
   appendX(row, "TD", appendButton, "buttonClear");
   appendX(row, "TD", appendTextNode, "textClear", null, "titleTextClear");
-  appendX(parent, "TABLE", row);
 }
 
 function initWindow(state, options) {
-  const row = getLastRow();
-  appendCheckboxCol(row, "checkboxClipboard", options.clipboard, null,
-    "titleCheckboxClipboard");
-  appendX(row, "TD", appendButton, "buttonClipboard", null, true);
-  const optionLine = document.createElement("P");
-  addOptionLine(optionLine, state, options);
-  const storageLine = document.createElement("P");
-  addStorageLine(storageLine, !state.storedLast);
-  const top = getTop();
-  top.appendChild(optionLine);
-  storageLine.id = "lastHead";
-  top.appendChild(storageLine);
+  initWindowLast(options.clipboard);
+  initWindowOptions(options.inputMode, state.size, state.base);
+  initWindowSession(!state.storedLast);
+  initWindowEditing();
   appendNext(state);
 }
 
@@ -217,7 +271,7 @@ function changeSize(state, size, forceRedisplay) {
     setInputSize(size);
   }
   if (oldSize[0] != size[0]) {
-    changeInputWidth(getTop(), size[0]);
+    changeInputWidth(getTop(), size[0] || 60);
   }
 }
 
