@@ -59,6 +59,16 @@ function setCheckboxClipboard(checked) {
   setChecked(getCheckboxClipboard(), checked);
 }
 
+function enableCurrent(lines, enable) {
+  if (!lines.enabled == !enable) {
+    return;
+  }
+  lines.enabled = !!enable;
+  for (let i of State.buttonsAbbrArray) {
+    enableButton(getElementById(i), enable);
+  }
+}
+
 function setInputSize(size) {
   const inputSize = getInputSize();
   if (!inputSize) {
@@ -95,11 +105,10 @@ function translateExamples() {
     }
     row.insertBefore(td.cloneNode(true), row.firstChild);
   }
-  const baseResults = [
+  for (let id of [
     "textResult1",
     "textResult2"
-  ];
-  for (let id of baseResults) {
+    ]) {
     const element = document.getElementById(id);
     element.textContent =
       browser.i18n.getMessage("messageResult", [element.textContent, "16"]);
@@ -110,7 +119,7 @@ function initLayout() {
   const title = browser.i18n.getMessage("extensionName");
   setTitle(title);
   setHead(title);
-  const translateId = [
+  for (let id of [
     "announceExamples",
     "announceBinaryOperators",
     "announceFunctions",
@@ -120,18 +129,16 @@ function initLayout() {
     "announceOptions",
     "announceSession",
     "announceEditing"
-  ];
-  for (let id of translateId) {
+    ]) {
     const translation = browser.i18n.getMessage(id);
     document.getElementById(id).textContent = translation;
   }
   translateExamples();
-  const rightToLeftId = [
+  const textRightToLeft = browser.i18n.getMessage("textRightToLeft");
+  for (let id of [
     "textRightToLeft1",
     "textRightToLeft2"
-  ];
-  const textRightToLeft = browser.i18n.getMessage("textRightToLeft");
-  for (let id of rightToLeftId) {
+    ]) {
     document.getElementById(id).textContent = textRightToLeft;
   }
 }
@@ -143,51 +150,45 @@ function clearWindow() {
   }
 }
 
-function appendNext(state, input, output) {
-  const index = String(++state.counter);
-  const outputId = "output=" + index;
-  const top = getTop();
-  let second;
-  let element;
-  if (isChecked(getCheckboxInputMode())) {
-    const row = document.createElement("TR");
-    appendX(row, "TD", appendTextNode, "textResult");
-    appendX(row, "TD", appendTextNode, null, outputId, null, output);
-    element = appendX(top, "P", appendFormInput,
-      "form=" + index, "input=" + index, state.size, input);
-    second = appendX(top, "TABLE", row);
+function appendNext(state, input, output, before) {
+  const lines = state.lines;
+  const line = lines.generateLine(!isChecked(getCheckboxInputMode()));
+  lines.currentIndex = lines.insertLine(line, before, true);
+  const paragraph = document.createElement("P");
+  paragraph.id = line.paragraph;
+  const row = document.createElement("TR");
+  if (line.isInput) {
+    appendFormInput(paragraph, line.form, line.input, state.size, input);
+    appendX(row, "TD", appendTextNode, "textResult", line.result);
+    appendX(row, "TD", appendTextNode, null, line.output, null, output);
   } else {
-    const row = document.createElement("TR");
-    second = appendX(row, "TD", appendButton, "button=" + index,
-      "buttonResult");
-    appendX(row, "TD", appendTextNode, null, outputId, null, output);
-    element = appendX(top, "P", appendTextarea, "area=" + index,
-      state.size, input);
-    appendX(top, "TABLE", row);
+    appendTextarea(paragraph, line.input, state.size, input);
+    appendX(row, "TD", appendButton, line.result, "buttonResult");
+    appendX(row, "TD", appendTextNode, null, line.output, null, output);
   }
-  if (second.focus) {
-    second.focus();
-  }
-  if (second.scrollIntoView) {
-    second.scrollIntoView(false);
-  }
-  element.focus();
+  const table = document.createElement("TABLE");
+  table.id = line.table;
+  table.appendChild(row);
+  const beforeNode = (lines.isValidIndex(before) ?
+    document.getElementById(lines.getLine(before).paragraph) : null);
+  const top = getTop();
+  top.insertBefore(paragraph, beforeNode);
+  top.insertBefore(table, beforeNode);
+  lines.focus();
 }
 
-function removeLine(id) {
-  let node = document.getElementById(id);
-  if (!node) {
+function removeLine(lines, index) {
+  const line = lines.getLine(index);
+  if (!line) {
     return;
   }
-  const topNode = getTop();
-  for (;;) {
-    const parentNode = node.parentNode;
-    if (parentNode == topNode) {
-      break;
-    }
-    node = parentNode;
+  if (!lines.isValidIndex(index) || (index === lines.currentIndex)) {
+    enableCurrent(lines, false);  // race: disable until we get focus again
   }
-  topNode.removeChild(node);
+  lines.removeLine(index);  // order matters: first invalidate currentIndex
+  const top = getTop();
+  top.removeChild(document.getElementById(line.table));
+  top.removeChild(document.getElementById(line.paragraph));
 }
 
 function initWindowLast(clipboard) {
@@ -198,30 +199,30 @@ function initWindowLast(clipboard) {
   appendX(row, "TD", appendButton, "buttonAllClipboard");
 }
 
-function initWindowOptions(inputMode, size, base) {
+function initWindowOptions(inputMode, size, base, edit) {
   const rowInputMode = document.getElementById("rowInputMode");
   const rowSize = document.getElementById("rowSize");
   const rowBase = document.getElementById("rowBase");
   appendCheckboxCol(rowInputMode, "checkboxInputMode", inputMode,
     null, "titleCheckboxInputMode");
   appendX(rowInputMode, "TD", appendButton, "buttonAbbrExclam",
-    null, null, "!");
+    null, edit, "!");
   appendX(rowInputMode, "TD", appendTextNode, "textOptionOn");
   appendX(rowInputMode, "TD", appendButton, "buttonAbbrQuestion",
-    null, null, "?");
+    null, edit, "?");
   appendX(rowInputMode, "TD", appendTextNode, "textOptionOff");
   appendInputCol(rowSize, "inputSize", 3, getSizeText(size),
     "inputSize", "titleInputSize");
   appendX(rowSize, "TD", appendButton, "buttonAbbrSize805",
-    null, null, "'80:5'");
+    null, edit, "'80:5'");
   appendX(rowSize, "TD", appendButton, "buttonAbbrSize00",
-    null, null, "'0:0'");
+    null, edit, "'0:0'");
   appendInputCol(rowBase, "inputBase", 1, getBaseText(base),
     "inputBase", "titleinputBase");
-  appendX(rowBase, "TD", appendButton, "buttonAbbrBase16", null, null, '"16"');
-  appendX(rowBase, "TD", appendButton, "buttonAbbrBase8", null, null, '"8"');
+  appendX(rowBase, "TD", appendButton, "buttonAbbrBase16", null, edit, '"16"');
+  appendX(rowBase, "TD", appendButton, "buttonAbbrBase8", null, edit, '"8"');
   appendX(rowBase, "TD", appendButton, "buttonAbbrBaseEmpty",
-    null, null, '""');
+    null, edit, '""');
 }
 
 function initWindowSession(disabled) {
@@ -239,27 +240,24 @@ function initWindowEditing() {
 
 function initWindow(state, options) {
   initWindowLast(options.clipboard);
-  initWindowOptions(options.inputMode, state.size, state.base);
+  initWindowOptions(options.inputMode, state.size, state.base,
+    state.lines.enabled);
   initWindowSession(!state.storedLast);
   initWindowEditing();
   appendNext(state);
 }
 
 function clearAll(state) {
+  enableCurrent(state.lines, false);  // race: disable until we get focus again
+  state.lines = new Lines();  // order matters: first invalidate lines data
   clearWindow();
-  state.count = 0;
   appendNext(state);
 }
 
-function changeInputWidth(parent, width) {
-  if (!parent.hasChildNodes()) {
-    return;
-  }
-  for (let child of parent.childNodes) {
-    if ((child.nodeName === "INPUT") && child.id.startsWith("input=")) {
-      child.size = width;
-    } else {
-      changeInputWidth(child, width);
+function changeInputWidth(lines, width) {
+  for (let line of lines.lines) {
+    if (line.isInput) {
+      document.getElementById(line.input).size = width;
     }
   }
 }
@@ -271,7 +269,7 @@ function changeSize(state, size, forceRedisplay) {
     setInputSize(size);
   }
   if (oldSize[0] != size[0]) {
-    changeInputWidth(getTop(), size[0] || 60);
+    changeInputWidth(state.lines, size[0] || 60);
   }
 }
 

@@ -4,33 +4,21 @@
 
 "use strict";
 
-function getInput(indexString) {
-  return document.getElementById("area=" + indexString) ||
-      document.getElementById("input=" + indexString);
-}
-
-function addContent(seed, counter) {
+function addContent(seed, lines) {
   let textResult;
   if (!Array.isArray(seed)) {
     textResult = browser.i18n.getMessage("textResult");
   }
-  for (let i = 0; i <= counter; ++i) {
-    const indexString = String(i);
-    const output = document.getElementById("output=" + indexString);
-    if (!output) {
-      continue;
-    }
-    const inputValue = getInput(indexString).value;
-    if (!inputValue) {
-      continue;
-    }
+  for (let line of lines.lines) {
+    const output = document.getElementById(line.output).textContent;
+    const input = document.getElementById(line.input).value;
     if (Array.isArray(seed)) {
-      seed.push([inputValue, output.textContent]);
+      seed.push([input, output]);
     } else {
-      seed += inputValue;
+      seed += input;
       seed += "\n";
       seed += textResult;
-      seed += output.textContent;
+      seed += output;
       seed += "\n";
     }
   }
@@ -79,14 +67,15 @@ function addSession(state, session) {
   }
   const content = session.content;
   if (Array.isArray(content)) {
-    const indexString = String(state.counter);  // end of current session
+    const lines = state.lines;
+    const lastIndex = lines.currentIndex;
     for (let [input, output] of content) {
       appendNext(state, input, output);
     }
-    const input = getInput(indexString);
-    if (input) {  // focus end of original session
-      input.focus();
+    if (lastIndex !== null) {
+      lines.currentIndex = lastIndex;
     }
+    lines.focus();
   }
 }
 
@@ -105,8 +94,13 @@ function optionsChanges(state, changes) {
   }
 }
 
-function displayResult(state, id, indexString) {
-  const input = document.getElementById(id).value;
+function displayResult(state, id) {
+  const lines = state.lines;
+  if (!lines.setCurrentId(id)) {  // no valid id
+    return false;
+  }
+  const line = lines.currentLine;
+  const input = document.getElementById(line.input).value;
   let last = false;
   let text;
   try {
@@ -123,32 +117,27 @@ function displayResult(state, id, indexString) {
       toClipboard(state.lastString);
     }
   }
-  let current = Number.parseInt(indexString, 10);
+  let nextIndex;
   if (text != null) {
-    changeText("output=" + indexString, text);
+    changeText(line.output, text);
+    nextIndex = (lines.currentIndex + 1);
   } else {  // null means to remove the line
-    removeLine("output=" + indexString);
-    removeLine(id);
-    if (current == state.counter) {  // We removed last: next becomes counter
-      state.counter = --current;
-    }
+    nextIndex = lines.currentIndex;
+    removeLine(lines);  // invalidates lines.currentIndex
   }
-  while (current < state.counter) {
-    ++current;
-    const nextIndex = String(current);
-    const nextNode = getInput(nextIndex);
-    if (nextNode) {
-      nextNode.focus();
-      return;
-    }
+  if (lines.setCurrentIndex(nextIndex)) {
+    lines.focus();
+  } else {
+    appendNext(state);
   }
-  appendNext(state);
+  return true;
 }
 
 function initCalc(state, options) {
   if (getCheckboxInputMode()) {  // already initialized
     return;
   }
+  state.parser = new Parser();
   state.size = sanitizeSize(options.size)
   state.base = sanitizeBase(options.base);
   initWindow(state, options);
@@ -164,7 +153,7 @@ function sendCommand(command, message) {
 
 function storeSession(state) {
   const session = {
-    content: addContent([], state.counter)
+    content: addContent([], state.lines)
   };
   const last = state.last;
   const lastString = state.lastString;
@@ -182,17 +171,13 @@ function storeSession(state) {
   sendCommand("storeSession", { session: session });
 }
 
-function insertButtonAbbr(state, id) {
-  const inputId = state.inputId;
-  if (!inputId) {
-    return;
-  }
-  const text = state.buttonsAbbr[id];
-  if (!text) {
-    return;
-  }
-  const input = document.getElementById(inputId);
+function insertButtonAbbr(lines, id) {
+  const input = lines.currentInput;
   if (!input) {
+    return;
+  }
+  const text = State.getButtonsAbbr(id);
+  if (!text) {
     return;
   }
   if (typeof(input.selectionStart) == "number") {
@@ -214,7 +199,7 @@ function clickListener(state, event) {
       toClipboard(state.lastString);
       return;
     case "buttonAllClipboard":
-      toClipboard(addContent("", state.counter));
+      toClipboard(addContent("", state.lines));
       return;
     case "buttonClear":
       clearAll(state);
@@ -230,28 +215,23 @@ function clickListener(state, event) {
       return;
     default:
       if (id.startsWith("buttonAbbr")) {
-        insertButtonAbbr(state, id);
+        insertButtonAbbr(state.lines, id);
+        return;
+      }
+      if (id.startsWith("button=")) {
+        displayResult(state, id);
         return;
       }
   }
-  if (!id.startsWith("button=")) {
-    return;
-  }
-  const indexString = id.substr(7);  // 7 = "button=".length
-  displayResult(state, "area=" + indexString, indexString);
 }
 
 function submitListener(state, event) {
   if (!event.target || !event.target.id) {
     return;
   }
-  const id = event.target.id;
-  if (!id.startsWith("form=")) {
-    return;
+  if (displayResult(state, event.target.id)) {
+    event.preventDefault();
   }
-  event.preventDefault();
-  const indexString = id.substr(5);  // 5 = "form=".length
-  displayResult(state, "input=" + indexString, indexString);
 }
 
 function changeListener(state, event) {
@@ -276,21 +256,10 @@ function focusinListener(state, event) {
   while (!target.id && target.hasChildNodes()) {
     target = target.firstChild;
   }
-  if (!target.id) {
-    return;
-  }
-  const id = target.id;
-  if (id.startsWith("area=") || id.startsWith("input")) {
-    state.inputId = id;
-    return;
-  }
-  if (id.startsWith("form=")) {
-    state.inputId = id.replace(/^form/, "input");
-    return;
-  }
-  if (id.startsWith("button=")) {
-    state.inputId = id.replace(/^button/, "area");
-    return;
+  const lines = state.lines;
+  if (lines.setCurrentId(target.id)) {
+    enableCurrent(lines, true);
+    lines.focus(true);
   }
 }
 
@@ -317,131 +286,7 @@ function messageListener(state, message) {
 }
 
 function initMain() {
-  const state = {
-    inputId: null,
-    counter: 0,
-    last: null,
-    lastString: null,
-    storedLast: null,
-    size: [0, 0],
-    base: 0,
-    parser: new Parser(),
-    buttonsAbbr: {
-      buttonAbbrUarr: "\u2191",
-      buttonAbbrDoubleAst: "**",
-      buttonAbbrTimes: "\xD7",
-      buttonAbbrMiddot: "\xB7",
-      buttonAbbrAst: "*",
-      buttonAbbrSlash: "/",
-      buttonAbbrColon: ":",
-      buttonAbbrPercentage: "%",
-      buttonAbbrPlus: " + ",
-      buttonAbbrMinus: " - ",
-      buttonAbbrAmp: " & ",
-      buttonAbbrPow: " ^ ",
-      buttonAbbrVert: " | ",
-      buttonAbbrAssign: " = ",
-      buttonAbbrSin: "sin ",
-      buttonAbbrCos: "cos ",
-      buttonAbbrTan: "tan ",
-      buttonAbbrAsin: "asin ",
-      buttonAbbrAcos: "acos ",
-      buttonAbbrAtan: "atan ",
-      buttonAbbrSinh: "sinh ",
-      buttonAbbrCosh: "cosh ",
-      buttonAbbrTanh: "tanh ",
-      buttonAbbrAsinh: "asinh ",
-      buttonAbbrAcosh: "acosh ",
-      buttonAbbrAtanh: "atanh ",
-      buttonAbbrLog10: "log10 ",
-      buttonAbbrLog2: "log2 ",
-      buttonAbbrLog: "log ",
-      buttonAbbrLog1p: "log1p ",
-      buttonAbbrExp: "exp ",
-      buttonAbbrExpm1: "expm1 ",
-      buttonAbbrSqrt: "sqrt ",
-      buttonAbbrRadic: "\u221A",
-      buttonAbbrCbrt: "cbrt ",
-      buttonAbbrCuberoot: "\u221B",
-      buttonAbbrClz32: "clz32 ",
-      buttonAbbrAbs: "abs ",
-      buttonAbbrSign: "sign ",
-      buttonAbbrFloor: "floor ",
-      buttonAbbrCeil: "ceil ",
-      buttonAbbrRound: "round ",
-      buttonAbbrTrunc: "trunc ",
-      buttonAbbrFround: "fround ",
-      buttonAbbrE: "E ",
-      buttonAbbrPi: "\u03C0",
-      buttonAbbrPI: "PI ",
-      buttonAbbrSQRT2: "SQRT2 ",
-      buttonAbbrSQRT1_2: "SQRT1_2 ",
-      buttonAbbrLN2: "LN2 ",
-      buttonAbbrLN10: "LN10 ",
-      buttonAbbrLOG2E: "LOG2E ",
-      buttonAbbrLOG10E: "LOG10E ",
-      buttonAbbrEPSILON: "EPSILON ",
-      buttonAbbrEpsilon: "\u03B5",
-      buttonAbbrUnaryPlus: "+",
-      buttonAbbrUnaryMinus: "-",
-      buttonAbbrOpen: "(",
-      buttonAbbrClose: ")",
-      buttonAbbr0: "0",
-      buttonAbbr1: "1",
-      buttonAbbr2: "2",
-      buttonAbbr3: "3",
-      buttonAbbr4: "4",
-      buttonAbbr5: "5",
-      buttonAbbr6: "6",
-      buttonAbbr7: "7",
-      buttonAbbr8: "8",
-      buttonAbbr9: "9",
-      buttonAbbrDot: ".",
-      buttonAbbrNumericE: "e",
-      buttonAbbrSpace: " ",
-      buttonAbbr0x: "0x",
-      buttonAbbrHexA: "A",
-      buttonAbbrHexB: "B",
-      buttonAbbrHexC: "C",
-      buttonAbbrHexD: "D",
-      buttonAbbrHexE: "E",
-      buttonAbbrHexF: "F",
-      buttonAbbrVarA: "a ",
-      buttonAbbrVarB: "b ",
-      buttonAbbrVarC: "c ",
-      buttonAbbrVarD: "d ",
-      buttonAbbrVarE: "e ",
-      buttonAbbrVarF: "f ",
-      buttonAbbrVarG: "g ",
-      buttonAbbrVarH: "h ",
-      buttonAbbrVarI: "i ",
-      buttonAbbrVarJ: "j ",
-      buttonAbbrVarK: "k ",
-      buttonAbbrVarL: "l ",
-      buttonAbbrVarM: "m ",
-      buttonAbbrVarN: "n ",
-      buttonAbbrVarO: "o ",
-      buttonAbbrVarP: "p ",
-      buttonAbbrVarQ: "q ",
-      buttonAbbrVarR: "r ",
-      buttonAbbrVarS: "s ",
-      buttonAbbrVarT: "t ",
-      buttonAbbrVarU: "u ",
-      buttonAbbrVarV: "v ",
-      buttonAbbrVarW: "w ",
-      buttonAbbrVarX: "x ",
-      buttonAbbrVarY: "y ",
-      buttonAbbrVarZ: "z ",
-      buttonAbbrLast: "#",
-      buttonAbbrExclam: "!",
-      buttonAbbrQuestion: "?",
-      buttonAbbrSize805: "'80:5'",
-      buttonAbbrSize00: "'0:0'",
-      buttonAbbrBase16: '"16"',
-      buttonAbbrBase8: '"8"',
-      buttonAbbrBaseEmpty: '""'
-    }
-  };
+  let state = new State();
   document.addEventListener("submit", (event) => {
     submitListener(state, event);
   });

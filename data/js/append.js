@@ -4,6 +4,10 @@
 
 "use strict";
 
+function getElementById(id) {
+  return (typeof(id) == "string") ? document.getElementById(id) : null;
+}
+
 function isChecked(checkbox) {
     return !!(checkbox && checkbox.checked);
 }
