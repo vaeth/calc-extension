@@ -65,7 +65,16 @@ function enableCurrent(lines, enable) {
   }
   lines.enabled = !!enable;
   for (let i of State.buttonsAbbrArray) {
-    enableButton(getElementById(i), enable);
+    enableButton(document.getElementById(i), enable);
+  }
+  for (let i of [
+    "buttonCleanLine",
+    "buttonRemoveLine",
+    "buttonMoveLineUp",
+    "buttonMoveLineDown",
+    "buttonInsertLine",
+    ]) {
+    enableButton(document.getElementById(i), enable);
   }
 }
 
@@ -199,30 +208,32 @@ function initWindowLast(clipboard) {
   appendX(row, "TD", appendButton, "buttonAllClipboard");
 }
 
-function initWindowOptions(inputMode, size, base, edit) {
+function initWindowOptions(inputMode, size, base, disabled) {
   const rowInputMode = document.getElementById("rowInputMode");
   const rowSize = document.getElementById("rowSize");
   const rowBase = document.getElementById("rowBase");
   appendCheckboxCol(rowInputMode, "checkboxInputMode", inputMode,
     null, "titleCheckboxInputMode");
   appendX(rowInputMode, "TD", appendButton, "buttonAbbrExclam",
-    null, edit, "!");
+    null, disabled, "!");
   appendX(rowInputMode, "TD", appendTextNode, "textOptionOn");
   appendX(rowInputMode, "TD", appendButton, "buttonAbbrQuestion",
-    null, edit, "?");
+    null, disabled, "?");
   appendX(rowInputMode, "TD", appendTextNode, "textOptionOff");
   appendInputCol(rowSize, "inputSize", 3, getSizeText(size),
     "inputSize", "titleInputSize");
   appendX(rowSize, "TD", appendButton, "buttonAbbrSize805",
-    null, edit, "'80:5'");
+    null, disabled, "'80:5'");
   appendX(rowSize, "TD", appendButton, "buttonAbbrSize00",
-    null, edit, "'0:0'");
+    null, disabled, "'0:0'");
   appendInputCol(rowBase, "inputBase", 1, getBaseText(base),
     "inputBase", "titleinputBase");
-  appendX(rowBase, "TD", appendButton, "buttonAbbrBase16", null, edit, '"16"');
-  appendX(rowBase, "TD", appendButton, "buttonAbbrBase8", null, edit, '"8"');
+  appendX(rowBase, "TD", appendButton, "buttonAbbrBase16", null,
+    disabled, '"16"');
+  appendX(rowBase, "TD", appendButton, "buttonAbbrBase8", null,
+    disabled, '"8"');
   appendX(rowBase, "TD", appendButton, "buttonAbbrBaseEmpty",
-    null, edit, '""');
+    null, disabled, '""');
 }
 
 function initWindowSession(disabled) {
@@ -232,18 +243,25 @@ function initWindowSession(disabled) {
   appendX(row, "TD", appendButton, "buttonClearStored", null, disabled);
 }
 
-function initWindowEditing() {
+function initWindowEditing(edit) {
   const row = document.getElementById("rowEditing");
-  appendX(row, "TD", appendButton, "buttonClear");
-  appendX(row, "TD", appendTextNode, "textClear", null, "titleTextClear");
+  appendX(row, "TD", appendButton, "buttonCleanLine", null, disabled);
+  appendX(row, "TD", appendButton, "buttonRemoveLine", null, disabled, null,
+    "titleButtonRemoveLine");
+  appendX(row, "TD", appendTextNode, "textRemoveLine", null,
+    "titleButtonRemoveLine");
+  appendX(row, "TD", appendButton, "buttonMoveLineUp", null, disabled);
+  appendX(row, "TD", appendButton, "buttonMoveLineDown", null, disabled);
+  appendX(row, "TD", appendButton, "buttonInsertLine", null, disabled);
+  appendX(row, "TD", appendButton, "buttonClearWindow", null, disabled);
 }
 
 function initWindow(state, options) {
   initWindowLast(options.clipboard);
   initWindowOptions(options.inputMode, state.size, state.base,
-    state.lines.enabled);
+    !state.lines.enabled);
   initWindowSession(!state.storedLast);
-  initWindowEditing();
+  initWindowEditing(!state.lines.enabled);
   appendNext(state);
 }
 

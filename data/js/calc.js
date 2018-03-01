@@ -201,7 +201,17 @@ function clickListener(state, event) {
     case "buttonAllClipboard":
       toClipboard(addContent("", state.lines));
       return;
-    case "buttonClear":
+    case "buttonCleanLine":
+      return;
+    case "buttonRemoveLine":
+      return;
+    case "buttonMoveLineUp":
+      return;
+    case "buttonMoveLineDown":
+      return;
+    case "buttonInsertLine":
+      return;
+    case "buttonClearWindow":
       clearAll(state);
       return;
     case "buttonStoreSession":

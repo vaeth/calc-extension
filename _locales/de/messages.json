@@ -119,17 +119,37 @@
     "message": "Editieren",
     "description": "Announcement of editing"
   },
-  "buttonClear": {
-    "message": "Fenster leeren",
-    "description": "Button to clear the current session"
+  "buttonCleanLine": {
+    "message": "Zeile leeren",
+    "description": "Button to clean the current line"
   },
-  "textClear": {
-    "message": "Ein leerer Ausdruck löscht dessen Zeile",
-    "description": "Brief explanation how to remove a line"
+  "buttonRemoveLine": {
+    "message": "Zeile entfernen",
+    "description": "Button to remove the current line"
   },
-  "titleTextClear": {
+  "titleButtonRemoveLine": {
     "message": "Wenn ein Ausdruck nichts außer ev. Leerzeichen und die Spezialflags zum Ändern von Optionen enthält, dann wird seine Auswertung bewirken, dass die Zeile, in der er steht, entfernt wird. Dieses Feature kann dazu benutzt werden, eine Zeile aus einer Sitzung zu entfernen: Man braucht nur den Ausdruck manuell löschen und ihn erneut auswerten.",
     "description": "Verbose explanation how to remove a line"
+  },
+  "textRemoveLine": {
+    "message": "Leeren Ausdruck auswerten",
+    "description": "Brief explanation how to remove a line"
+  },
+  "buttonMoveLineUp": {
+    "message": "Zeile nach oben",
+    "description": "Button to move the current line up"
+  },
+  "buttonMoveLineDown": {
+    "message": "Zeile nach unten",
+    "description": "Button to move the current line down"
+  },
+  "buttonInsertLine": {
+    "message": "Zeile einfügen",
+    "description": "Button to open a new line over the current one"
+  },
+  "buttonClearWindow": {
+    "message": "Fenster leeren",
+    "description": "Button to clear the current window"
   },
   "buttonResult": {
     "message": "~>",

@@ -90,12 +90,15 @@ function appendFormInput(parent, formId, id, size, value) {
   return input;
 }
 
-function appendButton(parent, id, textId, disabled, text) {
+function appendButton(parent, id, textId, disabled, text, titleId) {
   const button = document.createElement("BUTTON");
   button.type = "button";
   button.id = id;
   if (disabled) {
     button.disabled = true;
+  }
+  if (titleId) {
+    button.title = browser.i18n.getMessage(titleId);
   }
   button.textContent = (text || browser.i18n.getMessage(textId || id));
   parent.appendChild(button);

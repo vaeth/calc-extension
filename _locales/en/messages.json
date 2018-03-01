@@ -119,17 +119,37 @@
     "message": "Editing",
     "description": "Announcement of editing"
   },
-  "buttonClear": {
-    "message": "Clear window",
-    "description": "Button to clear the current session"
+  "buttonCleanLine": {
+    "message": "Clean line",
+    "description": "Button to clean the current line"
   },
-  "textClear": {
-    "message": "An empty expression removes its line",
-    "description": "Brief explanation how to remove a line"
+  "buttonRemoveLine": {
+    "message": "Remove line",
+    "description": "Button to remove the current line"
   },
-  "titleTextClear": {
+  "titleButtonRemoveLine": {
     "message": "If an expression contains nothing but spaces and option modifiers, evaluating it will remove the line in which it is placed. You can use that feature to remove a line from a session by clearing the expression manually and re-evaluating it",
     "description": "Verbose explanation how to remove a line"
+  },
+  "textRemoveLine": {
+    "message": "Evaluate an empty expression",
+    "description": "Brief explanation how to remove a line"
+  },
+  "buttonMoveLineUp": {
+    "message": "Move line up",
+    "description": "Button to move the current line up"
+  },
+  "buttonMoveLineDown": {
+    "message": "Move line down",
+    "description": "Button to move the current line down"
+  },
+  "buttonInsertLine": {
+    "message": "Insert line",
+    "description": "Button to open a new line over the current one"
+  },
+  "buttonClearWindow": {
+    "message": "Clear window",
+    "description": "Button to clear the current window"
   },
   "buttonResult": {
     "message": "~>",
