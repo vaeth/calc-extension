@@ -3,10 +3,12 @@
 *calc-extension-4.0:
 	Martin Väth <martin at mvath.de>:
 	- New layout of pagehead: Hide details first
+	- Buttons for editing (clean, remove, move or insert line, redraw)
 	- Buttons for all operators, variables, constants, numbers, etc
 	- Display current value of #
 	- Alternative symbols for sqrt and cbrt: √ and ∛
 	- Attempt to keep result scrolled in
+	- Button to restore session
 	- Internal: clean line organization
 	- Internal: avoid redundant array variables
 	- Bugfix: resetting to default width works now in non-button mode

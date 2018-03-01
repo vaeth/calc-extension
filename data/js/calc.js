@@ -4,25 +4,104 @@
 
 "use strict";
 
+function getContent(line) {
+  return [
+    document.getElementById(line.input).value,
+    document.getElementById(line.output).textContent
+  ];
+}
+
 function addContent(seed, lines) {
   let textResult;
   if (!Array.isArray(seed)) {
     textResult = browser.i18n.getMessage("textResult");
   }
   for (let line of lines.lines) {
-    const output = document.getElementById(line.output).textContent;
-    const input = document.getElementById(line.input).value;
+    const content = getContent(line);
     if (Array.isArray(seed)) {
-      seed.push([input, output]);
+      seed.push(content);
     } else {
-      seed += input;
+      seed += content[0];
       seed += "\n";
       seed += textResult;
-      seed += output;
+      seed += content[1];
       seed += "\n";
     }
   }
   return seed;
+}
+
+function redrawLine(state) {
+  const lines = state.lines;
+  const line = lines.currentLine;
+  if (!line) {
+    return;
+  }
+  const content = getContent(line);
+  appendNext(state, content[0], content[1], lines.currentIndex, true);
+  removeLine(lines, lines.currentIndex + 1);
+  lines.focus();
+}
+
+function redrawWindow(state) {
+  const lines = state.lines;
+  const content = addContent([], lines);
+  const index = state.lines.currentIndex;
+  clearAllLines(lines);
+  for (let [input, output] of content) {
+    appendNext(state, input, output, null, true);
+  }
+  lines.setCurrentIndex(index);
+  lines.focus();
+}
+
+function cleanLine(lines) {
+  const input = lines.currentInput;
+  if (!input) {
+    return;
+  }
+  input.value = "";
+  input.focus();
+}
+
+function removeCurrentLine(state) {
+  const lines = state.lines;
+  const index = lines.currentIndex;
+  if (!removeLine(lines)) {
+    return;
+  }
+  if (lines.setCurrentIndex(index)) {
+    lines.focus();
+  } else {
+    appendNext(state);
+  }
+}
+
+function moveLine(lines, add) {
+  const index = lines.currentIndex;
+  if (!lines.isValidIndex(index)) {
+    return;
+  }
+  const swapIndex = index + add;
+  if (!lines.isValidIndex(swapIndex)) {
+    lines.focus();
+    return;
+  }
+  const line = lines.currentLine;
+  lines.setCurrentIndex(swapIndex);
+  const swapLine = lines.currentLine;
+  lines.swapLines(index, swapIndex);
+  swapLines(line, swapLine);
+  lines.focus();
+}
+
+function insertLine(state) {
+  const lines = state.lines;
+  const line = lines.currentLine;
+  if (!line) {
+    return;
+  }
+  appendNext(state, null, null, lines.currentIndex);
 }
 
 function restoreSessionLast(state, checkOnly) {
@@ -36,7 +115,7 @@ function restoreSessionLast(state, checkOnly) {
       return true;
     }
     state.lastString = lastString;
-    displayLastString();
+    displayLastString(state);
   }
   if (checkOnly) {
     return false;
@@ -47,16 +126,16 @@ function restoreSessionLast(state, checkOnly) {
   }
 }
 
-function addSessionPrepare(state) {
+function addSessionPrepare(state, clear) {
   // Setting the clipboard cannot be done in the messageListener,
   // since otherwise we would need clipboard permissions
   if (restoreSessionLast(state, true) && isChecked(getCheckboxClipboard())) {
     toClipboard(state.storedLast[1]);
   }
-  sendCommand("sendSession");
+  sendCommand("sendSession", { clear: clear });
 }
 
-function addSession(state, session) {
+function addSession(state, session, clear) {
   if (!session) {
     return;
   }
@@ -68,9 +147,12 @@ function addSession(state, session) {
   const content = session.content;
   if (Array.isArray(content)) {
     const lines = state.lines;
+    if (clear) {
+      clearAllLines(lines);
+    }
     const lastIndex = lines.currentIndex;
     for (let [input, output] of content) {
-      appendNext(state, input, output);
+      appendNext(state, input, output, null, true);
     }
     if (lastIndex !== null) {
       lines.currentIndex = lastIndex;
@@ -201,15 +283,26 @@ function clickListener(state, event) {
     case "buttonAllClipboard":
       toClipboard(addContent("", state.lines));
       return;
+    case "buttonRedrawLine":
+      redrawLine(state);
+      return;
     case "buttonCleanLine":
+      cleanLine(state.lines);
       return;
     case "buttonRemoveLine":
+      removeCurrentLine(state);
       return;
     case "buttonMoveLineUp":
+      moveLine(state.lines, -1);
       return;
     case "buttonMoveLineDown":
+      moveLine(state.lines, 1);
       return;
     case "buttonInsertLine":
+      insertLine(state);
+      return;
+    case "buttonRedrawWindow":
+      redrawWindow(state);
       return;
     case "buttonClearWindow":
       clearAll(state);
@@ -217,8 +310,11 @@ function clickListener(state, event) {
     case "buttonStoreSession":
       storeSession(state);
       return;
+    case "buttonRestoreSession":
+      addSessionPrepare(state, true);
+      return;
     case "buttonAddSession":
-      addSessionPrepare(state);
+      addSessionPrepare(state, false);
       return;
     case "buttonClearStored":
       sendCommand("clearSession");
@@ -290,7 +386,7 @@ function messageListener(state, message) {
       enableStorageButtons((state.storedLast = message.last));
       return;
     case "session":
-      addSession(state, message.session);
+      addSession(state, message.session, message.clear);
       return;
   }
 }
@@ -314,6 +410,6 @@ function initMain() {
   });
 }
 
-initLayout();  // do this quickly
+initLayout();  // do this early
 initMain();
 sendCommand("sendInitCalc");

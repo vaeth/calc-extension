@@ -107,6 +107,10 @@
     "message": "Sitzung speichern",
     "description": "Button to store the session"
   },
+  "buttonRestoreSession": {
+    "message": "Gespeicherte Sitzung wiederherstellen",
+    "description": "Button to restore the session"
+  },
   "buttonAddSession": {
     "message": "Gespeicherte Sitzung hinzufügen",
     "description": "Button to add the stored session"
@@ -147,9 +151,17 @@
     "message": "Zeile einfügen",
     "description": "Button to open a new line over the current one"
   },
+  "buttonRedrawLine": {
+    "message": "Zeile neu zeichnen",
+    "description": "Button to redraw the current line"
+  },
   "buttonClearWindow": {
     "message": "Fenster leeren",
-    "description": "Button to clear the current window"
+    "description": "Button to clear the window"
+  },
+  "buttonRedrawWindow": {
+    "message": "Fenster neu zeichnen",
+    "description": "Button to redraw the window"
   },
   "buttonResult": {
     "message": "~>",

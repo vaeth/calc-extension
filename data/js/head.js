@@ -47,6 +47,7 @@ function displayLastString(state) {
 }
 
 function enableStorageButtons(enable) {
+  enableButton(document.getElementById("buttonRestoreSession"), enable);
   enableButton(document.getElementById("buttonAddSession"), enable);
   enableButton(document.getElementById("buttonClearStored"), enable);
 }
@@ -68,11 +69,12 @@ function enableCurrent(lines, enable) {
     enableButton(document.getElementById(i), enable);
   }
   for (let i of [
+    "buttonRedrawLine",
     "buttonCleanLine",
     "buttonRemoveLine",
     "buttonMoveLineUp",
     "buttonMoveLineDown",
-    "buttonInsertLine",
+    "buttonInsertLine"
     ]) {
     enableButton(document.getElementById(i), enable);
   }
@@ -159,10 +161,12 @@ function clearWindow() {
   }
 }
 
-function appendNext(state, input, output, before) {
+function appendNext(state, input, output, before, omitFocus) {
   const lines = state.lines;
+  const beforeNode = (lines.isValidIndex(before) ?
+    document.getElementById(lines.getLine(before).paragraph) : null);
   const line = lines.generateLine(!isChecked(getCheckboxInputMode()));
-  lines.currentIndex = lines.insertLine(line, before, true);
+  lines.currentIndex = lines.insertLine(line, before);
   const paragraph = document.createElement("P");
   paragraph.id = line.paragraph;
   const row = document.createElement("TR");
@@ -178,18 +182,34 @@ function appendNext(state, input, output, before) {
   const table = document.createElement("TABLE");
   table.id = line.table;
   table.appendChild(row);
-  const beforeNode = (lines.isValidIndex(before) ?
-    document.getElementById(lines.getLine(before).paragraph) : null);
   const top = getTop();
   top.insertBefore(paragraph, beforeNode);
   top.insertBefore(table, beforeNode);
-  lines.focus();
+  if (!omitFocus) {
+    lines.focus();
+  }
+}
+
+function swapLines(line1, line2) {
+  const top = getTop();
+  const a1 = document.getElementById(line1.paragraph);
+  const b1 = document.getElementById(line1.table);
+  const a2 = document.getElementById(line2.paragraph);
+  const b2 = document.getElementById(line2.table);
+  top.removeChild(b1);
+  top.insertBefore(b1, a2);
+  top.removeChild(b2);
+  top.insertBefore(b2, a1);
+  top.removeChild(a1);
+  top.insertBefore(a1, b1);
+  top.removeChild(a2);
+  top.insertBefore(a2, b2);
 }
 
 function removeLine(lines, index) {
   const line = lines.getLine(index);
   if (!line) {
-    return;
+    return false;
   }
   if (!lines.isValidIndex(index) || (index === lines.currentIndex)) {
     enableCurrent(lines, false);  // race: disable until we get focus again
@@ -198,6 +218,7 @@ function removeLine(lines, index) {
   const top = getTop();
   top.removeChild(document.getElementById(line.table));
   top.removeChild(document.getElementById(line.paragraph));
+  return true;
 }
 
 function initWindowLast(clipboard) {
@@ -208,7 +229,8 @@ function initWindowLast(clipboard) {
   appendX(row, "TD", appendButton, "buttonAllClipboard");
 }
 
-function initWindowOptions(inputMode, size, base, disabled) {
+function initWindowOptions(inputMode, size, base, linesEnabled) {
+  const disabled = !linesEnabled;
   const rowInputMode = document.getElementById("rowInputMode");
   const rowSize = document.getElementById("rowSize");
   const rowBase = document.getElementById("rowBase");
@@ -220,6 +242,9 @@ function initWindowOptions(inputMode, size, base, disabled) {
   appendX(rowInputMode, "TD", appendButton, "buttonAbbrQuestion",
     null, disabled, "?");
   appendX(rowInputMode, "TD", appendTextNode, "textOptionOff");
+  appendX(rowInputMode, "TD", appendButton, "buttonRedrawLine", null,
+    disabled);
+  appendX(rowInputMode, "TD", appendButton, "buttonRedrawWindow");
   appendInputCol(rowSize, "inputSize", 3, getSizeText(size),
     "inputSize", "titleInputSize");
   appendX(rowSize, "TD", appendButton, "buttonAbbrSize805",
@@ -232,43 +257,53 @@ function initWindowOptions(inputMode, size, base, disabled) {
     disabled, '"16"');
   appendX(rowBase, "TD", appendButton, "buttonAbbrBase8", null,
     disabled, '"8"');
-  appendX(rowBase, "TD", appendButton, "buttonAbbrBaseEmpty",
-    null, disabled, '""');
+  appendX(rowBase, "TD", appendButton, "buttonAbbrBaseEmpty", null,
+    disabled, '""');
 }
 
-function initWindowSession(disabled) {
+function initWindowSession(haveStored) {
+  const disabled = !haveStored;
   const row = document.getElementById("rowSession");
-  appendX(row, "TD", appendButton, "buttonStoreSession", null);
+  appendX(row, "TD", appendButton, "buttonStoreSession");
+  appendX(row, "TD", appendButton, "buttonRestoreSession", null, disabled);
   appendX(row, "TD", appendButton, "buttonAddSession", null, disabled);
   appendX(row, "TD", appendButton, "buttonClearStored", null, disabled);
 }
 
-function initWindowEditing(edit) {
+function initWindowEditing(linesEnabled) {
+  const disabled = !linesEnabled;
   const row = document.getElementById("rowEditing");
   appendX(row, "TD", appendButton, "buttonCleanLine", null, disabled);
-  appendX(row, "TD", appendButton, "buttonRemoveLine", null, disabled, null,
+  const div = document.createElement("DIV");
+  div.title = browser.i18n.getMessage("titleButtonRemoveLine");
+  div.style.border = "solid";
+  appendButton(div, "buttonRemoveLine", null, disabled, null,
     "titleButtonRemoveLine");
-  appendX(row, "TD", appendTextNode, "textRemoveLine", null,
-    "titleButtonRemoveLine");
+  appendTextNode(div, "textRemoveLine", null, "titleButtonRemoveLine");
+  appendX(row, "TD", div);
   appendX(row, "TD", appendButton, "buttonMoveLineUp", null, disabled);
   appendX(row, "TD", appendButton, "buttonMoveLineDown", null, disabled);
   appendX(row, "TD", appendButton, "buttonInsertLine", null, disabled);
-  appendX(row, "TD", appendButton, "buttonClearWindow", null, disabled);
+  appendX(row, "TD", appendButton, "buttonClearWindow");
 }
 
 function initWindow(state, options) {
   initWindowLast(options.clipboard);
   initWindowOptions(options.inputMode, state.size, state.base,
-    !state.lines.enabled);
-  initWindowSession(!state.storedLast);
-  initWindowEditing(!state.lines.enabled);
+    state.lines.enabled);
+  initWindowSession(state.storedLast);
+  initWindowEditing(state.lines.enabled);
   appendNext(state);
 }
 
-function clearAll(state) {
-  enableCurrent(state.lines, false);  // race: disable until we get focus again
-  state.lines = new Lines();  // order matters: first invalidate lines data
+function clearAllLines(lines) {
+  enableCurrent(lines, false);  // race: disable until we get focus again
+  lines.clearLines();  // order matters: first invalidate lines data
   clearWindow();
+}
+
+function clearAll(state) {
+  clearAllLines(state.lines);
   appendNext(state);
 }
 

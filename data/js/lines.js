@@ -5,11 +5,15 @@
 "use strict";
 
 class Lines {
-  constructor() {
-    this.counter = 0;
+  clearLines() {
     this.lines = [];
     this.lineNumber = new Map();
     this.currentIndex = null;
+  }
+
+  constructor() {
+    this.clearLines();
+    this.counter = 0;
     this.enabled = false;
   }
 

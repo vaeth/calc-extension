@@ -209,7 +209,8 @@ function messageListener(message) {
       sendInit("initOptions");
       return;
     case "sendSession":
-      sendCommand("session", { session: state.session });
+      message.session = state.session;
+      sendCommand("session", message);
       return;
     case "storeSession":
       storeSession(message.session);

@@ -107,6 +107,10 @@
     "message": "Store session",
     "description": "Button to store the session"
   },
+  "buttonRestoreSession": {
+    "message": "Restore session",
+    "description": "Button to restore the session"
+  },
   "buttonAddSession": {
     "message": "Add stored session",
     "description": "Button to add the stored session"
@@ -147,9 +151,17 @@
     "message": "Insert line",
     "description": "Button to open a new line over the current one"
   },
+  "buttonRedrawLine": {
+    "message": "Redraw line",
+    "description": "Button to redraw the current line"
+  },
   "buttonClearWindow": {
     "message": "Clear window",
-    "description": "Button to clear the current window"
+    "description": "Button to clear the window"
+  },
+  "buttonRedrawWindow": {
+    "message": "Redraw window",
+    "description": "Button to redraw the window"
   },
   "buttonResult": {
     "message": "~>",
