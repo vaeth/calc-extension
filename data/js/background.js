@@ -37,16 +37,14 @@ function storageOptionsChanges(newOptions) {
   const changes = {};
   let changed = false;
   const options = state.options;
-  const optionsProperties = Object.getOwnPropertyNames(options);
-  for (let i of optionsProperties) {
+  for (let i of Object.getOwnPropertyNames(options)) {
     if (newOptions.hasOwnProperty(i)) {
       continue;
     }
     changed = true;
     changes[i] = {};
   }
-  const newOptionsProperties = Object.getOwnPropertyNames(newOptions);
-  for (let i of newOptionsProperties) {
+  for (let i of Object.getOwnPropertyNames(newOptions)) {
     if (!newOptions.hasOwnProperty(i)) {
       continue;
     }
@@ -107,8 +105,7 @@ function flagSendHaveStorage() {
 
 function storageListener(changes) {
   if (!state.haveStorage) {
-    const changesProperties = Object.getOwnPropertyNames(changes);
-    for (let i of changesProperties) {
+    for (let i of Object.getOwnPropertyNames(changes)) {
       if (changes[i].hasOwnProperty("newValue")) {
         flagSendHaveStorage();
         break;
@@ -183,8 +180,7 @@ function sendInit(reply) {
 function optionsChanges(changes) {
   const options = Object.assign({}, state.options);
   let store = false;
-  const changesProperties = Object.getOwnPropertyNames(changes);
-  for (let i of changesProperties) {
+  for (let i of Object.getOwnPropertyNames(changes)) {
     const change = changes[i];
     if (change.hasOwnProperty("value")) {
       if (!options.hasOwnProperty(i) || options[i] !== change.value) {

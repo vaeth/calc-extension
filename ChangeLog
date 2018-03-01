@@ -8,6 +8,7 @@
 	- Alternative symbols for sqrt and cbrt: √ and ∛
 	- Attempt to keep result scrolled in
 	- Internal: clean line organization
+	- Internal: avoid redundant array variables
 	- Bugfix: resetting to default width works now in non-button mode
 
 *calc-extension-3.0:
