@@ -161,7 +161,7 @@ function addSession(state, session, clear) {
   }
 }
 
-function optionsChanges(state, changes, options) {
+function optionsChanges(state, options, changes) {
   if (options) {
     changes = {};
     for (let i of [
@@ -302,6 +302,47 @@ function insertButtonAbbr(lines, id) {
   input.focus();
 }
 
+function detailsClicked(id) {
+  const name = id.substr(7);  // 7 = "details".length
+  const open = State.details[name];
+  if (typeof(open) != "boolean") {
+    return false;
+  }
+  const list = document.getElementById("details" + name);
+  if (!list) {
+    return false;
+  }
+  const value = {};
+  const changes = {};
+  changes[name] = value;
+  if (open ? list.open : !list.open) {
+    value.value = true;
+  }
+  sendCommand("detailsChanges", { changes: changes });
+  return true;
+}
+
+function detailsChanges(details, changes) {
+  const defaultDetails = State.details;
+  const modify = Object.getOwnPropertyNames(details ?
+    defaultDetails : changes);
+  if (!details) {
+    details = {};
+  }
+  if (changes) {
+    applyChanges(details, changes);
+  }
+  for (let i of modify) {
+    if (!defaultDetails.hasOwnProperty(i)) {
+      continue;
+    }
+    const list = document.getElementById("details" + i);
+    if (list) {
+      setOpen(list, defaultDetails[i] == !details[i]);
+    }
+  }
+}
+
 function clickListener(state, event) {
   if (!event.target || !event.target.id) {
     return;
@@ -365,6 +406,9 @@ function clickListener(state, event) {
         displayResult(state, id);
         return;
       }
+      if (id.startsWith("summary") && detailsClicked(id)) {
+        state.lines.focus();
+      }
   }
 }
 
@@ -414,10 +458,15 @@ function messageListener(state, message) {
     case "initCalc":
       state.storedLast = message.last;
       initCalc(state, message.options, message.haveStorage);
+      detailsChanges(message.details);
       return;
     case "optionsChanges":
     case "storageOptionsChanges":
-      optionsChanges(state, message.changes, message.options);
+      optionsChanges(state, message.options, message.changes);
+      return;
+    case "detailsChanges":
+    case "storageDetailsChanges":
+      detailsChanges(message.details, message.changes);
       return;
     case "storedLastChanges":
       enableStorageButtons((state.storedLast = message.last));

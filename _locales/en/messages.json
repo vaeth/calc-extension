@@ -51,11 +51,11 @@
     "message": "Open a new “calc-extension” session",
     "description": "Link for opening a new session"
   },
-  "announceExamples": {
+  "summaryExamples": {
     "message": "Examples",
     "description": "Announcement of some examples"
   },
-  "announceBinaryOperators": {
+  "summaryBinaryOperators": {
     "message": "Binary Operators and their Precedence",
     "description": "Announcement of available binary operators"
   },
@@ -63,19 +63,19 @@
     "message": "right to left",
     "description": "Text for operators with right-to-left precedence"
   },
-  "announceFunctions": {
+  "summaryFunctions": {
     "message": "Functions",
     "description": "Announcement of available functions"
   },
-  "announceConstants": {
+  "summaryConstants": {
     "message": "Constants",
     "description": "Announcement of available constants"
   },
-  "announceNumbers": {
+  "summaryNumbers": {
     "message": "Numbers, some Variables, and others",
     "description": "Announcement of numbers, braces, variables"
   },
-  "announceLast": {
+  "summaryLast": {
     "message": "Last Result and Clipboard",
     "description": "Announcement of symbol for last result"
   },
@@ -87,7 +87,7 @@
     "message": "Session \u21E8 Clipboard",
     "description": "Button to copy the whole session to clipboard"
   },
-  "announceOptions": {
+  "summaryOptions": {
     "message": "Options",
     "description": "Announcement of options"
   },
@@ -99,7 +99,7 @@
     "message": "off",
     "description": "Explain that option will be switched off (should be short)"
   },
-  "announceStorage": {
+  "summaryStorage": {
     "message": "Storage",
     "description": "Announcement of storage"
   },
@@ -123,7 +123,7 @@
     "message": "Store Options",
     "description": "Button to store the options"
   },
-  "announceEditing": {
+  "summaryEditing": {
     "message": "Editing",
     "description": "Announcement of editing"
   },
@@ -151,6 +151,10 @@
     "message": "\u21E7",
     "description": "Button to move the current line up"
   },
+  "buttonMoveLineUpFontWeight": {
+    "message": "bolder",
+    "description": "font-weight property for buttonMoveLineUp"
+  },
   "titleButtonMoveLineUp": {
     "message": "Move the current line up",
     "description": "Explain that the current line will be moved up"
@@ -158,6 +162,10 @@
   "buttonMoveLineDown": {
     "message": "\u21E9",
     "description": "Button to move the current line down"
+  },
+  "buttonMoveLineDownFontWeight": {
+    "message": "bolder",
+    "description": "font-weight property for buttonMoveLineUp"
   },
   "titleButtonMoveLineDown": {
     "message": "Move the current line down",

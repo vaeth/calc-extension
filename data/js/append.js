@@ -14,6 +14,12 @@ function clearItem(top) {
   }
 }
 
+function setOpen(details, open) {
+  if (details && (!details.open != !open)) {
+    details.open = !!open;
+  }
+}
+
 function isChecked(checkbox) {
     return !!(checkbox && checkbox.checked);
 }

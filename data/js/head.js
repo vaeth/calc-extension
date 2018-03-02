@@ -13,7 +13,7 @@ function setTitle(title) {
 }
 
 function setHead(text) {
-  const head = document.getElementById("headTitle");
+  const head = document.getElementById("summaryTitle");
   head.appendChild(document.createTextNode("\xa0" + text));
 }
 
@@ -82,6 +82,18 @@ function enableCurrent(lines, enable) {
     ]) {
     enableButton(document.getElementById(i), enable);
   }
+  for (let i of [
+    "buttonMoveLineUp",
+    "buttonMoveLIneDown"
+    ]) {
+    const fontWeight = browser.i18n.getMessage(i + "FontWeight");
+    if (fontWeight) {
+      const button = document.getElementById(i);
+      if (button) {
+        button.style.fontWeight = fontWeight;
+      }
+    }
+  }
 }
 
 function setInputSize(size) {
@@ -107,7 +119,7 @@ function setInputBase(base) {
 }
 
 function translateExamples() {
-  const examples = document.getElementById("detailsExamples");
+  const examples = document.getElementById("summaryExamples");
   const td = document.createElement("TD");
   appendTextNode(td, "textResult");
   for (let table of examples.children) {
@@ -135,15 +147,15 @@ function initLayout() {
   setTitle(title);
   setHead(title);
   for (let id of [
-    "announceExamples",
-    "announceBinaryOperators",
-    "announceFunctions",
-    "announceConstants",
-    "announceNumbers",
-    "announceLast",
-    "announceOptions",
-    "announceStorage",
-    "announceEditing"
+    "summaryExamples",
+    "summaryBinaryOperators",
+    "summaryFunctions",
+    "summaryConstants",
+    "summaryNumbers",
+    "summaryLast",
+    "summaryOptions",
+    "summaryStorage",
+    "summaryEditing"
     ]) {
     const translation = browser.i18n.getMessage(id);
     document.getElementById(id).textContent = translation;

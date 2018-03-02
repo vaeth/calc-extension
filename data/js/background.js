@@ -12,6 +12,7 @@
 const state = {
   virgin: true,
   options: {},
+  details: {},
   session: null,
   last: null,
   haveStorage: false
@@ -20,7 +21,8 @@ const state = {
 function sendCommand(command, message) {
   if (!message) {
     message = {
-      options: state.options
+      options: state.options,
+      details: state.details
     };
     if (state.haveStorage) {
       message.haveStorage = true;
@@ -38,6 +40,14 @@ function storageOptionsChanges(newOptions) {
   if (changes) {
     state.options = newOptions;
     sendCommand("storageOptionsChanges", { changes: changes });
+  }
+}
+
+function storageDetailsChanges(newDetails) {
+  const changes = calcChanges(state.details, newDetails);
+  if (changes) {
+    state.details = newDetails;
+    sendCommand("storageDetailsChanges", { changes: changes });
   }
 }
 
@@ -93,18 +103,12 @@ function storageListener(changes) {
   if (changes.optionsV1) {
     storageOptionsChanges(changes.optionsV1.newValue || {});
   }
+  if (changes.detailsV1) {
+    storageDetailsChanges(changes.detailsV1.newValue || {});
+  }
   if (changes.sessionV1) {
     storageSessionChanges(changes.sessionV1.newValue || null);
   }
-}
-
-function storeSession(session) {
-  browser.storage.local.set({
-    sessionV1: session
-  }).then(() => {  // in case the handler does not apply for self-invoked
-    flagSendHaveStorage();
-    storageSessionChanges(session);
-  });
 }
 
 function storeOptions(options) {
@@ -113,6 +117,24 @@ function storeOptions(options) {
   }).then(() => {  // in case the handler does not apply for self-invoked
     flagSendHaveStorage();
     storageOptionsChanges(options);
+  });
+}
+
+function storeDetails(details) {
+  browser.storage.local.set({
+    detailsV1: details
+  }).then(() => {  // in case the handler does not apply for self-invoked
+    flagSendHaveStorage();
+    storageDetailsChanges(details);
+  });
+}
+
+function storeSession(session) {
+  browser.storage.local.set({
+    sessionV1: session
+  }).then(() => {  // in case the handler does not apply for self-invoked
+    flagSendHaveStorage();
+    storageSessionChanges(session);
   });
 }
 
@@ -129,9 +151,10 @@ function clearStorage() {
       return;
     }
     state.haveStorage = false;
-    sendCommand("haveStorageChanges", {});
-    const options = state.options = {};
-    sendCommand("storageOptionsChanges", { options: options });
+    const empty = state.options = state.details = {};
+    sendCommand("haveStorageChanges", empty);
+    sendCommand("storageOptionsChanges", { options: empty });
+    sendCommand("storageDetailsChanges", { details: empty });
     // in case the handler does not apply for self-invoked
     storageSessionChanges(null);
   });
@@ -147,6 +170,7 @@ function sendInit(reply) {
     if (storage && Object.getOwnPropertyNames(storage).length) {
       state.haveStorage = true;
       state.options = (storage.optionsV1 || {});
+      state.details = (storage.detailsV1 || {});
       const session = (storage.sessionV1 || null);
       state.last = splitLast(session);
       state.session = session;
@@ -166,6 +190,18 @@ function optionsChanges(options, changes) {
   }
   if (changes) {
     storeOptions(newOptions);
+  }
+}
+
+function detailsChanges(details, changes) {
+  const newDetails = details || Object.assign({}, state.details);
+  if (changes) {
+    applyChanges(newDetails, changes);
+  } else {
+    changes = calcChanges(state.details, newDetails);
+  }
+  if (changes) {
+    storeDetails(newDetails);
   }
 }
 
@@ -189,6 +225,9 @@ function messageListener(message) {
       return;
     case "optionsChanges":
       optionsChanges(message.options, message.changes);
+      return;
+    case "detailsChanges":
+      detailsChanges(message.details, message.changes);
       return;
     case "clearSession":
       clearSession();

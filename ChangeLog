@@ -1,5 +1,13 @@
 # ChangeLog for calc-extension:
 
+*calc-extension-4.1:
+	Martin Väth <martin at mvath.de>:
+	- The opening state of details is stored and propagated across tabs
+	- The accordeon list is now itself a detail which can be hidden
+	- Input keeps focus when opening/closing details
+	- Up-/Down-arrows in font-weight bolder
+	- Center icon
+
 *calc-extension-4.0:
 	Martin Väth <martin at mvath.de>:
 	- New layout of pagehead: Hide details first
@@ -12,6 +20,7 @@
 	- Button to restore session
 	- Internal: clean line organization
 	- Internal: avoid redundant array variables
+	- Internal: use clean HTML5 which passes https://validator.w3.org/
 	- Bugfix: default options propagation when cleaning storage
 	- Bugfix: resetting to default width works now in non-button mode
 

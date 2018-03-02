@@ -139,3 +139,16 @@ State.buttonsAbbr = {
   buttonAbbrBase8: '"8"',
   buttonAbbrBaseEmpty: '""'
 };
+
+State.details = {
+  Title: true,
+  Examples: false,
+  BinaryOperators: false,
+  Functions: false,
+  Constants: false,
+  Numbers: false,
+  Last: false,
+  Options: false,
+  Storage: false,
+  Editing: false
+};
