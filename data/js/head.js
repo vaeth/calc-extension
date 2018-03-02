@@ -236,8 +236,11 @@ function initWindowLast(clipboard) {
 function initWindowOptions(inputMode, size, base, linesEnabled) {
   const disabled = !linesEnabled;
   const rowInputMode = document.getElementById("rowInputMode");
+  clearItem(rowInputMode);
   const rowSize = document.getElementById("rowSize");
+  clearItem(rowSize);
   const rowBase = document.getElementById("rowBase");
+  clearItem(rowBase);
   appendCheckboxCol(rowInputMode, "checkboxInputMode", inputMode,
     null, "titleCheckboxInputMode");
   appendX(rowInputMode, "TD", appendButton, "buttonAbbrExclam",
@@ -268,6 +271,7 @@ function initWindowOptions(inputMode, size, base, linesEnabled) {
 function initWindowStorage(haveStored, haveStorage) {
   const disabled = !haveStored;
   const rowSession = document.getElementById("rowSession");
+  clearItem(rowSession);
   appendX(rowSession, "TD", appendButton, "buttonStoreSession");
   appendX(rowSession, "TD", appendButton, "buttonRestoreSession", null,
     disabled);
@@ -276,6 +280,7 @@ function initWindowStorage(haveStored, haveStorage) {
   appendX(rowSession, "TD", appendButton, "buttonClearStored", null,
     disabled);
   const rowStorage = document.getElementById("rowStorage");
+  clearItem(rowStorage);
   appendX(rowStorage, "TD", appendButton, "buttonStoreOptions");
   appendX(rowStorage, "TD", appendButton, "buttonClearStorage", null,
     !haveStorage, null, "titleButtonClearStorage");
@@ -283,24 +288,25 @@ function initWindowStorage(haveStored, haveStorage) {
 
 function initWindowEditing(linesEnabled) {
   const disabled = !linesEnabled;
-  const row = document.getElementById("rowEditing");
-  appendX(row, "TD", appendButton, "buttonCleanLine", null, disabled, null,
-    "titleButtonCleanLine");
+  const rowEditing = document.getElementById("rowEditing");
+  clearItem(rowEditing);
+  appendX(rowEditing, "TD", appendButton, "buttonCleanLine", null, disabled,
+    null, "titleButtonCleanLine");
   const div = document.createElement("DIV");
   div.title = browser.i18n.getMessage("titleButtonRemoveLine");
   div.style.border = "solid";
   appendButton(div, "buttonRemoveLine", null, disabled, null,
     "titleButtonRemoveLine");
   appendTextNode(div, "textRemoveLine", null, "titleButtonRemoveLine");
-  appendX(row, "TD", div);
-  appendX(row, "TD", appendButton, "buttonMoveLineUp", null, disabled, null,
-    "titleButtonMoveLineUp");
-  appendX(row, "TD", appendButton, "buttonMoveLineDown", null, disabled, null,
-    "titleButtonMoveLineDown");
-  appendX(row, "TD", appendButton, "buttonInsertLine", null, disabled, null,
-    "titleButtonInsertLine");
-  appendX(row, "TD", appendButton, "buttonClearWindow", null, null, null,
-    "titleButtonClearWindow");
+  appendX(rowEditing, "TD", div);
+  appendX(rowEditing, "TD", appendButton, "buttonMoveLineUp", null, disabled,
+    null, "titleButtonMoveLineUp");
+  appendX(rowEditing, "TD", appendButton, "buttonMoveLineDown", null, disabled,
+    null, "titleButtonMoveLineDown");
+  appendX(rowEditing, "TD", appendButton, "buttonInsertLine", null, disabled,
+    null, "titleButtonInsertLine");
+  appendX(rowEditing, "TD", appendButton, "buttonClearWindow", null, null,
+    null, "titleButtonClearWindow");
 }
 
 function initWindow(state, options, haveStorage) {

@@ -8,6 +8,12 @@ function getElementById(id) {
   return (typeof(id) == "string") ? document.getElementById(id) : null;
 }
 
+function clearItem(top) {
+  while (top.lastChild) {
+    top.removeChild(top.lastChild);
+  }
+}
+
 function isChecked(checkbox) {
     return !!(checkbox && checkbox.checked);
 }
