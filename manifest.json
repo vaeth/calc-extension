@@ -14,6 +14,7 @@
 
   "background": {
     "scripts": [
+      "data/js/changes.js",
       "data/js/background.js"
     ]
   },

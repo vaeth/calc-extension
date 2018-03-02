@@ -34,30 +34,8 @@ function sendCommand(command, message) {
 }
 
 function storageOptionsChanges(newOptions) {
-  const changes = {};
-  let changed = false;
-  const options = state.options;
-  for (let i of Object.getOwnPropertyNames(options)) {
-    if (newOptions.hasOwnProperty(i)) {
-      continue;
-    }
-    changed = true;
-    changes[i] = {};
-  }
-  for (let i of Object.getOwnPropertyNames(newOptions)) {
-    if (!newOptions.hasOwnProperty(i)) {
-      continue;
-    }
-    const value = newOptions[i];
-    if(options.hasOwnProperty(i) && (options[i] === value)) {
-      continue;
-    }
-    changed = true;
-    changes[i] = {
-        value: value
-    };
-  }
-  if (changed) {
+  const changes = calcChanges(state.options, newOptions);
+  if (changes) {
     state.options = newOptions;
     sendCommand("storageOptionsChanges", { changes: changes });
   }
@@ -147,13 +125,15 @@ function clearSession() {
 
 function clearStorage() {
   browser.storage.local.clear().then(() => {
-    if (state.haveStorage) {
-      state.haveStorage = false;
-      sendCommand("haveStorageChanges", {});
-      // in case the handler does not apply for self-invoked:
-      storageOptionsChanges({});
-      storageSessionChanges(null);
+    if (!state.haveStorage) {
+      return;
     }
+    state.haveStorage = false;
+    sendCommand("haveStorageChanges", {});
+    const options = state.options = {};
+    sendCommand("storageOptionsChanges", { options: options });
+    // in case the handler does not apply for self-invoked
+    storageSessionChanges(null);
   });
 }
 
@@ -177,23 +157,15 @@ function sendInit(reply) {
   });
 }
 
-function optionsChanges(changes) {
-  const options = Object.assign({}, state.options);
-  let store = false;
-  for (let i of Object.getOwnPropertyNames(changes)) {
-    const change = changes[i];
-    if (change.hasOwnProperty("value")) {
-      if (!options.hasOwnProperty(i) || options[i] !== change.value) {
-        store = true;
-        options[i] = change.value;
-      }
-    } else if (options.hasOwnProperty(i)) {
-        store = true;
-        delete options[i];
-    }
+function optionsChanges(options, changes) {
+  const newOptions = options || Object.assign({}, state.options);
+  if (changes) {
+    applyChanges(newOptions, changes);
+  } else {
+    changes = calcChanges(state.options, newOptions);
   }
-  if (store) {
-    storeOptions(options);
+  if (changes) {
+    storeOptions(newOptions);
   }
 }
 
@@ -216,7 +188,7 @@ function messageListener(message) {
       storeSession(message.session);
       return;
     case "optionsChanges":
-      optionsChanges(message.changes);
+      optionsChanges(message.options, message.changes);
       return;
     case "clearSession":
       clearSession();

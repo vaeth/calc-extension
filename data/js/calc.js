@@ -161,7 +161,21 @@ function addSession(state, session, clear) {
   }
 }
 
-function optionsChanges(state, changes) {
+function optionsChanges(state, changes, options) {
+  if (options) {
+    changes = {};
+    for (let i of [
+      "clipboard",
+      "inputMode",
+      "size",
+      "base"
+      ]) {
+      const change = changes[i] = {};
+      if (options.hasOwnProperty(i)) {
+        change.value = options[i];
+      }
+    }
+  }
   if (changes.clipboard) {
     setCheckboxClipboard(changes.clipboard.value);
   }
@@ -380,7 +394,7 @@ function messageListener(state, message) {
       return;
     case "optionsChanges":
     case "storageOptionsChanges":
-      optionsChanges(state, message.changes);
+      optionsChanges(state, message.changes, message.options);
       return;
     case "storedLastChanges":
       enableStorageButtons((state.storedLast = message.last));

@@ -11,6 +11,7 @@
 	- Button to restore session
 	- Internal: clean line organization
 	- Internal: avoid redundant array variables
+	- Bugfix: default options propagation when cleaning storage
 	- Bugfix: resetting to default width works now in non-button mode
 
 *calc-extension-3.0:

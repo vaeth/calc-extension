@@ -120,54 +120,41 @@ function initOptions(state, options, haveStorage) {
   initPage(stateOptions, haveStorage);
 }
 
-function optionsChanges(state, changes) {
+function optionsChanges(state, options, changes) {
   if (!state.options) {
     state.options = {};
   }
-  const options = state.options;
+  if (!options) {
+    options = state.options;
+  }
+  if (changes) {
+    applyChanges(options, changes);
+  } else {
+    changes = calcChanges(state.options, options);
+  }
+  if (!changes) {
+    return;
+  }
+  state.options = options;
   if (changes.inputMode) {
-    if (changes.inputMode.value) {
-      if (!options.inputMode) {
-        options.inputMode = true;
-        setCheckboxInputMode(true);
-      }
-    } else {
-      delete options.inputMode;
-      setCheckboxInputMode(false);
-    }
+    setCheckboxInputMode(changes.inputMode.value);
   }
   if (changes.size) {
     const size = sanitizeSize(changes.size.value);
-    if (!equalSize(sanitizeSize(options.size), size)) {
-      if (isDefaultSize(size)) {
-        delete options.size;
-      } else {
-        options.size = size;
-      }
-      setInputSize(size);
+    if (isDefaultSize(size)) {
+      delete options.size;
     }
+    setInputSize(size);
   }
   if (changes.base) {
     const base = sanitizeBase(changes.base.value);
-    if (sanitizeBase(options.base) !== base) {
-      if (isDefaultBase(base)) {
-        delete options.base;
-      } else {
-        options.base = base;
-      }
+    if (isDefaultBase(base)) {
+      delete options.base;
     }
     setInputBase(base);
   }
   if (changes.clipboard) {
-    if (changes.clipboard.value) {
-      if (!options.clipboard) {
-        options.clipboard = true;
-        setCheckboxClipboard(true);
-      }
-    } else {
-      delete options.clipboard;
-      setCheckboxClipboard(false);
-    }
+    setCheckboxClipboard(changes.clipboard.value);
   }
 }
 
@@ -294,7 +281,7 @@ function messageListener(state, message) {
       return;
     case "optionsChanges":
     case "storageOptionsChanges":
-      optionsChanges(state, message.changes);
+      optionsChanges(state, message.options, message.changes);
       return;
     case "haveStorageChanges":
       enableButton(getButtonClearStorage(), message.haveStorage);
