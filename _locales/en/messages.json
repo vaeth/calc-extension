@@ -168,7 +168,7 @@
     "description": "Button to insert a new empty line over the current line"
   },
   "titleButtonInsertLine": {
-    "message": "Insert a new empty line over the current line"
+    "message": "Insert a new empty line over the current line",
     "description": "Explain that a new empty line will be inserted over the current line"
   },
   "buttonClearWindow": {
