@@ -165,7 +165,7 @@
   },
   "buttonMoveLineDownFontWeight": {
     "message": "bolder",
-    "description": "font-weight property for buttonMoveLineUp"
+    "description": "font-weight property for buttonMoveLineDown"
   },
   "titleButtonMoveLineDown": {
     "message": "Move the current line down",
@@ -184,7 +184,7 @@
     "description": "Button to clear the window"
   },
   "titleButtonClearWindow": {
-    "message": "Alle Zeilen aus dem Fenster entfernen",
+    "message": "Remove all lines from the window",
     "description": "Explain that all lines will be removed from the window"
   },
   "buttonRedrawLine": {

@@ -84,7 +84,7 @@ function enableCurrent(lines, enable) {
   }
   for (let i of [
     "buttonMoveLineUp",
-    "buttonMoveLIneDown"
+    "buttonMoveLineDown"
     ]) {
     const fontWeight = browser.i18n.getMessage(i + "FontWeight");
     if (fontWeight) {
