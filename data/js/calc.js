@@ -229,14 +229,14 @@ function displayResult(state, id) {
   return true;
 }
 
-function initCalc(state, options) {
+function initCalc(state, options, haveStorage) {
   if (getCheckboxInputMode()) {  // already initialized
     return;
   }
   state.parser = new Parser();
   state.size = sanitizeSize(options.size)
   state.base = sanitizeBase(options.base);
-  initWindow(state, options);
+  initWindow(state, options, haveStorage);
 }
 
 function sendCommand(command, message) {
@@ -265,6 +265,23 @@ function storeSession(state) {
     session.variables = variables;
   }
   sendCommand("storeSession", { session: session });
+}
+
+function storeOptions(state) {
+  const options = {};
+  if (isChecked(getCheckboxInputMode())) {
+    options.inputMode = true;
+  }
+  if (isChecked(getCheckboxClipboard())) {
+    options.clipboard = true;
+  }
+  if (!isDefaultSize(state.size)) {
+    options.size = state.size;
+  }
+  if (!isDefaultBase(state.base)) {
+    options.base = state.base;
+  }
+  sendCommand("optionsChanges", { options: options });
 }
 
 function insertButtonAbbr(lines, id) {
@@ -333,6 +350,12 @@ function clickListener(state, event) {
     case "buttonClearStored":
       sendCommand("clearSession");
       return;
+    case "buttonStoreOptions":
+      storeOptions(state);
+      return;
+    case "buttonClearStorage":
+      sendCommand("clearStorage");
+      return;
     default:
       if (id.startsWith("buttonAbbr")) {
         insertButtonAbbr(state.lines, id);
@@ -390,7 +413,7 @@ function messageListener(state, message) {
   switch (message.command) {
     case "initCalc":
       state.storedLast = message.last;
-      initCalc(state, message.options);
+      initCalc(state, message.options, message.haveStorage);
       return;
     case "optionsChanges":
     case "storageOptionsChanges":
@@ -398,6 +421,9 @@ function messageListener(state, message) {
       return;
     case "storedLastChanges":
       enableStorageButtons((state.storedLast = message.last));
+      return;
+    case "haveStorageChanges":
+      enableButton(getButtonClearStorage(), message.haveStorage);
       return;
     case "session":
       addSession(state, message.session, message.clear);

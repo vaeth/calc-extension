@@ -43,7 +43,7 @@
     "message": "Clear Storage",
     "description": "Clear storage button"
   },
-  "textClearStorage": {
+  "titleButtonClearStorage": {
     "message": "This clears all stored data of the extension and resets all options to their defaults",
     "description": "Verbose explanation to clear storage button"
   },
@@ -99,9 +99,9 @@
     "message": "off",
     "description": "Explain that option will be switched off (should be short)"
   },
-  "announceSession": {
-    "message": "Session",
-    "description": "Announcement of session"
+  "announceStorage": {
+    "message": "Storage",
+    "description": "Announcement of storage"
   },
   "buttonStoreSession": {
     "message": "Store session",
@@ -119,6 +119,10 @@
     "message": "Clear stored session",
     "description": "Button to clear the stored session"
   },
+  "buttonStoreOptions": {
+    "message": "Store Options",
+    "description": "Button to store the options"
+  },
   "announceEditing": {
     "message": "Editing",
     "description": "Announcement of editing"
@@ -127,8 +131,12 @@
     "message": "Clean line",
     "description": "Button to clean the current line"
   },
+  "titleButtonCleanLine": {
+    "message": "All input text from the current line is removed",
+    "description": "Explain that all input text from the current line will be removed"
+  },
   "buttonRemoveLine": {
-    "message": "Remove line",
+    "message": "\u2716 Line",
     "description": "Button to remove the current line"
   },
   "titleButtonRemoveLine": {
@@ -140,24 +148,40 @@
     "description": "Brief explanation how to remove a line"
   },
   "buttonMoveLineUp": {
-    "message": "Move line up",
+    "message": "\u21E7",
     "description": "Button to move the current line up"
   },
+  "titleButtonMoveLineUp": {
+    "message": "Move the current line up",
+    "description": "Explain that the current line will be moved up"
+  },
   "buttonMoveLineDown": {
-    "message": "Move line down",
+    "message": "\u21E9",
     "description": "Button to move the current line down"
   },
+  "titleButtonMoveLineDown": {
+    "message": "Move the current line down",
+    "description": "Explain that the current line will be moved down"
+  },
   "buttonInsertLine": {
-    "message": "Insert line",
-    "description": "Button to open a new line over the current one"
+    "message": "\u2795",
+    "description": "Button to insert a new empty line over the current line"
+  },
+  "titleButtonInsertLine": {
+    "message": "Insert a new empty line over the current line"
+    "description": "Explain that a new empty line will be inserted over the current line"
+  },
+  "buttonClearWindow": {
+    "message": "\u2716 window",
+    "description": "Button to clear the window"
+  },
+  "titleButtonClearWindow": {
+    "message": "Alle Zeilen aus dem Fenster entfernen",
+    "description": "Explain that all lines will be removed from the window"
   },
   "buttonRedrawLine": {
     "message": "Redraw line",
     "description": "Button to redraw the current line"
-  },
-  "buttonClearWindow": {
-    "message": "Clear window",
-    "description": "Button to clear the window"
   },
   "buttonRedrawWindow": {
     "message": "Redraw window",

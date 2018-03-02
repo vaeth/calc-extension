@@ -33,6 +33,10 @@ function getInputBase() {
   return document.getElementById("inputBase");
 }
 
+function getButtonClearStorage() {
+  return document.getElementById("buttonClearStorage");
+}
+
 function getLastHead() {
   return document.getElementById("lastHead");
 }
@@ -138,7 +142,7 @@ function initLayout() {
     "announceNumbers",
     "announceLast",
     "announceOptions",
-    "announceSession",
+    "announceStorage",
     "announceEditing"
     ]) {
     const translation = browser.i18n.getMessage(id);
@@ -261,19 +265,27 @@ function initWindowOptions(inputMode, size, base, linesEnabled) {
     disabled, '""');
 }
 
-function initWindowSession(haveStored) {
+function initWindowStorage(haveStored, haveStorage) {
   const disabled = !haveStored;
-  const row = document.getElementById("rowSession");
-  appendX(row, "TD", appendButton, "buttonStoreSession");
-  appendX(row, "TD", appendButton, "buttonRestoreSession", null, disabled);
-  appendX(row, "TD", appendButton, "buttonAddSession", null, disabled);
-  appendX(row, "TD", appendButton, "buttonClearStored", null, disabled);
+  const rowSession = document.getElementById("rowSession");
+  appendX(rowSession, "TD", appendButton, "buttonStoreSession");
+  appendX(rowSession, "TD", appendButton, "buttonRestoreSession", null,
+    disabled);
+  appendX(rowSession, "TD", appendButton, "buttonAddSession", null,
+    disabled);
+  appendX(rowSession, "TD", appendButton, "buttonClearStored", null,
+    disabled);
+  const rowStorage = document.getElementById("rowStorage");
+  appendX(rowStorage, "TD", appendButton, "buttonStoreOptions");
+  appendX(rowStorage, "TD", appendButton, "buttonClearStorage", null,
+    !haveStorage, null, "titleButtonClearStorage");
 }
 
 function initWindowEditing(linesEnabled) {
   const disabled = !linesEnabled;
   const row = document.getElementById("rowEditing");
-  appendX(row, "TD", appendButton, "buttonCleanLine", null, disabled);
+  appendX(row, "TD", appendButton, "buttonCleanLine", null, disabled, null,
+    "titleButtonCleanLine");
   const div = document.createElement("DIV");
   div.title = browser.i18n.getMessage("titleButtonRemoveLine");
   div.style.border = "solid";
@@ -281,17 +293,21 @@ function initWindowEditing(linesEnabled) {
     "titleButtonRemoveLine");
   appendTextNode(div, "textRemoveLine", null, "titleButtonRemoveLine");
   appendX(row, "TD", div);
-  appendX(row, "TD", appendButton, "buttonMoveLineUp", null, disabled);
-  appendX(row, "TD", appendButton, "buttonMoveLineDown", null, disabled);
-  appendX(row, "TD", appendButton, "buttonInsertLine", null, disabled);
-  appendX(row, "TD", appendButton, "buttonClearWindow");
+  appendX(row, "TD", appendButton, "buttonMoveLineUp", null, disabled, null,
+    "titleButtonMoveLineUp");
+  appendX(row, "TD", appendButton, "buttonMoveLineDown", null, disabled, null,
+    "titleButtonMoveLineDown");
+  appendX(row, "TD", appendButton, "buttonInsertLine", null, disabled, null,
+    "titleButtonInsertLine");
+  appendX(row, "TD", appendButton, "buttonClearWindow", null, null, null,
+    "titleButtonClearWindow");
 }
 
-function initWindow(state, options) {
+function initWindow(state, options, haveStorage) {
   initWindowLast(options.clipboard);
   initWindowOptions(options.inputMode, state.size, state.base,
     state.lines.enabled);
-  initWindowSession(state.storedLast);
+  initWindowStorage(state.storedLast, haveStorage);
   initWindowEditing(state.lines.enabled);
   appendNext(state);
 }

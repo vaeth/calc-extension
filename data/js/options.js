@@ -2,7 +2,7 @@
  * This project is under the GNU public license 2.0
 */
 
-"use strict"
+"use strict";
 
 function getTop() {
   return document.getElementById("top");
@@ -88,7 +88,7 @@ function initPage(options, haveStorage) {
   appendX(table, "TR", appendCheckboxCol, "checkboxClipboard",
     options.clipboard, "titleCheckboxClipboard");
   appendX(table, "TR", appendButtonTextCol, "buttonClearStorage", null,
-    !haveStorage, "textClearStorage");
+    !haveStorage, "titleButtonClearStorage");
   const top = getTop();
   top.appendChild(table);
   appendX(top, "P", appendLink, top);
