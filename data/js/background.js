@@ -160,6 +160,10 @@ function clearStorage() {
   });
 }
 
+function removeObsoleteOptions(options) {
+  delete options.inputMode;  // existed up to calc-extension-4.0
+}
+
 function sendInit(reply) {
   if (!state.virgin) {
     sendCommand(reply);
@@ -170,6 +174,7 @@ function sendInit(reply) {
     if (storage && Object.getOwnPropertyNames(storage).length) {
       state.haveStorage = true;
       state.options = (storage.optionsV1 || {});
+      removeObsoleteOptions(state.options);
       state.details = (storage.detailsV1 || {});
       const session = (storage.sessionV1 || null);
       state.last = splitLast(session);

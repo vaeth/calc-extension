@@ -8,8 +8,8 @@
 
 function handleInlineToken(state, token) {
   switch (token.inline) {
-    case "inputMode":
-      setCheckboxInputMode(token.value);
+    case "textarea":
+      setCheckboxTextarea(token.value);
       return;
     case "size":
       changeSize(state, token.value);
@@ -350,12 +350,12 @@ function lexToken(input) {
       token.text = first;
       token.value = true;
       token.type = "#inline";
-      token.inline = "inputMode";
+      token.inline = "textarea";
     } else if (first === "?") {
       token.text = first;
       token.value = false;
       token.type = "#inline";
-      token.inline = "inputMode";
+      token.inline = "textarea";
     } else if (first === "'") {
       const quote = /^\'\s*(\d*(?:\s*\D\s*\d*)?)\s*\'/.exec(input);
       if (!quote) {

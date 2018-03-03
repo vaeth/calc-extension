@@ -42,7 +42,7 @@ function sanitizeWidth(size) {
   if (width && (width > 0)) {
     return Math.min(width, 200);
   }
-  return 60;
+  return 80;
 }
 
 function sanitizeHeight(size) {
@@ -50,7 +50,7 @@ function sanitizeHeight(size) {
   if (height && (height > 0)) {
     return Math.min(height, 20);
   }
-  return 1;
+  return 5;
 }
 
 function appendCheckbox(parent, id, checked, titleId) {
@@ -66,13 +66,16 @@ function appendCheckbox(parent, id, checked, titleId) {
   parent.appendChild(checkbox);
 }
 
-function appendTextarea(parent, id, size, value) {
+function appendTextarea(parent, id, size, value, titleId) {
   const textarea = document.createElement("TEXTAREA");
   textarea.cols = sanitizeWidth(size);
   textarea.rows = sanitizeHeight(size);
   textarea.id = id;
   if (value) {
     textarea.value = value;
+  }
+  if (titleId) {
+    textarea.title = browser.i18n.getMessage(titleId);
   }
   parent.appendChild(textarea);
   return textarea;
@@ -93,16 +96,16 @@ function appendInput(parent, id, size, value, titleId) {
   return input;
 }
 
-function appendFormInput(parent, formId, id, size, value) {
+function appendFormInput(parent, formId, id, size, value, titleId) {
   const form = document.createElement("FORM");
   form.id = formId;
   form.autocomplete = "off";
-  const input = appendInput(form, id, size, value);
+  const input = appendInput(form, id, size, value, titleId);
   parent.appendChild(form);
   return input;
 }
 
-function appendButton(parent, id, textId, disabled, text, titleId) {
+function appendButton(parent, id, textId, disabled, text, titleId, fontWeightId) {
   const button = document.createElement("BUTTON");
   button.type = "button";
   button.id = id;
@@ -111,6 +114,9 @@ function appendButton(parent, id, textId, disabled, text, titleId) {
   }
   if (titleId) {
     button.title = browser.i18n.getMessage(titleId);
+  }
+  if (fontWeightId) {
+    button.style.fontWeight = browser.i18n.getMessage(fontWeightId);
   }
   button.textContent = (text || browser.i18n.getMessage(textId || id));
   parent.appendChild(button);

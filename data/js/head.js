@@ -16,8 +16,8 @@ function setHead(text) {
   changeText("textHead", text);
 }
 
-function getCheckboxInputMode() {
-  return document.getElementById("checkboxInputMode");
+function getCheckboxTextarea() {
+  return document.getElementById("checkboxTextarea");
 }
 
 function getCheckboxClipboard() {
@@ -55,8 +55,8 @@ function enableStorageButtons(enable) {
   enableButton(document.getElementById("buttonClearStored"), enable);
 }
 
-function setCheckboxInputMode(checked) {
-  setChecked(getCheckboxInputMode(), checked);
+function setCheckboxTextarea(checked) {
+  setChecked(getCheckboxTextarea(), checked);
 }
 
 function setCheckboxClipboard(checked) {
@@ -80,18 +80,6 @@ function enableCurrent(lines, enable) {
     "buttonInsertLine"
     ]) {
     enableButton(document.getElementById(i), enable);
-  }
-  for (let i of [
-    "buttonMoveLineUp",
-    "buttonMoveLineDown"
-    ]) {
-    const fontWeight = browser.i18n.getMessage(i + "FontWeight");
-    if (fontWeight) {
-      const button = document.getElementById(i);
-      if (button) {
-        button.style.fontWeight = fontWeight;
-      }
-    }
   }
 }
 
@@ -160,6 +148,12 @@ function initLayout() {
     document.getElementById(id).textContent = translation;
   }
   translateExamples();
+  for (let i of [
+    "AbbrLast"
+    ]) {
+    document.getElementById("button" + i).title =
+      browser.i18n.getMessage("titleButton" + i);
+  }
   const textRightToLeft = browser.i18n.getMessage("textRightToLeft");
   const titleTextRightToLeft = browser.i18n.getMessage("titleTextRightToLeft");
   for (let id of [
@@ -179,27 +173,46 @@ function clearWindow() {
   }
 }
 
-function appendNext(state, input, output, before, omitFocus) {
+function getResultParagraph(line, input, size) {
+  const paragraph = document.createElement("P");
+  paragraph.id = line.paragraph;
+  if (line.isInput) {
+    appendFormInput(paragraph, line.form, line.input, size,
+      input && input.replace(/[\r\n]+/g, " "), "titleInput");
+  } else {
+    appendTextarea(paragraph, line.input, size, input, "titleTextarea");
+  }
+  return paragraph;
+}
+
+function getResultTable(line, output) {
+  const table = document.createElement("TABLE");
+  const row = document.createElement("TR");
+  appendX(row, "TD", appendButton, line.button, "buttonResult", null,
+    null, "titleButtonResult");
+  appendX(row, "TD", appendTextNode, null, line.output, null, output);
+  table.id = line.table;
+  table.appendChild(row);
+  return table;
+}
+
+function appendNext(state, input, output, before, omitFocus, size) {
   const lines = state.lines;
   const beforeNode = (lines.isValidIndex(before) ?
     document.getElementById(lines.getLine(before).paragraph) : null);
-  const line = lines.generateLine(!isChecked(getCheckboxInputMode()));
-  lines.currentIndex = lines.insertLine(line, before);
-  const paragraph = document.createElement("P");
-  paragraph.id = line.paragraph;
-  const row = document.createElement("TR");
-  if (line.isInput) {
-    appendFormInput(paragraph, line.form, line.input, state.size, input);
-    appendX(row, "TD", appendTextNode, "textResult", line.result);
-    appendX(row, "TD", appendTextNode, null, line.output, null, output);
+  let useTextarea;
+  if (typeof(size) == "number") {
+    useTextarea = false;
+  } else if (Array.isArray(size)) {
+    useTextarea = true;
   } else {
-    appendTextarea(paragraph, line.input, state.size, input);
-    appendX(row, "TD", appendButton, line.result, "buttonResult");
-    appendX(row, "TD", appendTextNode, null, line.output, null, output);
+    useTextarea = isChecked(getCheckboxTextarea());
+    size = state.size;
   }
-  const table = document.createElement("TABLE");
-  table.id = line.table;
-  table.appendChild(row);
+  const line = lines.generateLine(useTextarea);
+  lines.currentIndex = lines.insertLine(line, before);
+  const paragraph = getResultParagraph(line, input, size);
+  const table = getResultTable(line, output);
   const top = getTop();
   top.insertBefore(paragraph, beforeNode);
   top.insertBefore(table, beforeNode);
@@ -257,27 +270,27 @@ function initWindowLast(clipboard) {
   appendX(rowLast, "TD", appendButton, "buttonAllClipboard");
 }
 
-function initWindowOptions(inputMode, size, base, linesEnabled) {
+function initWindowOptions(textarea, size, base, linesEnabled) {
   const disabled = !linesEnabled;
-  const rowInputMode = document.getElementById("rowInputMode");
-  clearItem(rowInputMode);
+  const rowTextarea = document.getElementById("rowTextarea");
+  clearItem(rowTextarea);
   const rowSize = document.getElementById("rowSize");
   clearItem(rowSize);
   const rowBase = document.getElementById("rowBase");
   clearItem(rowBase);
-  appendCheckboxCol(rowInputMode, "checkboxInputMode", inputMode,
-    null, "titleCheckboxInputMode");
-  appendX(rowInputMode, "TD", appendButton, "buttonAbbrExclam",
+  appendCheckboxCol(rowTextarea, "checkboxTextarea", textarea,
+    null, "titleCheckboxTextarea");
+  appendX(rowTextarea, "TD", appendButton, "buttonAbbrExclam",
     null, disabled, "!", "titleTextOptionOn");
-  appendX(rowInputMode, "TD", appendTextNode, "textOptionOn", null,
+  appendX(rowTextarea, "TD", appendTextNode, "textOptionOn", null,
     "titleTextOptionOn");
-  appendX(rowInputMode, "TD", appendButton, "buttonAbbrQuestion",
+  appendX(rowTextarea, "TD", appendButton, "buttonAbbrQuestion",
     null, disabled, "?", "titleTextOptionOff");
-  appendX(rowInputMode, "TD", appendTextNode, "textOptionOff", null,
+  appendX(rowTextarea, "TD", appendTextNode, "textOptionOff", null,
     "titleTextOptionOff");
-  appendX(rowInputMode, "TD", appendButton, "buttonRedrawLine", null,
+  appendX(rowTextarea, "TD", appendButton, "buttonRedrawLine", null,
     disabled, null, "titleButtonRedrawLine");
-  appendX(rowInputMode, "TD", appendButton, "buttonRedrawWindow", null,
+  appendX(rowTextarea, "TD", appendButton, "buttonRedrawWindow", null,
     null, null, "titleButtonRedrawWindow");
   appendInputCol(rowSize, "inputSize", 3, getSizeText(size),
     "inputSize", "titleInputSize");
@@ -326,9 +339,9 @@ function initWindowEditing(linesEnabled) {
   appendX(rowEditing, "TD", appendButton, "buttonRemoveLine", null, disabled,
     null, "titleButtonRemoveLine");
   appendX(rowEditing, "TD", appendButton, "buttonMoveLineUp", null, disabled,
-    null, "titleButtonMoveLineUp");
+    null, "titleButtonMoveLineUp", "buttonMoveLineUpFontWeight");
   appendX(rowEditing, "TD", appendButton, "buttonMoveLineDown", null, disabled,
-    null, "titleButtonMoveLineDown");
+    null, "titleButtonMoveLineDown", "buttonMoveLineDownFontWeight");
   appendX(rowEditing, "TD", appendButton, "buttonInsertLine", null, disabled,
     null, "titleButtonInsertLine");
   appendX(rowEditing, "TD", appendButton, "buttonClearWindow", null, null,
@@ -337,7 +350,7 @@ function initWindowEditing(linesEnabled) {
 
 function initWindow(state, options, haveStorage) {
   initWindowLast(options.clipboard);
-  initWindowOptions(options.inputMode, state.size, state.base,
+  initWindowOptions(options.textarea, state.size, state.base,
     state.lines.enabled);
   initWindowStorage(state.storedLast, haveStorage);
   initWindowEditing(state.lines.enabled);
@@ -370,7 +383,7 @@ function changeSize(state, size, forceRedisplay) {
     setInputSize(size);
   }
   if (oldSize[0] != size[0]) {
-    changeInputWidth(state.lines, size[0] || 60);
+    changeInputWidth(state.lines, size[0] || 80);
   }
 }
 

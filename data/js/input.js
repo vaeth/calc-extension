@@ -4,6 +4,16 @@
 
 "use strict";
 
+function getNumeric(number) {
+  if (typeof(number) == "number") {
+    return number;
+  }
+  if (typeof(numer) != "string") {
+    return null;
+  }
+  return (Number.parseInt || parseInt)(number, 10);
+}
+
 function numberOrZero(text) {
   if (!text) {
     return 0;
@@ -16,7 +26,7 @@ function numberOrZero(text) {
 }
 
 function isPositive(number) {
-  return ((typeof(number) === "number") && (number > 0));
+  return ((typeof(number) == "number") && (number > 0));
 }
 
 function getPositiveText(number, nonPositive) {

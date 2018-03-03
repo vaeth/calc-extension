@@ -31,12 +31,12 @@
     "message": "Schließt all Details des Akkordeons",
     "description": "Verbose explanation for button to collapse the accordeon"
   },
-  "checkboxInputMode": {
-    "message": "Neue Zeilen ohne „~>”-Knopf",
+  "checkboxTextarea": {
+    "message": "Eingabe in Textbereich",
     "description": "Brief explanation for input mode checkbox"
   },
-  "titleCheckboxInputMode": {
-    "message": "Ersetzen des Berechnungsknopfes („~>”) durch die Benutzung der Eingabeteste \u23CE. Dies ist bequemer aber weniger intuitiv. Ein weiterer Nachteil ist, dass es nicht möglich ist, Ausdrücke über mehrere Zeilen aufzusplitten, und dass die Größe des Eingabefeldes nicht mit der Maus angepasst werden kann.",
+  "titleCheckboxTextarea": {
+    "message": "Die Eingabe des Ausdrucks erfolgt in einem Textbereich variabler Größe. Die Eingabetaste \u23CE startet dort eine neue Zeile statt die Berechnung zu beginnen.",
     "description": "Verbose explanation for input mode checkbox in popup and on option page"
   },
   "checkboxClipboard": {
@@ -44,15 +44,15 @@
     "description": "Brief explanation for clipboard checkbox"
   },
   "titleCheckboxClipboard": {
-    "message": "Bei Berechnungen oder Hinzufügen einer gespeicherten Sitzung das Ergebnis automatisch ins Clipboard kopieren.",
+    "message": "Bei Berechnungen und bei Wiederherstellung/Hinzufügen einer gespeicherten Sitzung das Ergebnis automatisch ins Clipboard kopieren",
     "description": "Verbose explanation for clipboard checkbox in popup and on option page"
   },
   "inputSize": {
-    "message": "Breite:Höhe (0:0 = 60:1)",
-    "description": "Brief explanation for size (60:1 default) in input field"
+    "message": "Breite:Höhe (0:0 = 80:5)",
+    "description": "Brief explanation for size (80:5 default) in input field"
   },
   "titleInputSize": {
-    "message": "Die Größe („Breite:Höhe“) neuer Eingabefelder und die Breite für nicht-verstellbare. Wenn „Höhe“ (oder “:Höhe”) 0 ist oder weggelassen wird, wird der Wert 1 genommen; wenn „Breite“ weggelassen wird, wird der Wert 60 genommen. Der Wert kann auch dadurch verändert werden, indem 'Breite:Höhe' irgendwo in die Eingabezeile geschrieben wird.",
+    "message": "Die Größe („Breite:Höhe“) neuer Eingabefelder und die Breite für nicht-verstellbare. Wenn „Höhe“ (oder “:Höhe”) 0 ist oder weggelassen wird, wird der Wert 5 genommen; wenn „Breite“ weggelassen wird, wird der Wert 80 genommen. Der Wert kann auch dadurch verändert werden, indem 'Breite:Höhe' irgendwo in die Eingabezeile geschrieben wird.",
     "description": "Verbose explanation for size in popup and on option page"
   },
   "titleButtonAbbrSize": {
@@ -113,15 +113,27 @@
   },
   "summaryLast": {
     "message": "Letztes Ergebnis und Clipboard",
-    "description": "Announcement of symbol for last result"
+    "description": "Announcement of symbol for last result and clipboard actions"
+  },
+  "titleButtonAbbrLast": {
+    "message": "In einem Ausdruck kann auf das letzte Ergebnis mit dem „#“-Zeichen zurückgegriffen werden.",
+    "description": "Explanation of # button"
   },
   "buttonClipboard": {
     "message": "# \u21E8 Clipboard",
     "description": "Button to copy last result to clipboard"
   },
+  "titleButtonClipboard": {
+    "message": "Das letzte Ergebnis „#“ wird in das Clipboard kopiert.",
+    "description": "Explain that the last result is copied to clipboard"
+  },
   "buttonAllClipboard": {
-    "message": "Sitzung \u21E8 Clipboard",
-    "description": "Button to copy the whole session to clipboard"
+    "message": "Fenster \u21E8 Clipboard",
+    "description": "Button to copy the whole window to clipboard"
+  },
+  "titleButtonAllClipboard": {
+    "message": "All Eingabefelder und Ergebnisse werden in das Clipboard kopiert.",
+    "description": "Explain that the whole window is copied to clipboard"
   },
   "summaryOptions": {
     "message": "Optionen",
@@ -154,6 +166,10 @@
   "titleButtonStoreSession": {
     "message": "Die Sitzung kommt in den lokalen Speicher und überlebt damit einen Browser-Neustart. Die Sitzung besteht aus allen Eingabefeldern und Ergebnissen, allen Variablen sowie dem letzten Ergebnis „#“.",
     "description": "Explain what storing a session means"
+  },
+  "buttonRestoreSession": {
+    "message": "Sitzung wiederherstellen",
+    "description": "Button to restore the session"
   },
   "titleButtonRestoreSession": {
     "message": "Der Fensterinhalt wird durch die gespeicherte Sitzung ersetzt. Auch „#“ erhält den Wert aus der gepeicherten Sitzung. Derzeit gesetzte Variablen werden beibehalten, wenn sie in der gespeicherten Sitzung keinen anderen Wert hatten.",
@@ -267,13 +283,30 @@
     "message": "Erst bei Neuzeichnen des Fensters wird die Änderung dieser Option in allen Zeilen sichtbar.",
     "description": "Explain why to redraw the window"
   },
+  "titleInput": {
+    "message": "Geben Sie den Ausdruck ein, den Sie auswerten wollen, beispielsweise „1+2cos PI“. Drücken Sie die Eingabetaste \u23CE oder den „~>“-Knopf zum Start der Auswertung.",
+    "description": "Explain result button"
+  },
+  "titleTextarea": {
+    "message": "Geben Sie den Ausdruck ein, den Sie auswerten wollen, beispielsweise „1+2cos PI“. Drücken Sie den „~>”-Knopf zum Start der Auswertung.",
+    "message": "Enter the expression you want to evaluate, e.g. 1+2(3+4). To actually start the evaluation press the ~> button. There is also an option to remove that button and let the evaluation start with the enter key \u23CE instead.",
+    "description": "Explain result button"
+  },
   "buttonResult": {
     "message": "~>",
     "description": "Result button"
   },
+  "titleButtonResult": {
+    "message": "Ausdruck auswerten",
+    "description": "Explain result button"
+  },
   "textResult": {
     "message": "~> ",
-    "description": "Substituting text if no result button is used. Should probably not be empty or usable in an expression for clarity and coincide with the result button, followed by a space"
+    "description": "Substituting text for the result button when copying to Clipboard. For clarity, this should not be empty and contain a symbol combination not usable in an expression"
+  },
+  "titleTextResult": {
+    "message": "Das Ergebnis des Ausdrucks nach Drücken der Eingabetaste \u23CE. Es gibt auch eine Option, bei der dieser Text durch einen Knopf ersetzt wird und die Eingebetaste eine neue Zeile beginnt.",
+    "description": "Explain result text"
   },
   "messageResult": {
     "message": "$RESULT$ (zur Basis $BASE$)",

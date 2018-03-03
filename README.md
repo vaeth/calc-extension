@@ -118,9 +118,9 @@ the last (succesful) calculation.
 There are also special sequences which can occur anywhere in an expression
 and which cause options to switch (you can also switch them by the mouse).
 To modify options more permanently (also for future sessions even across
-browser restarts), you have to set them in the preferences window.
+browser restarts), you have to store them or use the preferences window.
 
-- `'width:height'` default is 60:1
+- `'width:height'` textarea size
 - `"base"` switch output to base (2-36)
 - `!` Omit the ~> button
 - `?` Do not omit the ~> button

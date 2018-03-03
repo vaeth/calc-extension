@@ -31,12 +31,12 @@
     "message": "Close all details of the accordeon",
     "description": "Verbose explanation for button to collapse the accordeon"
   },
-  "checkboxInputMode": {
-    "message": "New lines without “~>” button",
+  "checkboxTextarea": {
+    "message": "Input expression in textarea",
     "description": "Brief explanation for input mode checkbox"
   },
-  "titleCheckboxInputMode": {
-    "message": "Replace the calculate (“~>”) button by pressing the enter key \u23CE. This is more convenient but less intuitive. A further disadvantage is that it is not possible to break an expression over several lines and that the size of the field cannot be adjusted with the mouse.",
+  "titleCheckboxTextarea": {
+    "message": "The input of the expression occurs in a textarea of variable size. The enter key \u23CE opens a new line instead of initiating the calculation.",
     "description": "Verbose explanation for input mode checkbox in popup and on option page"
   },
   "checkboxClipboard": {
@@ -44,15 +44,15 @@
     "description": "Brief explanation for clipboard checkbox"
   },
   "titleCheckboxClipboard": {
-    "message": "Automatically copy the result to the clipboard for calculations or when adding a stored session",
+    "message": "Automatically copy the result to the clipboard for calculations or when restoring/adding a stored session",
     "description": "Verbose explanation for clipboard checkbox in popup and on option page"
   },
   "inputSize": {
-    "message": "width:height (0:0 = 60:1)",
-    "description": "Brief explanation for size (60:1 default) in input field"
+    "message": "width:height (0:0 = 80:5)",
+    "description": "Brief explanation for size (80:5 default) in input field"
   },
   "titleInputSize": {
-    "message": "The size (“width:height”) of new input fields and the width for non-resizable fields. If “height” (or “:height”) is 0 or omitted, it defaults to 1; if “width” is 0 or omitted, it defaults to 60. The value can be changed by putting 'width:height' somewhere on the input line.",
+    "message": "The size (“width:height”) of new input fields and the width for non-resizable fields. If “height” (or “:height”) is 0 or omitted, it defaults to 5; if “width” is 0 or omitted, it defaults to 80. The value can be changed by putting 'width:height' somewhere on the input line.",
     "description": "Verbose explanation for size in popup and on option page"
   },
   "titleButtonAbbrSize": {
@@ -109,19 +109,31 @@
   },
   "summaryNumbers": {
     "message": "Numbers, some Variables, and others",
-    "description": "Announcement of numbers, braces, variables"
+    "description": "Announcement of numbers, some variables and others"
   },
   "summaryLast": {
     "message": "Last Result and Clipboard",
-    "description": "Announcement of symbol for last result"
+    "description": "Announcement of symbol for last result and clipboard actions"
+  },
+  "titleButtonAbbrLast": {
+    "message": "The last result can be accessed within an expression with the “#” symbol",
+    "description": "Explanation of # button"
   },
   "buttonClipboard": {
-    "message": "# \u21E8 Clipboard",
+    "message": "# \u21E8 clipboard",
     "description": "Button to copy last result to clipboard"
   },
+  "titleButtonClipboard": {
+    "message": "The last result “#” is copied to the clipboard.",
+    "description": "Explain that the last result is copied to clipboard"
+  },
   "buttonAllClipboard": {
-    "message": "Session \u21E8 Clipboard",
-    "description": "Button to copy the whole session to clipboard"
+    "message": "Window \u21E8 clipboard",
+    "description": "Button to copy the whole window to clipboard"
+  },
+  "titleButtonAllClipboard": {
+    "message": "All input fields and results are copied to the clipboard.",
+    "description": "Explain that the whole window is copied to clipboard"
   },
   "summaryOptions": {
     "message": "Options",
@@ -271,13 +283,29 @@
     "message": "Only after the window is redrawn the change of this option becomes visible in all lines.",
     "description": "Explain why to redraw the window"
   },
+  "titleInput": {
+    "message": "Enter the expression you want to evaluate, e.g. “1+2cos PI”. To actually start the evaluation press the enter key \u23CE or the “~>” button.",
+    "description": "Explain result button"
+  },
+  "titleTextarea": {
+    "message": "Enter the expression you want to evaluate, e.g. “1+2cos PI”. To actually start the evaluation press the “~>” button.",
+    "description": "Explain result button"
+  },
   "buttonResult": {
     "message": "~>",
     "description": "Result button"
   },
+  "titleButtonResult": {
+    "message": "Evaluate expression",
+    "description": "Explain result button"
+  },
   "textResult": {
     "message": "~> ",
-    "description": "Substituting text if no result button is used. Should probably not be empty or usable in an expression for clarity and coincide with the result button, followed by a space"
+    "description": "Substituting text for the result button when copying to Clipboard. For clarity, this should not be empty and contain a symbol combination not usable in an expression"
+  },
+  "titleTextResult": {
+    "message": "The result of the expression after pressing the enter key \u23CE. There is also an option to replace this text by a button and the let the enter key start a new line.",
+    "description": "Explain result text"
   },
   "messageResult": {
     "message": "$RESULT$ (in base $BASE$)",

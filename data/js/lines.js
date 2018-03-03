@@ -38,18 +38,17 @@ class Lines {
   generateLine(textarea) {
     const unique = this.unique();
     const line = {
+      button: "button=" + unique,
       output: "output=" + unique,
       paragraph: "paragraph=" + unique,
       table: "table=" + unique
     }
     if (textarea) {
       line.input = "area=" + unique;
-      line.result = "button=" + unique;
       return line;
     }
     line.isInput = true;
     line.input = "input=" + unique;
-    line.result = "result=" + unique;
     line.form = "form=" + unique;
     return line;
   }
@@ -171,6 +170,6 @@ class Lines {
   }
 }
 
-Lines.indexedItems = [ "input", "output", "result", "form",
+Lines.indexedItems = [ "input", "output", "button", "form",
   "paragraph", "table" ];
-Lines.scrollIntoView = [ "table", "result", "output", "input" ];
+Lines.scrollIntoView = [ "table", "button", "output", "input" ];

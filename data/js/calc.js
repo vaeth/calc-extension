@@ -11,7 +11,23 @@ function getContent(line) {
   ];
 }
 
-function addContent(seed, lines) {
+function getSizeOf(line) {
+  const input = document.getElementById(line.input);
+  if (!input) {
+    return null;
+  }
+  if (line.isInput) {
+    return getNumeric(input.size);
+  }
+  const cols = getNumeric(input.cols);
+  const rows = getNumeric(input.rows);
+  if (!cols && !rows) {
+    return null;
+  }
+  return [ cols || 0, rows || 0 ];
+}
+
+function addContent(seed, lines, withSize) {
   let textResult;
   if (!Array.isArray(seed)) {
     textResult = browser.i18n.getMessage("textResult");
@@ -19,6 +35,12 @@ function addContent(seed, lines) {
   for (let line of lines.lines) {
     const content = getContent(line);
     if (Array.isArray(seed)) {
+      if (withSize) {
+        const size = getSizeOf(line);
+        if (size) {
+          content.push(size);
+        }
+      }
       seed.push(content);
     } else {
       seed += content[0];
@@ -151,8 +173,8 @@ function addSession(state, session, clear) {
       clearAllLines(lines);
     }
     const lastIndex = lines.currentIndex;
-    for (let [input, output] of content) {
-      appendNext(state, input, output, null, true);
+    for (let [input, output, size] of content) {
+      appendNext(state, input, output, null, true, size);
     }
     if (lastIndex !== null) {
       lines.currentIndex = lastIndex;
@@ -166,7 +188,7 @@ function optionsChanges(state, options, changes) {
     changes = {};
     for (let i of [
       "clipboard",
-      "inputMode",
+      "textarea",
       "size",
       "base"
       ]) {
@@ -179,8 +201,8 @@ function optionsChanges(state, options, changes) {
   if (changes.clipboard) {
     setCheckboxClipboard(changes.clipboard.value);
   }
-  if (changes.inputMode) {
-    setCheckboxInputMode(changes.inputMode.value);
+  if (changes.textarea) {
+    setCheckboxTextarea(changes.textarea.value);
   }
   if (changes.size) {
     changeSize(state, sanitizeSize(changes.size.value));
@@ -230,7 +252,7 @@ function displayResult(state, id) {
 }
 
 function initCalc(state, options, haveStorage) {
-  if (getCheckboxInputMode()) {  // already initialized
+  if (getCheckboxTextarea()) {  // already initialized
     return;
   }
   state.parser = new Parser();
@@ -249,7 +271,7 @@ function sendCommand(command, message) {
 
 function storeSession(state) {
   const session = {
-    content: addContent([], state.lines)
+    content: addContent([], state.lines, true)
   };
   const last = state.last;
   const lastString = state.lastString;
@@ -269,8 +291,8 @@ function storeSession(state) {
 
 function storeOptions(state) {
   const options = {};
-  if (isChecked(getCheckboxInputMode())) {
-    options.inputMode = true;
+  if (isChecked(getCheckboxTextarea())) {
+    options.textarea = true;
   }
   if (isChecked(getCheckboxClipboard())) {
     options.clipboard = true;

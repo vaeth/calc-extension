@@ -17,8 +17,8 @@ function initLayout() {
   setTitle(title);
 }
 
-function getCheckboxInputMode() {
-  return document.getElementById("checkboxInputMode");
+function getCheckboxTextarea() {
+  return document.getElementById("checkboxTextarea");
 }
 
 function getCheckboxClipboard() {
@@ -37,8 +37,8 @@ function getButtonClearStorage() {
   return document.getElementById("buttonClearStorage");
 }
 
-function setCheckboxInputMode(checked) {
-  setChecked(getCheckboxInputMode(), checked);
+function setCheckboxTextarea(checked) {
+  setChecked(getCheckboxTextarea(), checked);
 }
 
 function setCheckboxClipboard(checked) {
@@ -79,8 +79,8 @@ function appendLink(parent) {
 
 function initPage(options, haveStorage) {
   const table = document.createElement("TABLE");
-  appendX(table, "TR", appendCheckboxCol, "checkboxInputMode",
-    options.inputMode, "titleCheckboxInputMode");
+  appendX(table, "TR", appendCheckboxCol, "checkboxTextarea",
+    options.textarea, "titleCheckboxTextarea");
   appendX(table, "TR", appendInputCol, "inputSize", 3,
     getSizeText(options.size), "titleInputSize");
   appendX(table, "TR", appendInputCol, "inputBase", 1,
@@ -95,12 +95,12 @@ function initPage(options, haveStorage) {
 }
 
 function initOptions(state, options, haveStorage) {
-  if (getCheckboxInputMode()) {  // already initialized
+  if (getCheckboxTextarea()) {  // already initialized
     return;
   }
   const stateOptions = state.options = {};
-  if (options.inputMode) {
-    stateOptions.inputMode = true;
+  if (options.textarea) {
+    stateOptions.textarea = true;
   }
   if (options.clipboard) {
     stateOptions.clipboard = true;
@@ -136,8 +136,8 @@ function optionsChanges(state, options, changes) {
     return;
   }
   state.options = options;
-  if (changes.inputMode) {
-    setCheckboxInputMode(changes.inputMode.value);
+  if (changes.textarea) {
+    setCheckboxTextarea(changes.textarea.value);
   }
   if (changes.size) {
     const size = sanitizeSize(changes.size.value);
@@ -172,19 +172,19 @@ function sendChanges(changes) {
   sendCommand("optionsChanges", changes);
 }
 
-function changeInputMode(options) {
-  const value = isChecked(getCheckboxInputMode());
-  if (value == !!options.inputMode) {
+function changeTextarea(options) {
+  const value = isChecked(getCheckboxTextarea());
+  if (value == !!options.textarea) {
     return;
   }
-  const inputModeChange = {};
+  const textareaChange = {};
   const changes = {
-    inputMode: inputModeChange
+    textarea: textareaChange
   };
   if (value) {
-    inputModeChange.value = options.inputMode = true;
+    textareaChange.value = options.textarea = true;
   } else {
-    delete options.inputMode;
+    delete options.textarea;
   }
   sendChanges(changes);
 }
@@ -245,8 +245,8 @@ function changeListener(state, event) {
     return;
   }
   switch (event.target.id) {
-    case "checkboxInputMode":
-      changeInputMode(state.options);
+    case "checkboxTextarea":
+      changeTextarea(state.options);
       return;
     case "checkboxClipboard":
       changeClipboard(state.options);
