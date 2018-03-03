@@ -7,6 +7,30 @@
     "message": "Calculate values of mathematical expressions",
     "description": "Description of the extension"
   },
+  "checkboxStoreAccordeon": {
+    "message": "Store accordeon state",
+    "description": "Brief explanation for checkbox to store accordeon state"
+  },
+  "titleCheckboxStoreAccordeon": {
+    "message": "Store for every item of the accordeon whether it is opened, and propagate the state to other calc-extension tabs!",
+    "description": "Verbose explanation for checkbox to store accordeon state"
+  },
+  "buttonOpenAccordeon": {
+    "message": "Open",
+    "description": "Brief explanation for button to open the accordeon"
+  },
+  "titleButtonOpenAccordeon": {
+    "message": "Open all details of the accordeon",
+    "description": "Verbose explanation for button to open the accordeon"
+  },
+  "buttonCollapseAccordeon": {
+    "message": "Collapse",
+    "description": "Brief explanation for button to collapse the accordeon"
+  },
+  "titleButtonCollapseAccordeon": {
+    "message": "Close all details of the accordeon",
+    "description": "Verbose explanation for button to collapse the accordeon"
+  },
   "checkboxInputMode": {
     "message": "New lines without “~>” button",
     "description": "Brief explanation for input mode checkbox"
@@ -31,6 +55,10 @@
     "message": "The size (“width:height”) of new input fields and the width for non-resizable fields. If “height” (or “:height”) is 0 or omitted, it defaults to 1; if “width” is 0 or omitted, it defaults to 60. The value can be changed by putting 'width:height' somewhere on the input line.",
     "description": "Verbose explanation for size in popup and on option page"
   },
+  "titleButtonAbbrSize": {
+    "message": "The text 'width' or 'width:height' (in these quotes) within an expression modifies this option.",
+    "description": "Verbose explanation how to set size in an expression"
+  },
   "inputBase": {
     "message": "output base (2-36 or default 10)",
     "description": "Brief explanation for output base (2-36) in input field"
@@ -39,12 +67,16 @@
     "message": "The number base (2-36) which is used for the output of the resulting numbers. Any other value than 2-36 means that the usual basis 10 is used and that the additional output of the basis itself is omitted.",
     "description": "Verbose explanation for output base (2-36) in popup and on option page"
   },
+  "titleButtonAbbrBase": {
+    "message": "The text \"base\" (in these quotes) within an expression modifies this option.",
+    "description": "Verbose explanation how to set base in an expression"
+  },
   "buttonClearStorage": {
     "message": "Clear Storage",
     "description": "Clear storage button"
   },
   "titleButtonClearStorage": {
-    "message": "This clears all stored data of the extension and resets all options to their defaults",
+    "message": "This clears all locally stored data of the extension and propagates this change to all calc-extension tabs. In particular, all options are reset to their default",
     "description": "Verbose explanation to clear storage button"
   },
   "textLinkOpen": {
@@ -61,7 +93,11 @@
   },
   "textRightToLeft": {
     "message": "right to left",
-    "description": "Text for operators with right-to-left precedence"
+    "description": "Brief text for operators with right-to-left precedence"
+  },
+  "titleTextRightToLeft": {
+    "message": "Sequentiel Expressions with these operators are evaluated from right to left. For instance, a**b**c is a**b**c equivalent to a**(b**c) or a=b=c is equivalent to a=(b=c).",
+    "description": "Verbose text for operators with right-to-left precedence"
   },
   "summaryFunctions": {
     "message": "Functions",
@@ -93,11 +129,19 @@
   },
   "textOptionOn": {
     "message": "on",
-    "description": "Explain that option will be switched on (should be short)"
+    "description": "Briefly explain that option will be switched on"
+  },
+  "titleTextOptionOn": {
+    "message": "When using the symbol “!” within an expression, this option will be activated",
+    "description": "Verbosely explain that option will be switched on"
   },
   "textOptionOff": {
     "message": "off",
-    "description": "Explain that option will be switched off (should be short)"
+    "description": "Briefly explain that option will be switched off"
+  },
+  "titleTextOptionOff": {
+    "message": "When using the symbol “?” within an expression, this option will be deactivated",
+    "description": "Verbosely explain that option will be switched off"
   },
   "summaryStorage": {
     "message": "Storage",
@@ -107,21 +151,41 @@
     "message": "Store session",
     "description": "Button to store the session"
   },
+  "titleButtonStoreSession": {
+    "message": "The session is stored on local storage, surviving a browser restart. The session consists of all input fields and results, all variables, and the last result “#”.",
+    "description": "Explain what storing a session means"
+  },
   "buttonRestoreSession": {
     "message": "Restore session",
     "description": "Button to restore the session"
+  },
+  "titleButtonRestoreSession": {
+    "message": "The window content is replaced by the stored session. Also “#” gets the value of the stored session. Currently set variables are kept unless they had a different value in the stored session.",
+    "description": "Explain what restoring a session means"
   },
   "buttonAddSession": {
     "message": "Add stored session",
     "description": "Button to add the stored session"
   },
+  "titleButtonAddSession": {
+    "message": "The input fields and results of the stored session are appended to the current session. Also “#” gets the value of the stored session. Currently set variables are kept unless they had a different value in the stored session.",
+    "description": "Explain what adding a session means"
+  },
   "buttonClearStored": {
     "message": "Clear stored session",
     "description": "Button to clear the stored session"
   },
+  "titleButtonClearStored": {
+    "message": "The stored session is removed from local storage. This has no immediately visible effect.",
+    "description": "Explain what clearing a stored session means"
+  },
   "buttonStoreOptions": {
     "message": "Store Options",
     "description": "Button to store the options"
+  },
+  "titleButtonStoreOptions": {
+    "message": "Store the options (including also the checkboxes not listed in “Options”) on local storage, surviving a browser restart. The options are also propagated to all calc-extension tabs.",
+    "description": "Explain what storing the options means"
   },
   "summaryEditing": {
     "message": "Editing",
@@ -132,20 +196,24 @@
     "description": "Button to clean the current line"
   },
   "titleButtonCleanLine": {
-    "message": "All input text from the current line is removed",
+    "message": "All input text from the current line is removed.",
     "description": "Explain that all input text from the current line will be removed"
+  },
+  "textRemoveLine": {
+    "message": "~>",
+    "description": "Brief explanation how to remove a line"
+  },
+  "titleTextRemoveLine": {
+    "message": "If an expression contains nothing but spaces and option modifiers, evaluating it will remove the line in which it is placed. You can use that feature to remove a line from a session by clearing the expression manually and re-evaluating it",
+    "description": "Verbose explanation how to remove a line"
   },
   "buttonRemoveLine": {
     "message": "\u2716 Line",
     "description": "Button to remove the current line"
   },
   "titleButtonRemoveLine": {
-    "message": "If an expression contains nothing but spaces and option modifiers, evaluating it will remove the line in which it is placed. You can use that feature to remove a line from a session by clearing the expression manually and re-evaluating it",
-    "description": "Verbose explanation how to remove a line"
-  },
-  "textRemoveLine": {
-    "message": "Evaluate an empty expression",
-    "description": "Brief explanation how to remove a line"
+    "message": "The current line is completely removed.",
+    "description": "Explain that the current line will be removed"
   },
   "buttonMoveLineUp": {
     "message": "\u21E7",
@@ -156,7 +224,7 @@
     "description": "font-weight property for buttonMoveLineUp"
   },
   "titleButtonMoveLineUp": {
-    "message": "Move the current line up",
+    "message": "Move the current line up.",
     "description": "Explain that the current line will be moved up"
   },
   "buttonMoveLineDown": {
@@ -168,7 +236,7 @@
     "description": "font-weight property for buttonMoveLineDown"
   },
   "titleButtonMoveLineDown": {
-    "message": "Move the current line down",
+    "message": "Move the current line down.",
     "description": "Explain that the current line will be moved down"
   },
   "buttonInsertLine": {
@@ -191,9 +259,17 @@
     "message": "Redraw line",
     "description": "Button to redraw the current line"
   },
+  "titleButtonRedrawLine": {
+    "message": "Only after the line is redrawn the change of this option becomes visible.",
+    "description": "Explain why to redraw a line"
+  },
   "buttonRedrawWindow": {
     "message": "Redraw window",
     "description": "Button to redraw the window"
+  },
+  "titleButtonRedrawWindow": {
+    "message": "Only after the window is redrawn the change of this option becomes visible in all lines.",
+    "description": "Explain why to redraw the window"
   },
   "buttonResult": {
     "message": "~>",

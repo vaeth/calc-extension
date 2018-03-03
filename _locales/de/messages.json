@@ -7,6 +7,30 @@
     "message": "Wertberechnung mathematischer Ausdrücke",
     "description": "Description of the extension"
   },
+  "checkboxStoreAccordeon": {
+    "message": "Status des Akkordeons speichern",
+    "description": "Brief explanation for checkbox to store accordeon state"
+  },
+  "titleCheckboxStoreAccordeon": {
+    "message": "Speichert für jeden Eintrag des Akkordeons, ob er geöffnet ist und sendet den Status an andere Tabulatoren von “Rechner”!",
+    "description": "Verbose explanation for checkbox to store accordeon state"
+  },
+  "buttonOpenAccordeon": {
+    "message": "Auf",
+    "description": "Brief explanation for button to open the accordeon"
+  },
+  "titleButtonOpenAccordeon": {
+    "message": "Öffnet alle Details des Akkordeons",
+    "description": "Verbose explanation for button to open the accordeon"
+  },
+  "buttonCollapseAccordeon": {
+    "message": "Zu",
+    "description": "Brief explanation for button to collapse the accordeon"
+  },
+  "titleButtonCollapseAccordeon": {
+    "message": "Schließt all Details des Akkordeons",
+    "description": "Verbose explanation for button to collapse the accordeon"
+  },
   "checkboxInputMode": {
     "message": "Neue Zeilen ohne „~>”-Knopf",
     "description": "Brief explanation for input mode checkbox"
@@ -31,6 +55,10 @@
     "message": "Die Größe („Breite:Höhe“) neuer Eingabefelder und die Breite für nicht-verstellbare. Wenn „Höhe“ (oder “:Höhe”) 0 ist oder weggelassen wird, wird der Wert 1 genommen; wenn „Breite“ weggelassen wird, wird der Wert 60 genommen. Der Wert kann auch dadurch verändert werden, indem 'Breite:Höhe' irgendwo in die Eingabezeile geschrieben wird.",
     "description": "Verbose explanation for size in popup and on option page"
   },
+  "titleButtonAbbrSize": {
+    "message": "Der Text 'Breite' bzw. 'Breite:Höhe' (in diesen Anführungszeichen) innerhalb eines Ausdrucks bewirkt das Setzen dieser Option.",
+    "description": "Verbose explanation how to set size in an expression"
+  },
   "inputBase": {
     "message": "Ausgabebasis (2-26 oder Vorgabe 10)",
     "description": "Brief explanation for output base (2-36) in input field"
@@ -39,12 +67,16 @@
     "message": "Die Zahlenbasis für die Ausgabe der Ergebnisse. Der leere Wert oder die Basis 0 bedeutet die übliche Basis 10 sowie die Unterdrückung der expliziten Ausgabe der Basis.",
     "description": "Verbose explanation for output base (2-36) in popup and on option page"
   },
+  "titleButtonAbbrBase": {
+    "message": "Der Text \"Basis\" (in diesen Anführungszeichen) innerhalb eines Ausdrucks bewirkt das Setzen dieser Option.",
+    "description": "Verbose explanation how to set base in an expression"
+  },
   "buttonClearStorage": {
     "message": "Speicher löschen",
     "description": "Clear storage button"
   },
   "titleButtonClearStorage": {
-    "message": "Löscht alle gespeicherten Daten der Erweiterung und setzt alle Optionen in den Vorgabezustand zurück",
+    "message": "Löscht all lokal gespeicherten Daten der Erweiterung und sendet diese Änderung an alle “Rechner”-Fenster weiter. Insbesondere werden alle Optionen in ihren Auslieferungszustand zurückgesetzt.",
     "description": "Verbose explanation to clear storage button"
   },
   "textLinkOpen": {
@@ -61,7 +93,11 @@
   },
   "textRightToLeft": {
     "message": "Von rechts nach links",
-    "description": "Text for operators with right-to-left precedence"
+    "description": "Brief text for operators with right-to-left precedence"
+  },
+  "titleTextRightToLeft": {
+    "message": "Hinteinanderstehende Ausdrücke mit diesen Operatoren werden von rechts nach links ausgewertet. Beispielsweise ist a**b**c äquivalent zu a**(b**c) oder a=b=c äquivalent zu a=(b=c).",
+    "description": "Verbose text for operators with right-to-left precedence"
   },
   "summaryFunctions": {
     "message": "Funktionen",
@@ -93,11 +129,19 @@
   },
   "textOptionOn": {
     "message": "an",
-    "description": "Explain that option will be switched on (should be short)"
+    "description": "Briefly explain that option will be switched on"
+  },
+  "titleTextOptionOn": {
+    "message": "Das Zeichen „!” im Ausdruck aktiviert diese Option",
+    "description": "Verbosely explain that option will be switched on"
   },
   "textOptionOff": {
     "message": "aus",
-    "description": "Explain that option will be switched off (should be short)"
+    "description": "Briefly explain that option will be switched off"
+  },
+  "titleTextOptionOff": {
+    "message": "Das Zeichen „?” im Ausdruck deaktiviert diese Option",
+    "description": "Verbosely explain that option will be switched off"
   },
   "summaryStorage": {
     "message": "Speicher",
@@ -107,21 +151,37 @@
     "message": "Sitzung speichern",
     "description": "Button to store the session"
   },
-  "buttonRestoreSession": {
-    "message": "Gespeicherte Sitzung wiederherstellen",
-    "description": "Button to restore the session"
+  "titleButtonStoreSession": {
+    "message": "Die Sitzung kommt in den lokalen Speicher und überlebt damit einen Browser-Neustart. Die Sitzung besteht aus allen Eingabefeldern und Ergebnissen, allen Variablen sowie dem letzten Ergebnis „#“.",
+    "description": "Explain what storing a session means"
+  },
+  "titleButtonRestoreSession": {
+    "message": "Der Fensterinhalt wird durch die gespeicherte Sitzung ersetzt. Auch „#“ erhält den Wert aus der gepeicherten Sitzung. Derzeit gesetzte Variablen werden beibehalten, wenn sie in der gespeicherten Sitzung keinen anderen Wert hatten.",
+    "description": "Explain what restoring a session means"
   },
   "buttonAddSession": {
     "message": "Gespeicherte Sitzung hinzufügen",
     "description": "Button to add the stored session"
   },
+  "titleButtonAddSession": {
+    "message": "Eingabefelder und Ergebnisse der gespeicherten Sitzung werden angehängt. Auch „#“ erhält den Wert aus der gepeicherten Sitzung. Derzeit gesetzte Variablen werden beibehalten, wenn sie in der gespeicherten Sitzung keinen anderen Wert hatten.",
+    "description": "Explain what adding a session means"
+  },
   "buttonClearStored": {
     "message": "Gespeicherte Sitzung löschen",
     "description": "Button to clear the stored session"
   },
+  "titleButtonClearStored": {
+    "message": "Die gespeicherte Sitzung wird aus dem lokalen Speicher entfernt. Die hat keine unmittelbar sichtbaren Auswirkungen",
+    "description": "Explain what clearing a stored session means"
+  },
   "buttonStoreOptions": {
     "message": "Optionen speichern",
     "description": "Button to store the options"
+  },
+  "titleButtonStoreOptions": {
+    "message": "Speichert die Optionen (dazu gehören auch die Checkboxen, die nicht unter “Optionen” gelistet sind) im lokalen Speicher, der einen Browser-Neustart überlebt. Die Optionen werden ebenfalls an alle Tabulatoren von „Rechner” gesendet.",
+    "description": "Explain what storing the options means"
   },
   "summaryEditing": {
     "message": "Editieren",
@@ -132,20 +192,24 @@
     "description": "Button to clean the current line"
   },
   "titleButtonCleanLine": {
-    "message": "Der gesamte Eingabetext der aktuellen Zeile wird entfernt",
+    "message": "Der gesamte Eingabetext der aktuellen Zeile wird entfernt.",
     "description": "Explain that all input text from the current line will be removed"
+  },
+  "textRemoveLine": {
+    "message": "~>",
+    "description": "Brief explanation how to remove a line"
+  },
+  "titleTextRemoveLine": {
+    "message": "Wenn ein Ausdruck nichts außer ev. Leerzeichen und die Spezialflags zum Ändern von Optionen enthält, dann wird seine Auswertung bewirken, dass die Zeile, in der er steht, entfernt wird. Dieses Feature kann dazu benutzt werden, eine Zeile aus einer Sitzung zu entfernen: Man braucht nur den Ausdruck manuell löschen und ihn erneut auswerten.",
+    "description": "Verbose explanation how to remove a line"
   },
   "buttonRemoveLine": {
     "message": "\u2716 Zeile",
     "description": "Button to remove the current line"
   },
   "titleButtonRemoveLine": {
-    "message": "Wenn ein Ausdruck nichts außer ev. Leerzeichen und die Spezialflags zum Ändern von Optionen enthält, dann wird seine Auswertung bewirken, dass die Zeile, in der er steht, entfernt wird. Dieses Feature kann dazu benutzt werden, eine Zeile aus einer Sitzung zu entfernen: Man braucht nur den Ausdruck manuell löschen und ihn erneut auswerten.",
-    "description": "Verbose explanation how to remove a line"
-  },
-  "textRemoveLine": {
-    "message": "Leeren Ausdruck auswerten",
-    "description": "Brief explanation how to remove a line"
+    "message": "Die aktuelle Zeile wird vollständig entfernt.",
+    "description": "Explain that the current line will be removed"
   },
   "buttonMoveLineUp": {
     "message": "\u21E7",
@@ -156,7 +220,7 @@
     "description": "font-weight property for buttonMoveLineUp"
   },
   "titleButtonMoveLineUp": {
-    "message": "Die aktuelle Zeile nach oben verschieben",
+    "message": "Die aktuelle Zeile wird nach oben verschieben.",
     "description": "Explain that the current line will be moved up"
   },
   "buttonMoveLineDown": {
@@ -168,7 +232,7 @@
     "description": "font-weight property for buttonMoveLineDown"
   },
   "titleButtonMoveLineDown": {
-    "message": "Die aktuelle Zeile nach unten verschieben",
+    "message": "Die aktuelle Zeile wird nach unten verschoben.",
     "description": "Explain that the current line will be moved down"
   },
   "buttonInsertLine": {
@@ -191,9 +255,17 @@
     "message": "Zeile neu zeichnen",
     "description": "Button to redraw the current line"
   },
+  "titleButtonRedrawLine": {
+    "message": "Erst bei Neuzeichnen der Zeile wird die Änderung dieser Option sichtbar.",
+    "description": "Explain why to redraw a line"
+  },
   "buttonRedrawWindow": {
     "message": "Fenster neu zeichnen",
     "description": "Button to redraw the window"
+  },
+  "titleButtonRedrawWindow": {
+    "message": "Erst bei Neuzeichnen des Fensters wird die Änderung dieser Option in allen Zeilen sichtbar.",
+    "description": "Explain why to redraw the window"
   },
   "buttonResult": {
     "message": "~>",

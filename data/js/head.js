@@ -13,8 +13,7 @@ function setTitle(title) {
 }
 
 function setHead(text) {
-  const head = document.getElementById("summaryTitle");
-  head.appendChild(document.createTextNode("\xa0" + text));
+  changeText("textHead", text);
 }
 
 function getCheckboxInputMode() {
@@ -162,11 +161,14 @@ function initLayout() {
   }
   translateExamples();
   const textRightToLeft = browser.i18n.getMessage("textRightToLeft");
+  const titleTextRightToLeft = browser.i18n.getMessage("titleTextRightToLeft");
   for (let id of [
     "textRightToLeft1",
     "textRightToLeft2"
     ]) {
-    document.getElementById(id).textContent = textRightToLeft;
+    const col = document.getElementById(id);
+    col.textContent = textRightToLeft;
+    col.title = titleTextRightToLeft;
   }
 }
 
@@ -237,12 +239,22 @@ function removeLine(lines, index) {
   return true;
 }
 
+function initHead(storeOpen) {
+  const rowHead = document.getElementById("rowHead");
+  appendCheckboxCol(rowLast, "checkboxStoreAccordeon", clipboard, storeOpen,
+    "titleCheckboxStoreAccordeon");
+  appendX(rowLast, "TD", appendButton, "buttonOpenAccordeon", null,
+    "titleButtonOpenAccordeon");
+  appendX(rowLast, "TD", appendButton, "buttonCollapseAccordeon", null,
+    "titleCollapseAccordeon");
+}
+
 function initWindowLast(clipboard) {
-  const row = document.getElementById("lastRow");
-  appendCheckboxCol(row, "checkboxClipboard", clipboard, null,
+  const rowLast = document.getElementById("rowLast");
+  appendCheckboxCol(rowLast, "checkboxClipboard", clipboard, null,
     "titleCheckboxClipboard");
-  appendX(row, "TD", appendButton, "buttonClipboard", null, true);
-  appendX(row, "TD", appendButton, "buttonAllClipboard");
+  appendX(rowLast, "TD", appendButton, "buttonClipboard", null, true);
+  appendX(rowLast, "TD", appendButton, "buttonAllClipboard");
 }
 
 function initWindowOptions(inputMode, size, base, linesEnabled) {
@@ -256,44 +268,49 @@ function initWindowOptions(inputMode, size, base, linesEnabled) {
   appendCheckboxCol(rowInputMode, "checkboxInputMode", inputMode,
     null, "titleCheckboxInputMode");
   appendX(rowInputMode, "TD", appendButton, "buttonAbbrExclam",
-    null, disabled, "!");
-  appendX(rowInputMode, "TD", appendTextNode, "textOptionOn");
+    null, disabled, "!", "titleTextOptionOn");
+  appendX(rowInputMode, "TD", appendTextNode, "textOptionOn", null,
+    "titleTextOptionOn");
   appendX(rowInputMode, "TD", appendButton, "buttonAbbrQuestion",
-    null, disabled, "?");
-  appendX(rowInputMode, "TD", appendTextNode, "textOptionOff");
+    null, disabled, "?", "titleTextOptionOff");
+  appendX(rowInputMode, "TD", appendTextNode, "textOptionOff", null,
+    "titleTextOptionOff");
   appendX(rowInputMode, "TD", appendButton, "buttonRedrawLine", null,
-    disabled);
-  appendX(rowInputMode, "TD", appendButton, "buttonRedrawWindow");
+    disabled, null, "titleButtonRedrawLine");
+  appendX(rowInputMode, "TD", appendButton, "buttonRedrawWindow", null,
+    null, null, "titleButtonRedrawWindow");
   appendInputCol(rowSize, "inputSize", 3, getSizeText(size),
     "inputSize", "titleInputSize");
   appendX(rowSize, "TD", appendButton, "buttonAbbrSize805",
-    null, disabled, "'80:5'");
+    null, disabled, "'80:5'", "titleButtonAbbrSize");
   appendX(rowSize, "TD", appendButton, "buttonAbbrSize00",
-    null, disabled, "'0:0'");
+    null, disabled, "'0:0'", "titleButtonAbbrSize");
   appendInputCol(rowBase, "inputBase", 1, getBaseText(base),
     "inputBase", "titleinputBase");
   appendX(rowBase, "TD", appendButton, "buttonAbbrBase16", null,
-    disabled, '"16"');
+    disabled, '"16"', "titleButtonAbbrBase");
   appendX(rowBase, "TD", appendButton, "buttonAbbrBase8", null,
-    disabled, '"8"');
+    disabled, '"8"', "titleButtonAbbrBase");
   appendX(rowBase, "TD", appendButton, "buttonAbbrBaseEmpty", null,
-    disabled, '""');
+    disabled, '""', "titleButtonAbbrBase");
 }
 
 function initWindowStorage(haveStored, haveStorage) {
   const disabled = !haveStored;
   const rowSession = document.getElementById("rowSession");
   clearItem(rowSession);
-  appendX(rowSession, "TD", appendButton, "buttonStoreSession");
+  appendX(rowSession, "TD", appendButton, "buttonStoreSession", null,
+    null, null, "titleButtonStoreSession");
   appendX(rowSession, "TD", appendButton, "buttonRestoreSession", null,
-    disabled);
+    disabled, null, "titleButtonRestoreSession");
   appendX(rowSession, "TD", appendButton, "buttonAddSession", null,
-    disabled);
+    disabled, null, "titleButtonAddSession");
   appendX(rowSession, "TD", appendButton, "buttonClearStored", null,
-    disabled);
+    disabled, null, "titleButtonClearStored");
   const rowStorage = document.getElementById("rowStorage");
   clearItem(rowStorage);
-  appendX(rowStorage, "TD", appendButton, "buttonStoreOptions");
+  appendX(rowStorage, "TD", appendButton, "buttonStoreOptions", null,
+    null, null, "titleButtonStoreOptions");
   appendX(rowStorage, "TD", appendButton, "buttonClearStorage", null,
     !haveStorage, null, "titleButtonClearStorage");
 }
@@ -304,13 +321,10 @@ function initWindowEditing(linesEnabled) {
   clearItem(rowEditing);
   appendX(rowEditing, "TD", appendButton, "buttonCleanLine", null, disabled,
     null, "titleButtonCleanLine");
-  const div = document.createElement("DIV");
-  div.title = browser.i18n.getMessage("titleButtonRemoveLine");
-  div.style.border = "solid";
-  appendButton(div, "buttonRemoveLine", null, disabled, null,
-    "titleButtonRemoveLine");
-  appendTextNode(div, "textRemoveLine", null, "titleButtonRemoveLine");
-  appendX(rowEditing, "TD", div);
+  appendX(rowEditing, "TD", appendTextNode, "textRemoveLine", null,
+    "titleTextRemoveLine");
+  appendX(rowEditing, "TD", appendButton, "buttonRemoveLine", null, disabled,
+    null, "titleButtonRemoveLine");
   appendX(rowEditing, "TD", appendButton, "buttonMoveLineUp", null, disabled,
     null, "titleButtonMoveLineUp");
   appendX(rowEditing, "TD", appendButton, "buttonMoveLineDown", null, disabled,

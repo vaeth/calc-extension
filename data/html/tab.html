@@ -7,9 +7,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
   <body>
-    <details open="open" id="detailsTitle">
-      <summary id="summaryTitle" style="font-size:1.7em;font-weight:bold"><img
-        src="/data/icons/48.svg" width="32" height="32" alt="" /></summary>
+    <details open="open" id="detailsHead">
+      <summary id="summaryHead">
+        <table>
+          <tr id="rowHead">
+            <td>
+              <img src="/data/icons/48.svg" width="32" height="32" alt="" />
+            </td>
+            <td style="font-size:1.7em;font-weight:bold" id="textHead"></td>
+          </tr>
+        </table>
+      </summary>
       <details id="detailsExamples">
         <summary id="summaryExamples"></summary>
         <p>1 + 2(1+1) + (2-1)(3-2)</p>
@@ -272,7 +280,7 @@
       <details id="detailsLast">
         <summary id="summaryLast"></summary>
         <table>
-          <tr id="lastRow">
+          <tr id="rowLast">
             <td><button disabled="disabled" id="buttonAbbrLast">#</button></td>
             <td id="lastString"></td>
           </tr>
