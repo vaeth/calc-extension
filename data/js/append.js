@@ -64,6 +64,7 @@ function appendCheckbox(parent, id, checked, titleId) {
   }
   checkbox.id = id;
   parent.appendChild(checkbox);
+  return checkbox;
 }
 
 function appendTextarea(parent, id, size, value, titleId) {

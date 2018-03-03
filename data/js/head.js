@@ -24,6 +24,10 @@ function getCheckboxClipboard() {
   return document.getElementById("checkboxClipboard");
 }
 
+function getCheckboxAccordeon() {
+  return document.getElementById("checkboxAccordeon");
+}
+
 function getInputSize() {
   return document.getElementById("inputSize");
 }
@@ -55,8 +59,24 @@ function enableStorageButtons(enable) {
   enableButton(document.getElementById("buttonClearStored"), enable);
 }
 
+function isCheckedAccordeon() {
+  return isChecked(getCheckboxAccordeon());
+}
+
+function setCheckboxAccordeon(checked) {
+  setChecked(getCheckboxAccordeon(), checked);
+}
+
+function isCheckedTextarea() {
+  return isChecked(getCheckboxTextarea());
+}
+
 function setCheckboxTextarea(checked) {
   setChecked(getCheckboxTextarea(), checked);
+}
+
+function isCheckedClipboard() {
+  return isChecked(getCheckboxClipboard());
 }
 
 function setCheckboxClipboard(checked) {
@@ -267,7 +287,7 @@ function getResultTable(line, output) {
   return table;
 }
 
-function appendNext(state, input, output, before, omitFocus, size) {
+function appendNext(state, input, output, before, size) {
   const lines = state.lines;
   const beforeNode = (lines.isValidIndex(before) ?
     document.getElementById(lines.getLine(before).paragraph) : null);
@@ -277,7 +297,7 @@ function appendNext(state, input, output, before, omitFocus, size) {
   } else if (Array.isArray(size)) {
     useTextarea = true;
   } else {
-    useTextarea = isChecked(getCheckboxTextarea());
+    useTextarea = isCheckedTextarea();
     size = state.size;
   }
   const line = lines.generateLine(useTextarea);
@@ -287,9 +307,6 @@ function appendNext(state, input, output, before, omitFocus, size) {
   const top = getTop();
   top.insertBefore(paragraph, beforeNode);
   top.insertBefore(table, beforeNode);
-  if (!omitFocus) {
-    lines.focus();
-  }
 }
 
 function swapLines(line1, line2) {
@@ -323,14 +340,16 @@ function removeLine(lines, index) {
   return true;
 }
 
-function initHead(storeOpen) {
-  const rowHead = document.getElementById("rowHead");
-  appendCheckboxCol(rowLast, "checkboxStoreAccordeon", clipboard, storeOpen,
-    "titleCheckboxStoreAccordeon");
-  appendX(rowLast, "TD", appendButton, "buttonOpenAccordeon", null, null,
-    null, "titleButtonOpenAccordeon");
-  appendX(rowLast, "TD", appendButton, "buttonCollapseAccordeon", null, null,
-    null,  "titleCollapseAccordeon");
+function initWindowHead(storeOpen) {
+  appendButton(document.getElementById("spanButtonExpandAccordeon"),
+    "buttonExpandAccordeon", null, null, null, "titleButtonExpandAccordeon");
+  appendButton(document.getElementById("spanButtonCollapseAccordeon"),
+    "buttonCollapseAccordeon", null, null, null,
+    "titleButtonCollapseAccordeon");
+  appendCheckbox(document.getElementById("spanCheckboxAccordeon"),
+    "checkboxAccordeon", storeOpen, "titleCheckboxAccordeon");
+  appendTextNode(document.getElementById("textCheckboxAccordeon"),
+    "checkboxAccordeon", "textCheckboxAccordeon", "titleCheckboxAccordeon");
 }
 
 function initWindowLast(clipboard) {
@@ -422,6 +441,7 @@ function initWindowEditing(linesEnabled) {
 }
 
 function initWindow(state, options, haveStorage) {
+  initWindowHead(false);
   initWindowLast(options.clipboard);
   initWindowOptions(options.textarea, state.size, state.base,
     state.lines.enabled);

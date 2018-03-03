@@ -25,6 +25,10 @@ function getCheckboxClipboard() {
   return document.getElementById("checkboxClipboard");
 }
 
+function getCheckboxAccordeon() {
+  return document.getElementById("checkboxAccordeon");
+}
+
 function getInputSize() {
   return document.getElementById("inputSize");
 }
@@ -37,8 +41,24 @@ function getButtonClearStorage() {
   return document.getElementById("buttonClearStorage");
 }
 
+function isCheckedAccordeon() {
+  return isChecked(getCheckboxAccordeon());
+}
+
+function setCheckboxAccordeon(checked) {
+  setChecked(getCheckboxAccordeon(), checked);
+}
+
+function isCheckedTextarea() {
+  return isChecked(getCheckboxTextarea());
+}
+
 function setCheckboxTextarea(checked) {
   setChecked(getCheckboxTextarea(), checked);
+}
+
+function isCheckedClipboard() {
+  return isChecked(getCheckboxClipboard());
 }
 
 function setCheckboxClipboard(checked) {
@@ -79,6 +99,8 @@ function appendLink(parent) {
 
 function initPage(options, haveStorage) {
   const table = document.createElement("TABLE");
+  appendX(table, "TR", appendCheckboxCol, "checkboxAccordeon",
+    options.textarea, "titleCheckboxAccordeon");
   appendX(table, "TR", appendCheckboxCol, "checkboxTextarea",
     options.textarea, "titleCheckboxTextarea");
   appendX(table, "TR", appendInputCol, "inputSize", 3,
@@ -95,10 +117,13 @@ function initPage(options, haveStorage) {
 }
 
 function initOptions(state, options, haveStorage) {
-  if (getCheckboxTextarea()) {  // already initialized
+  if (getCheckboxAccordeon()) {  // already initialized
     return;
   }
   const stateOptions = state.options = {};
+  if (options.accordeon) {
+    stateOptions.accordeon = true;
+  }
   if (options.textarea) {
     stateOptions.textarea = true;
   }
@@ -136,6 +161,9 @@ function optionsChanges(state, options, changes) {
     return;
   }
   state.options = options;
+  if (changes.accordeon) {
+    setCheckboxAccordeon(changes.accordeon.value);
+  }
   if (changes.textarea) {
     setCheckboxTextarea(changes.textarea.value);
   }
@@ -172,8 +200,25 @@ function sendChanges(changes) {
   sendCommand("optionsChanges", changes);
 }
 
+function changeAccordeon(options) {
+  const value = isCheckedAccordeon();
+  if (value == !!options.accordeon) {
+    return;
+  }
+  const accordeonChange = {};
+  const changes = {
+    accordeon: accordeonChange
+  };
+  if (value) {
+    accordeonChange.value = options.accordeon = true;
+  } else {
+    delete options.accordeon;
+  }
+  sendChanges(changes);
+}
+
 function changeTextarea(options) {
-  const value = isChecked(getCheckboxTextarea());
+  const value = isCheckedTextarea();
   if (value == !!options.textarea) {
     return;
   }
@@ -190,7 +235,7 @@ function changeTextarea(options) {
 }
 
 function changeClipboard(options) {
-  const value = isChecked(getCheckboxClipboard());
+  const value = isCheckedClipboard();
   if (value == !!options.clipboard) {
     return;
   }
@@ -245,6 +290,9 @@ function changeListener(state, event) {
     return;
   }
   switch (event.target.id) {
+    case "checkboxAccordeon":
+      changeAccordeon(state.options);
+      return;
     case "checkboxTextarea":
       changeTextarea(state.options);
       return;

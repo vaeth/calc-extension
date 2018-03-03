@@ -8,18 +8,18 @@
   </head>
   <body>
     <details open="open" id="detailsHead">
-      <summary id="summaryHead">
-        <table>
-          <tr id="rowHead">
-            <td>
-              <img src="/data/icons/48.svg" width="32" height="32" alt="" />
-            </td>
-            <td style="font-size:1.7em;font-weight:bold" id="textHead"></td>
-          </tr>
-        </table>
-      </summary>
+     <summary id="summaryHead">
+        <img src="/data/icons/48.svg" width="32" height="32" alt="" />
+        <span style="font-size:1.7em" id="textHead"></span>
+        <span id="spanButtonExpandAccordeon"></span>
+        <span id="spanButtonCollapseAccordeon"></span>
+        <span id="spanCheckboxAccordeon"></span>
+        <span id="textCheckboxAccordeon"></span>
+     </summary>
+     <div style="margin-left:1em">
       <details id="detailsExamples">
-        <summary id="summaryExamples"></summary>
+       <summary id="summaryExamples"></summary>
+       <div style="margin-left:1em">
         <p>1 + 2(1+1) + (2-1)(3-2)</p>
         <table><tr><td>6</td></tr></table>
         <p>1·1 + 1×1 + 1 1 + 1*1</p>
@@ -40,9 +40,11 @@
         <table><tr><td id="textResult1">3f</td></tr></table>
         <p>Variable_1a = (c=d=#)+c ^ d</p>
         <table><tr><td id="textResult2">41</td></tr></table>
+       </div>
       </details>
       <details id="detailsBinaryOperators">
-        <summary id="summaryBinaryOperators"></summary>
+       <summary id="summaryBinaryOperators"></summary>
+       <div style="margin-left:1em">
         <table>
           <tr>
             <td><div style="border:solid"><button disabled="disabled"
@@ -91,9 +93,11 @@
             <td id="textRightToLeft2"></td>
           </tr>
         </table>
+       </div>
       </details>
       <details id="detailsFunctions">
-        <summary id="summaryFunctions"></summary>
+       <summary id="summaryFunctions"></summary>
+       <div style="margin-left:1em">
         <table>
           <tr>
             <td><button disabled="disabled"
@@ -172,9 +176,11 @@
               id="buttonAbbrFround">fround</button></td>
           </tr>
         </table>
+       </div>
       </details>
       <details id="detailsConstants">
-        <summary id="summaryConstants"></summary>
+       <summary id="summaryConstants"></summary>
+       <div style="margin-left:1em">
         <table>
           <tr>
             <td><button disabled="disabled"
@@ -212,9 +218,11 @@
               id="buttonAbbrLOG10E">LOG10E</button>log10&nbsp;E</td>
           </tr>
         </table>
+       </div>
       </details>
       <details id="detailsNumbers">
-        <summary id="summaryNumbers"></summary>
+       <summary id="summaryNumbers"></summary>
+       <div style="margin-left:1em">
         <table>
           <tr>
             <td><button disabled="disabled"
@@ -288,31 +296,41 @@
             <td><button disabled="disabled" id="buttonAbbrVarZ">z</button></td>
           </tr>
         </table>
+       </div>
       </details>
       <details id="detailsLast">
-        <summary id="summaryLast"></summary>
+       <summary id="summaryLast"></summary>
+       <div style="margin-left:1em">
         <table>
           <tr id="rowLast">
             <td><button disabled="disabled" id="buttonAbbrLast">#</button></td>
             <td id="lastString"></td>
           </tr>
         </table>
+       </div>
       </details>
       <details id="detailsOptions">
-        <summary id="summaryOptions"></summary>
+       <summary id="summaryOptions"></summary>
+       <div style="margin-left:1em">
         <table><tr id="rowTextarea"><td></td></tr></table>
         <table><tr id="rowSize"><td></td></tr></table>
         <table><tr id="rowBase"><td></td></tr></table>
+       </div>
       </details>
       <details id="detailsStorage">
-        <summary id="summaryStorage"></summary>
+       <summary id="summaryStorage"></summary>
+       <div style="margin-left:1em">
         <table><tr id="rowSession"><td></td></tr></table>
         <table><tr id="rowStorage"><td></td></tr></table>
+       </div>
       </details>
       <details id="detailsEditing">
-        <summary id="summaryEditing"></summary>
+       <summary id="summaryEditing"></summary>
+       <div style="margin-left:1em">
         <table><tr id="rowEditing"><td></td></tr></table>
+       </div>
       </details>
+      </div>
     </details>
     <div id="top"></div>
     <script src="/data/js/changes.js"></script>

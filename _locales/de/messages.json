@@ -7,19 +7,19 @@
     "message": "Wertberechnung mathematischer Ausdrücke",
     "description": "Description of the extension"
   },
-  "checkboxStoreAccordeon": {
+  "checkboxAccordeon": {
     "message": "Status des Akkordeons speichern",
     "description": "Brief explanation for checkbox to store accordeon state"
   },
-  "titleCheckboxStoreAccordeon": {
+  "titleCheckboxAccordeon": {
     "message": "Speichert für jeden Eintrag des Akkordeons, ob er geöffnet ist und sendet den Status an andere Tabulatoren von “Rechner”!",
     "description": "Verbose explanation for checkbox to store accordeon state"
   },
-  "buttonOpenAccordeon": {
+  "buttonExpandAccordeon": {
     "message": "Auf",
     "description": "Brief explanation for button to open the accordeon"
   },
-  "titleButtonOpenAccordeon": {
+  "titleButtonExpandAccordeon": {
     "message": "Öffnet alle Details des Akkordeons",
     "description": "Verbose explanation for button to open the accordeon"
   },

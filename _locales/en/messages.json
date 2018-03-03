@@ -7,20 +7,20 @@
     "message": "Calculate values of mathematical expressions",
     "description": "Description of the extension"
   },
-  "checkboxStoreAccordeon": {
+  "checkboxAccordeon": {
     "message": "Store accordeon state",
     "description": "Brief explanation for checkbox to store accordeon state"
   },
-  "titleCheckboxStoreAccordeon": {
+  "titleCheckboxAccordeon": {
     "message": "Store for every item of the accordeon whether it is opened, and propagate the state to other calc-extension tabs!",
     "description": "Verbose explanation for checkbox to store accordeon state"
   },
-  "buttonOpenAccordeon": {
-    "message": "Open",
+  "buttonExpandAccordeon": {
+    "message": "Expand",
     "description": "Brief explanation for button to open the accordeon"
   },
-  "titleButtonOpenAccordeon": {
-    "message": "Open all details of the accordeon",
+  "titleButtonExpandAccordeon": {
+    "message": "Expand the accordeon by opening all details",
     "description": "Verbose explanation for button to open the accordeon"
   },
   "buttonCollapseAccordeon": {
@@ -28,7 +28,7 @@
     "description": "Brief explanation for button to collapse the accordeon"
   },
   "titleButtonCollapseAccordeon": {
-    "message": "Close all details of the accordeon",
+    "message": "Collaps the accordeon by closing all details",
     "description": "Verbose explanation for button to collapse the accordeon"
   },
   "checkboxTextarea": {

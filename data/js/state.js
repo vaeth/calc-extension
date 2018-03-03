@@ -141,7 +141,7 @@ State.buttonsAbbr = {
 };
 
 State.details = {
-  Title: true,
+  Head: true,
   Examples: false,
   BinaryOperators: false,
   Functions: false,

@@ -2,14 +2,15 @@
 
 *calc-extension-5.0:
 	Martin Väth <martin at mvath.de>:
+	- Everything now has an explaining tooltip/title
+	- Option to store accordeon state
+	- Buttons to expand/collapse accordeon
+	- The accordeon list is now itself a detail which can be closed
 	- Always provide ~> button
+	- Input line keeps focus
 	- New option for textarea mode replaces previous non-button option
 	- Store/restore type and size of input fields with session
-	- Everything now has an explaining title (popup)
-	- Backspace button
-	- The opening state of details is stored and propagated across tabs
-	- The accordeon list is now itself a detail which can be hidden
-	- Input keeps focus when opening/closing details
+	- Clickable Backspace button
 	- Increase default size to 80:5
 	- Up-/Down-arrows in font-weight bolder
 	- Center icon

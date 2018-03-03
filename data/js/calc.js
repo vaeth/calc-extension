@@ -60,9 +60,8 @@ function redrawLine(state) {
     return;
   }
   const content = getContent(line);
-  appendNext(state, content[0], content[1], lines.currentIndex, true);
+  appendNext(state, content[0], content[1], lines.currentIndex);
   removeLine(lines, lines.currentIndex + 1);
-  lines.focus();
 }
 
 function redrawWindow(state) {
@@ -71,10 +70,9 @@ function redrawWindow(state) {
   const index = state.lines.currentIndex;
   clearAllLines(lines);
   for (let [input, output] of content) {
-    appendNext(state, input, output, null, true);
+    appendNext(state, input, output);
   }
   lines.setCurrentIndex(index);
-  lines.focus();
 }
 
 function backspace(lines) {
@@ -95,7 +93,6 @@ function backspace(lines) {
       input.value = value.substr(0, value.length - 1);
     }
   }
-  lines.focus();
 }
 
 function cleanLine(lines) {
@@ -104,7 +101,6 @@ function cleanLine(lines) {
     return;
   }
   input.value = "";
-  lines.focus();
 }
 
 function removeCurrentLine(state) {
@@ -113,9 +109,7 @@ function removeCurrentLine(state) {
   if (!removeLine(lines)) {
     return;
   }
-  if (lines.setCurrentIndex(index)) {
-    lines.focus();
-  } else {
+  if (!lines.setCurrentIndex(index)) {
     appendNext(state);
   }
 }
@@ -127,7 +121,6 @@ function moveLine(lines, add) {
   }
   const swapIndex = index + add;
   if (!lines.isValidIndex(swapIndex)) {
-    lines.focus();
     return;
   }
   const line = lines.currentLine;
@@ -135,7 +128,6 @@ function moveLine(lines, add) {
   const swapLine = lines.currentLine;
   lines.swapLines(index, swapIndex);
   swapLines(line, swapLine);
-  lines.focus();
 }
 
 function insertLine(state) {
@@ -172,7 +164,7 @@ function restoreSessionLast(state, checkOnly) {
 function addSessionPrepare(state, clear) {
   // Setting the clipboard cannot be done in the messageListener,
   // since otherwise we would need clipboard permissions
-  if (restoreSessionLast(state, true) && isChecked(getCheckboxClipboard())) {
+  if (restoreSessionLast(state, true) && isCheckedClipboard()) {
     toClipboard(state.storedLast[1]);
   }
   sendCommand("sendSession", { clear: clear });
@@ -195,41 +187,11 @@ function addSession(state, session, clear) {
     }
     const lastIndex = lines.currentIndex;
     for (let [input, output, size] of content) {
-      appendNext(state, input, output, null, true, size);
+      appendNext(state, input, output, null, size);
     }
     if (lastIndex !== null) {
       lines.currentIndex = lastIndex;
     }
-    lines.focus();
-  }
-}
-
-function optionsChanges(state, options, changes) {
-  if (options) {
-    changes = {};
-    for (let i of [
-      "clipboard",
-      "textarea",
-      "size",
-      "base"
-      ]) {
-      const change = changes[i] = {};
-      if (options.hasOwnProperty(i)) {
-        change.value = options[i];
-      }
-    }
-  }
-  if (changes.clipboard) {
-    setCheckboxClipboard(changes.clipboard.value);
-  }
-  if (changes.textarea) {
-    setCheckboxTextarea(changes.textarea.value);
-  }
-  if (changes.size) {
-    changeSize(state, sanitizeSize(changes.size.value));
-  }
-  if (changes.base) {
-    changeBase(state, sanitizeBase(changes.base.value));
   }
 }
 
@@ -252,7 +214,7 @@ function displayResult(state, id) {
   }
   if (last) {
     displayLastString(state);
-    if (isChecked(getCheckboxClipboard())) {
+    if (isCheckedClipboard()) {
       toClipboard(state.lastString);
     }
   }
@@ -264,16 +226,14 @@ function displayResult(state, id) {
     nextIndex = lines.currentIndex;
     removeLine(lines);  // invalidates lines.currentIndex
   }
-  if (lines.setCurrentIndex(nextIndex)) {
-    lines.focus();
-  } else {
+  if (!lines.setCurrentIndex(nextIndex)) {
     appendNext(state);
   }
   return true;
 }
 
 function initCalc(state, options, haveStorage) {
-  if (getCheckboxTextarea()) {  // already initialized
+  if (getCheckboxAccordeon()) {  // already initialized
     return;
   }
   state.parser = new Parser();
@@ -312,10 +272,13 @@ function storeSession(state) {
 
 function storeOptions(state) {
   const options = {};
-  if (isChecked(getCheckboxTextarea())) {
+  if (isCheckedAccordeon()) {
+    options.accordeon = true;
+  }
+  if (isCheckedTextarea()) {
     options.textarea = true;
   }
-  if (isChecked(getCheckboxClipboard())) {
+  if (isCheckedClipboard()) {
     options.clipboard = true;
   }
   if (!isDefaultSize(state.size)) {
@@ -344,11 +307,35 @@ function insertButtonAbbr(lines, id) {
   } else {
     input.value += text;
   }
-  input.focus();
+}
+
+function detailsStore() {
+  if (!isCheckedAccordeon()) {
+    return;
+  }
+  const details = {};
+  const defaultDetails = State.details;
+  for (let name of Object.getOwnPropertyNames(defaultDetails)) {
+    const list = document.getElementById("details" + name);
+    if (list && (defaultDetails[name] == !list.open)) {
+      details[name] = true;
+    }
+  }
+  sendCommand("detailsChanges", { details: details });
+}
+
+function detailsAll(open) {
+  for (let name of Object.getOwnPropertyNames(State.details)) {
+    setOpen(document.getElementById("details" + name), open);
+  }
+  detailsStore();
 }
 
 function detailsClicked(id) {
-  const name = id.substr(7);  // 7 = "details".length
+  if (!isCheckedAccordeon()) {
+    return;
+  }
+  const name = id.substr(7);  // 7 = "summary".length
   const open = State.details[name];
   if (typeof(open) != "boolean") {
     return false;
@@ -360,7 +347,7 @@ function detailsClicked(id) {
   const value = {};
   const changes = {};
   changes[name] = value;
-  if (open ? list.open : !list.open) {
+  if (!open == !list.open) {  // list.open is currently negated
     value.value = true;
   }
   sendCommand("detailsChanges", { changes: changes });
@@ -377,14 +364,48 @@ function detailsChanges(details, changes) {
   if (changes) {
     applyChanges(details, changes);
   }
-  for (let i of modify) {
-    if (!defaultDetails.hasOwnProperty(i)) {
+  for (let name of modify) {
+    if (!defaultDetails.hasOwnProperty(name)) {
       continue;
     }
-    const list = document.getElementById("details" + i);
-    if (list) {
-      setOpen(list, defaultDetails[i] == !details[i]);
+    const list = document.getElementById("details" + name);
+    setOpen(list, defaultDetails[name] == !details[name]);
+  }
+}
+
+function optionsChanges(state, options, changes) {
+  if (options) {
+    changes = {};
+    for (let i of [
+      "accordeon",
+      "clipboard",
+      "textarea",
+      "size",
+      "base"
+      ]) {
+      const change = changes[i] = {};
+      if (options.hasOwnProperty(i)) {
+        change.value = options[i];
+      }
     }
+  }
+  if (changes.accordeon) {
+    setCheckboxAccordeon(changes.accordeon.value);
+    if (changes.accordeon.value) {
+      detailsStore();
+    }
+  }
+  if (changes.clipboard) {
+    setCheckboxClipboard(changes.clipboard.value);
+  }
+  if (changes.textarea) {
+    setCheckboxTextarea(changes.textarea.value);
+  }
+  if (changes.size) {
+    changeSize(state, sanitizeSize(changes.size.value));
+  }
+  if (changes.base) {
+    changeBase(state, sanitizeBase(changes.base.value));
   }
 }
 
@@ -396,68 +417,84 @@ function clickListener(state, event) {
   switch (id) {
     case "buttonClipboard":
       toClipboard(state.lastString);
-      return;
+      break;
     case "buttonAllClipboard":
       toClipboard(addContent("", state.lines));
-      return;
+      break;
     case "buttonRedrawLine":
       redrawLine(state);
-      return;
+      break;
     case "buttonBackspace":
       backspace(state.lines);
-      return;
+      break;
     case "buttonCleanLine":
       cleanLine(state.lines);
-      return;
+      break;
     case "buttonRemoveLine":
       removeCurrentLine(state);
-      return;
+      break;
     case "buttonMoveLineUp":
       moveLine(state.lines, -1);
-      return;
+      break;
     case "buttonMoveLineDown":
       moveLine(state.lines, 1);
-      return;
+      break;
     case "buttonInsertLine":
       insertLine(state);
-      return;
+      break;
     case "buttonRedrawWindow":
       redrawWindow(state);
-      return;
+      break;
     case "buttonClearWindow":
       clearAll(state);
-      return;
+      break;
     case "buttonStoreSession":
       storeSession(state);
-      return;
+      break;
     case "buttonRestoreSession":
       addSessionPrepare(state, true);
-      return;
+      break;
     case "buttonAddSession":
       addSessionPrepare(state, false);
-      return;
+      break;
     case "buttonClearStored":
       sendCommand("clearSession");
-      return;
+      break;
     case "buttonStoreOptions":
       storeOptions(state);
-      return;
+      break;
     case "buttonClearStorage":
       sendCommand("clearStorage");
-      return;
+      break;
+    case "buttonExpandAccordeon":
+      event.preventDefault();
+      detailsAll(true);
+      break;
+    case "buttonCollapseAccordeon":
+      event.preventDefault();
+      detailsAll(false);
+      break;
+    case "textCheckboxAccordeon":
+      event.preventDefault();
+      break;
+    case "textHead":
+      detailsClicked("summaryHead");
+      break;
     default:
       if (id.startsWith("buttonAbbr")) {
         insertButtonAbbr(state.lines, id);
-        return;
+        break;
       }
       if (id.startsWith("button=")) {
         displayResult(state, id);
-        return;
+        break;
       }
-      if (id.startsWith("summary") && detailsClicked(id)) {
-        state.lines.focus();
+      if (id.startsWith("summary")) {
+        detailsClicked(id);
+        break;
       }
   }
+  state.lines.focus();
 }
 
 function submitListener(state, event) {
@@ -476,11 +513,18 @@ function changeListener(state, event) {
   switch (event.target.id) {
     case "inputSize":
       changeSize(state, getSize(getInputSize().value), true);
-      return;
+      break;
     case "inputBase":
       changeBase(state, getBase(getInputBase().value), true);
-      return;
+      break;
+    case "checkboxAccordeon": {
+      detailsStore();
+      const details = document.getElementById("detailsHead");
+      details.open = !details.open;
+      break;
+    }
   }
+  state.lines.focus();
 }
 
 function focusinListener(state, event) {
@@ -507,7 +551,7 @@ function messageListener(state, message) {
       state.storedLast = message.last;
       initCalc(state, message.options, message.haveStorage);
       detailsChanges(message.details);
-      return;
+      break;
     case "optionsChanges":
     case "storageOptionsChanges":
       optionsChanges(state, message.options, message.changes);
@@ -524,8 +568,9 @@ function messageListener(state, message) {
       return;
     case "session":
       addSession(state, message.session, message.clear);
-      return;
+      break;
   }
+  state.lines.focus();
 }
 
 function initMain() {
