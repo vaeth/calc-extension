@@ -71,9 +71,9 @@ Note that functions bind stronger than all binary operators, i.e.
 - `sinh` the hyperbolic sine
 - `cosh` the hyperbolic cosine
 - `tanh` the hyperbolic tangent
-- `asinh` the hyperbolic arccosine
-- `acosh` the hyperbolic arccosine
-- `atanh` the hyperbolic arctangent
+- `asinh` the hyperbolic areasine
+- `acosh` the hyperbolic areacosine
+- `atanh` the hyperbolic areatangent
 - `log10` the base 10 logarithm
 - `log2` the base 2 logarithm
 - `log` the natural logarithm (base E)
@@ -84,11 +84,11 @@ Note that functions bind stronger than all binary operators, i.e.
 - `cbrt` the cube root, that is `cbrt x = x ** (1/3)`
 - `abs` the absolute value
 - `sign` the signum (1, 0, or -1)
-- `floor` the value rounded down to its nearest integer
-- `ceil` the value rounded up to its nearest integer
+- `floor` the value rounded down to an integer
+- `ceil` the value rounded up to an integer
 - `trunc` the value rounded to the integer of smaller absolute value
 - `round` the value rounded to its nearest integer
-- `fround` the value rounded to the nearest 32 bit float
+- `fround` the value rounded to its nearest 32 bit float
 - `clz32` the number of leading zero bits in a 32 bit representation
 
 Furthermore, there are constants available:

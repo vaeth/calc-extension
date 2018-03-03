@@ -134,12 +134,12 @@
               id="buttonAbbrLog2">log2</button></td>
             <td><button disabled="disabled"
               id="buttonAbbrLog">log</button></td>
-            <td><div style="border:solid"><button disabled="disabled"
-              id="buttonAbbrLog1p">log1p</button>x&mapsto;log(1+x)</div></td>
+            <td><button disabled="disabled"
+              id="buttonAbbrLog1p">log1p</button>x&mapsto;log(1+x)</td>
             <td><button disabled="disabled"
               id="buttonAbbrExp">exp</button></td>
-            <td><div style="border:solid"><button disabled="disabled"
-              id="buttonAbbrExpm1">expm1</button>x&mapsto;exp x - 1</div></td>
+            <td><button disabled="disabled"
+              id="buttonAbbrExpm1">expm1</button>x&mapsto;exp x - 1</td>
           </tr>
         </table>
         <table>
@@ -177,17 +177,23 @@
         <summary id="summaryConstants"></summary>
         <table>
           <tr>
-            <td><div style="border:solid"><button disabled="disabled"
-              id="buttonAbbrE">E</button>exp&nbsp;1</div></td>
-            <td><div style="border:solid"><button disabled="disabled"
-              id="buttonAbbrPi">&pi;</button><button disabled="disabled"
-              id="buttonAbbrPI">PI</button>acos-1</div></td>
-            <td><div style="border:solid"><button disabled="disabled"
+            <td><button disabled="disabled"
+              id="buttonAbbrE">E</button>exp&nbsp;1</td>
+            <td><table>
+                <tr>
+                  <td><div style="border:solid"><button disabled="disabled"
+                    id="buttonAbbrPi">&pi;</button><button
+                    disabled="disabled"
+                     id="buttonAbbrPI">PI</button></div></td>
+                  <td>acos-1</td>
+                </tr>
+              </table></td>
+            <td><button disabled="disabled"
               id="buttonAbbrSQRT2">SQRT2</button>&radic;<span
-                style="text-decoration:overline;">2</span></div></td>
-            <td><div style="border:solid"><button disabled="disabled"
+                style="text-decoration:overline;">2</span></td>
+            <td><button disabled="disabled"
               id="buttonAbbrSQRT1_2">SQRT1_2</button>&radic;<span
-                style="text-decoration:overline;">&frac12;</span></div></td>
+                style="text-decoration:overline;">&frac12;</span></td>
             <td><div style="border:solid"><button disabled="disabled"
               id="buttonAbbrEpsilon">&epsilon;</button><button
               disabled="disabled" id="buttonAbbrEPSILON"
@@ -196,14 +202,14 @@
         </table>
         <table>
           <tr>
-            <td><div style="border:solid"><button disabled="disabled"
-              id="buttonAbbrLN2">LN2</button>log&nbsp;2</div></td>
-            <td><div style="border:solid"><button disabled="disabled"
-              id="buttonAbbrLN10">LN10</button>log&nbsp;10</div></td>
-            <td><div style="border:solid"><button disabled="disabled"
-              id="buttonAbbrLOG2E">LOG2E</button>log2&nbsp;E</div></td>
-            <td><div style="border:solid"><button disabled="disabled"
-              id="buttonAbbrLOG10E">LOG10E</button>log10&nbsp;E</div></td>
+            <td><button disabled="disabled"
+              id="buttonAbbrLN2">LN2</button>log&nbsp;2</td>
+            <td><button disabled="disabled"
+              id="buttonAbbrLN10">LN10</button>log&nbsp;10</td>
+            <td><button disabled="disabled"
+              id="buttonAbbrLOG2E">LOG2E</button>log2&nbsp;E</td>
+            <td><button disabled="disabled"
+              id="buttonAbbrLOG10E">LOG10E</button>log10&nbsp;E</td>
           </tr>
         </table>
       </details>
@@ -218,6 +224,8 @@
             <td><button disabled="disabled" id="buttonAbbrOpen">(</button></td>
             <td><button disabled="disabled"
               id="buttonAbbrClose">)</button></td>
+            <td><button disabled="disabled"
+              id="buttonBackspace">&larr;</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarA">a</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarB">b</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarC">c</button></td>
@@ -231,6 +239,7 @@
             <td><button disabled="disabled" id="buttonAbbr9">9</button></td>
             <td><button disabled="disabled" id="buttonAbbrHexE">E</button></td>
             <td><button disabled="disabled" id="buttonAbbrHexF">F</button></td>
+            <td></td>
             <td><button disabled="disabled" id="buttonAbbrVarG">g</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarH">h</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarI">i</button></td>
@@ -243,6 +252,7 @@
             <td><button disabled="disabled" id="buttonAbbr6">6</button></td>
             <td><button disabled="disabled" id="buttonAbbrHexC">C</button></td>
             <td><button disabled="disabled" id="buttonAbbrHexD">D</button></td>
+            <td></td>
             <td><button disabled="disabled" id="buttonAbbrVarL">l</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarM">m</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarN">n</button></td>
@@ -255,6 +265,7 @@
             <td><button disabled="disabled" id="buttonAbbr3">3</button></td>
             <td><button disabled="disabled" id="buttonAbbrHexA">A</button></td>
             <td><button disabled="disabled" id="buttonAbbrHexB">B</button></td>
+            <td></td>
             <td><button disabled="disabled" id="buttonAbbrVarQ">q</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarR">r</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarS">s</button></td>
@@ -267,8 +278,9 @@
             <td><button disabled="disabled"
               id="buttonAbbrNumericE">e</button></td>
             <td><button disabled="disabled" id="buttonAbbr0x">0x</button></td>
-            <td><button disabled="disabled"
-              id="buttonAbbrSpace">&nbsp;</button></td>
+            <td colspan="2"><button disabled="disabled" id="buttonAbbrSpace">
+              <span style="display:inline-block; width:4em">&nbsp;</span>
+              </button></td>
             <td><button disabled="disabled" id="buttonAbbrVarV">v</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarW">w</button></td>
             <td><button disabled="disabled" id="buttonAbbrVarX">x</button></td>

@@ -72,6 +72,7 @@ function enableCurrent(lines, enable) {
     enableButton(document.getElementById(i), enable);
   }
   for (let i of [
+    "buttonBackspace",
     "buttonRedrawLine",
     "buttonCleanLine",
     "buttonRemoveLine",
@@ -149,10 +150,80 @@ function initLayout() {
   }
   translateExamples();
   for (let i of [
+    [ "AbbrUarr", "AbbrDoubleAst" ],
+    [ "AbbrTimes", "AbbrMiddot", "AbbrAst" ],
+    [ "AbbrSlash", "AbbrColon" ],
+    "AbbrPercentage",
+    "AbbrPlus",
+    "AbbrMinus",
+    "AbbrAmp",
+    "AbbrPow",
+    "AbbrVert",
+    "AbbrAssign",
+    "AbbrSin",
+    "AbbrCos",
+    "AbbrTan",
+    "AbbrAsin",
+    "AbbrAcos",
+    "AbbrAtan",
+    "AbbrSinh",
+    "AbbrCosh",
+    "AbbrTanh",
+    "AbbrAsinh",
+    "AbbrAcosh",
+    "AbbrAtanh",
+    "AbbrLog10",
+    "AbbrLog2",
+    "AbbrLog",
+    "AbbrLog1p",
+    "AbbrExp",
+    "AbbrExpm1",
+    [ "AbbrRadic", "AbbrSqrt" ],
+    [ "AbbrCuberoot", "AbbrCbrt" ],
+    "AbbrClz32",
+    "AbbrAbs",
+    "AbbrSign",
+    "AbbrFloor",
+    "AbbrCeil",
+    "AbbrRound",
+    "AbbrTrunc",
+    "AbbrFround",
+    "AbbrE",
+    [ "AbbrPi", "AbbrPI" ],
+    "AbbrSQRT2",
+    "AbbrSQRT1_2",
+    [ "AbbrEpsilon", "AbbrEPSILON" ],
+    "AbbrLN2",
+    "AbbrLN10",
+    "AbbrLOG2E",
+    "AbbrLOG10E",
+    [ "AbbrUnaryPlus", "AbbrUnaryMinus" ],
+    [ "AbbrOpen", "AbbrClose" ],
+    "Backspace",
+    "AbbrSpace",
+    [ "AbbrVarA",
+      "AbbrVarB", "AbbrVarC", "AbbrVarD", "AbbrVarE", "AbbrVarF",
+      "AbbrVarG", "AbbrVarH", "AbbrVarI", "AbbrVarJ", "AbbrVarK",
+      "AbbrVarL", "AbbrVarM", "AbbrVarN", "AbbrVarO", "AbbrVarP",
+      "AbbrVarQ", "AbbrVarR", "AbbrVarS", "AbbrVarT", "AbbrVarU",
+      "AbbrVarV", "AbbrVarW", "AbbrVarX", "AbbrVarY", "AbbrVarZ" ],
+    "Abbr0x",
+    "Abbr0",
+    [ "Abbr1", "Abbr2", "Abbr3", "Abbr4", "Abbr5", "Abbr6", "Abbr7", "Abbr8",
+      "Abbr9" ],
+    [ "AbbrHexA", "AbbrHexB", "AbbrHexC", "AbbrHexD", "AbbrHexE", "AbbrHexF" ],
+    "AbbrDot",
+    "AbbrNumericE",
     "AbbrLast"
     ]) {
-    document.getElementById("button" + i).title =
-      browser.i18n.getMessage("titleButton" + i);
+    if (!Array.isArray(i)) {
+      i = [ i ];
+    }
+    const translation = browser.i18n.getMessage("titleButton" + i[0]);
+    for (let j of i) {
+if (!document.getElementById("button" + j)) { console.log(j); }
+      document.getElementById("button" + j).title = translation;
+    }
   }
   const textRightToLeft = browser.i18n.getMessage("textRightToLeft");
   const titleTextRightToLeft = browser.i18n.getMessage("titleTextRightToLeft");
@@ -256,18 +327,20 @@ function initHead(storeOpen) {
   const rowHead = document.getElementById("rowHead");
   appendCheckboxCol(rowLast, "checkboxStoreAccordeon", clipboard, storeOpen,
     "titleCheckboxStoreAccordeon");
-  appendX(rowLast, "TD", appendButton, "buttonOpenAccordeon", null,
-    "titleButtonOpenAccordeon");
-  appendX(rowLast, "TD", appendButton, "buttonCollapseAccordeon", null,
-    "titleCollapseAccordeon");
+  appendX(rowLast, "TD", appendButton, "buttonOpenAccordeon", null, null,
+    null, "titleButtonOpenAccordeon");
+  appendX(rowLast, "TD", appendButton, "buttonCollapseAccordeon", null, null,
+    null,  "titleCollapseAccordeon");
 }
 
 function initWindowLast(clipboard) {
   const rowLast = document.getElementById("rowLast");
   appendCheckboxCol(rowLast, "checkboxClipboard", clipboard, null,
     "titleCheckboxClipboard");
-  appendX(rowLast, "TD", appendButton, "buttonClipboard", null, true);
-  appendX(rowLast, "TD", appendButton, "buttonAllClipboard");
+  appendX(rowLast, "TD", appendButton, "buttonClipboard", null, true, null,
+    "titleButtonClipBoard");
+  appendX(rowLast, "TD", appendButton, "buttonAllClipboard", null, null, null,
+    "titleButtonAllClipboard");
 }
 
 function initWindowOptions(textarea, size, base, linesEnabled) {

@@ -99,17 +99,249 @@
     "message": "Sequentiel Expressions with these operators are evaluated from right to left. For instance, a**b**c is a**b**c equivalent to a**(b**c) or a=b=c is equivalent to a=(b=c).",
     "description": "Verbose text for operators with right-to-left precedence"
   },
+  "titleButtonAbbrUarr": {
+    "message": "“a**b” is a raised to the power of b.",
+    "description": "Explain exponentiation operator"
+  },
+  "titleButtonAbbrTimes": {
+    "message": "“a*b” is the product of a and b.",
+    "description": "Explain multiplication operator"
+  },
+  "titleButtonAbbrSlash": {
+    "message": "“a/b” is the quotient of a and b.",
+    "description": "Explain division operator"
+  },
+  "titleButtonAbbrPercentage": {
+    "message": "“a%b” is the remainder of the division of a by b.",
+    "description": "Explain remainder operator"
+  },
+  "titleButtonAbbrPlus": {
+    "message": "“a+b” is the sum of a and b.",
+    "description": "Explain sum operator"
+  },
+  "titleButtonAbbrMinus": {
+    "message": "“a-b” is the difference of a and b.",
+    "description": "Explain difference operator"
+  },
+  "titleButtonAbbrAmp": {
+    "message": "“a&b” is the binary AND of a and b.",
+    "description": "Explain binary AND operator"
+  },
+  "titleButtonAbbrPow": {
+    "message": "“a&b” is the binary XOR of a and b.",
+    "description": "Explain binary XOR operator"
+  },
+  "titleButtonAbbrVert": {
+    "message": "“a|b” is the binary OR of a and b.",
+    "description": "Explain binary OR operator"
+  },
+  "titleButtonAbbrAssign": {
+    "message": "“a=b” assigns to the variable a the value of b. The result of the assignment is the variable a.",
+    "description": "Explain assignment operator"
+  },
   "summaryFunctions": {
     "message": "Functions",
     "description": "Announcement of available functions"
+  },
+  "titleButtonAbbrSin": {
+    "message": "“sin x” is the sine of x (x in radians).",
+    "description": "Explain sin function"
+  },
+  "titleButtonAbbrCos": {
+    "message": "“cos x” is the cosine of x (x in radians).",
+    "description": "Explain cos function"
+  },
+  "titleButtonAbbrTan": {
+    "message": "“tan x” is the tangent of x (x in radians).",
+    "description": "Explain tan function"
+  },
+  "titleButtonAbbrAsin": {
+    "message": "“asin x” is the arcsine of x in radians.",
+    "description": "Explain asin function"
+  },
+  "titleButtonAbbrAcos": {
+    "message": "“acos x” is the arccosine of x in radians.",
+    "description": "Explain acos function"
+  },
+  "titleButtonAbbrAtan": {
+    "message": "“tan x” is the arctangent of x in radians.",
+    "description": "Explain atan function"
+  },
+  "titleButtonAbbrSinh": {
+    "message": "“sinh x” is the hyperbolic sine of x.",
+    "description": "Explain sinh function"
+  },
+  "titleButtonAbbrCosh": {
+    "message": "“cosh x” is the hyperbolic cosine of x.",
+    "description": "Explain cosh function"
+  },
+  "titleButtonAbbrTanh": {
+    "message": "“tanh x” is the hyperbolic tangent of x.",
+    "description": "Explain tanh function"
+  },
+  "titleButtonAbbrAsinh": {
+    "message": "“asinh x” is the hyperbolic areasine of x.",
+    "description": "Explain asin function"
+  },
+  "titleButtonAbbrAcosh": {
+    "message": "“acosh x” is the hyperbolic areacosine of x.",
+    "description": "Explain acos function"
+  },
+  "titleButtonAbbrAtanh": {
+    "message": "“tanh x” is the hyperbolic areatangent of x.",
+    "description": "Explain atan function"
+  },
+  "titleButtonAbbrLog10": {
+    "message": "“log10 x” is the base 10 logarithm of x.",
+    "description": "Explain log10 function"
+  },
+  "titleButtonAbbrLog2": {
+    "message": "“log2 x” is the base 2 logarithm of x.",
+    "description": "Explain log2 function"
+  },
+  "titleButtonAbbrLog": {
+    "message": "“log x” is the natural logarithm of x.",
+    "description": "Explain log function"
+  },
+  "titleButtonAbbrLog1p": {
+    "message": "“log1p x” is the natural logarithm of 1+x.",
+    "description": "Explain log function"
+  },
+  "titleButtonAbbrExp": {
+    "message": "“exp x” is the exponential function (base E).",
+    "description": "Explain exp function"
+  },
+  "titleButtonAbbrExpm1": {
+    "message": "“expm1 x” is the exponential function (base E) minus 1.",
+    "description": "Explain expm1 function"
+  },
+  "titleButtonAbbrRadic": {
+    "message": "“sqrt x” is the square root of x.",
+    "description": "Explain sqrt function"
+  },
+  "titleButtonAbbrCuberoot": {
+    "message": "“cbrt x” is the cube root of x.",
+    "description": "Explain sqrt function"
+  },
+  "titleButtonAbbrClz32": {
+    "message": "“clz32 x” is the number of leading zeroes in a 32 bit representation of x.",
+    "description": "Explain clz32 function"
+  },
+  "titleButtonAbbrAbs": {
+    "message": "“abs x” is the absolute value of x.",
+    "description": "Explain abs function"
+  },
+  "titleButtonAbbrSign": {
+    "message": "“sign x” is the signum of x (1, 0, or -1).",
+    "description": "Explain sign function"
+  },
+  "titleButtonAbbrFloor": {
+    "message": "“floor x” is x rounded down to an integer.",
+    "description": "Explain floor function"
+  },
+  "titleButtonAbbrCeil": {
+    "message": "“ceil x” is x rounded up to an integer.",
+    "description": "Explain ceil function"
+  },
+  "titleButtonAbbrTrunc": {
+    "message": "“trunc x” is x rounded to the integer of smaller absolute value.",
+    "description": "Explain trunc function"
+  },
+  "titleButtonAbbrRound": {
+    "message": "“round x” is x rounded to its nearest integer.",
+    "description": "Explain round function"
+  },
+  "titleButtonAbbrFround": {
+    "message": "“fround x” is x rounded to its nearest 32 bit float.",
+    "description": "Explain fround function"
   },
   "summaryConstants": {
     "message": "Constants",
     "description": "Announcement of available constants"
   },
+  "titleButtonAbbrE": {
+    "message": "Euler's number 2.718281...",
+    "description": "Explain constant E"
+  },
+  "titleButtonAbbrPi": {
+    "message": "Circle number: area of the unit disc",
+    "description": "Explain constant PI"
+  },
+  "titleButtonAbbrSQRT2": {
+    "message": "Square root of 2",
+    "description": "Explain constant SQRT2"
+  },
+  "titleButtonAbbrSQRT1_2": {
+    "message": "Square root of 1/2",
+    "description": "Explain constant SQRT1_2"
+  },
+  "titleButtonAbbrEpsilon": {
+    "message": "Distance of 1 to the smallest larger floating point number",
+    "description": "Explain constant EPSILON"
+  },
+  "titleButtonAbbrLN2": {
+    "message": "Natural logarithm of 2",
+    "description": "Explain constant LN2"
+  },
+  "titleButtonAbbrLN10": {
+    "message": "Natural logarithm of 10",
+    "description": "Explain constant LN10"
+  },
+  "titleButtonAbbrLOG2E": {
+    "message": "Base 2 logarithm of E",
+    "description": "Explain constant LOG2E"
+  },
+  "titleButtonAbbrLOG10E": {
+    "message": "Base 10 logarithm of E",
+    "description": "Explain constant LOG10E"
+  },
   "summaryNumbers": {
     "message": "Numbers, some Variables, and others",
     "description": "Announcement of numbers, some variables and others"
+  },
+  "titleButtonAbbrUnaryPlus": {
+    "message": "Insert sign (without space).",
+    "description": "Explain unary sign buttons"
+  },
+  "titleButtonAbbrOpen": {
+    "message": "Insert brace.",
+    "description": "Explain brace buttons"
+  },
+  "titleButtonBackspace": {
+    "message": "Remove previous symbol.",
+    "description": "Explain backspace button"
+  },
+  "titleButtonAbbrSpace": {
+    "message": "Insert space.",
+    "description": "Explain space button"
+  },
+  "titleButtonAbbrVarA": {
+    "message": "Insert variable name (with a trailing space).",
+    "description": "Explain space button"
+  },
+  "titleButtonAbbr0x": {
+    "message": "Insert “0x”, which denotes the start of a hexadecimal number.",
+    "description": "Explain 0x button"
+  },
+  "titleButtonAbbr0": {
+    "message": "Insert “0”, which either denotes the number symbol 0 or the start of an octal number.",
+    "description": "Explain 0 button"
+  },
+  "titleButtonAbbr1": {
+    "message": "Insert the number symbol.",
+    "description": "Explain number symbol buttons"
+  },
+  "titleButtonAbbrHexA": {
+    "message": "Insert the hexadecimal number symbol.",
+    "description": "Explain hexadecimal symbol buttons"
+  },
+  "titleButtonAbbrDot": {
+    "message": "Insert decimal separator “.”",
+    "description": "Explain e number button"
+  },
+  "titleButtonAbbrNumericE": {
+    "message": "Insert the letter “e”, which is used in scientific number notation like 1.2e-2.",
+    "description": "Explain e number button"
   },
   "summaryLast": {
     "message": "Last Result and Clipboard",

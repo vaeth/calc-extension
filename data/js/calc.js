@@ -77,13 +77,34 @@ function redrawWindow(state) {
   lines.focus();
 }
 
+function backspace(lines) {
+  const input = lines.currentInput;
+  if (!input) {
+    return;
+  }
+  const value = input.value;
+  if (value) {
+    if (typeof(input.selectionStart) == "number") {
+      if (input.selectionStart > 0) {
+        const rest = input.selectionStart;
+        const next = rest - 1;
+        input.value = value.substr(0, next) + value.substr(rest);
+        input.selectionStart = input.selectionEnd = next;
+      }
+    } else {
+      input.value = value.substr(0, value.length - 1);
+    }
+  }
+  lines.focus();
+}
+
 function cleanLine(lines) {
   const input = lines.currentInput;
   if (!input) {
     return;
   }
   input.value = "";
-  input.focus();
+  lines.focus();
 }
 
 function removeCurrentLine(state) {
@@ -316,8 +337,10 @@ function insertButtonAbbr(lines, id) {
     return;
   }
   if (typeof(input.selectionStart) == "number") {
+    const next = input.selectionStart + text.length;
     input.value = input.value.substr(0, input.selectionStart) +
       text + input.value.substr(input.selectionEnd);
+    input.selectionStart = input.selectionEnd = next;
   } else {
     input.value += text;
   }
@@ -379,6 +402,9 @@ function clickListener(state, event) {
       return;
     case "buttonRedrawLine":
       redrawLine(state);
+      return;
+    case "buttonBackspace":
+      backspace(state.lines);
       return;
     case "buttonCleanLine":
       cleanLine(state.lines);
