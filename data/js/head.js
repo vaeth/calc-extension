@@ -340,14 +340,14 @@ function removeLine(lines, index) {
   return true;
 }
 
-function initWindowHead(storeOpen) {
+function initWindowHead(accordeon) {
   appendButton(document.getElementById("spanButtonExpandAccordeon"),
     "buttonExpandAccordeon", null, null, null, "titleButtonExpandAccordeon");
   appendButton(document.getElementById("spanButtonCollapseAccordeon"),
     "buttonCollapseAccordeon", null, null, null,
     "titleButtonCollapseAccordeon");
   appendCheckbox(document.getElementById("spanCheckboxAccordeon"),
-    "checkboxAccordeon", storeOpen, "titleCheckboxAccordeon");
+    "checkboxAccordeon", accordeon, "titleCheckboxAccordeon");
   appendTextNode(document.getElementById("textCheckboxAccordeon"),
     "checkboxAccordeon", "textCheckboxAccordeon", "titleCheckboxAccordeon");
 }
@@ -441,7 +441,7 @@ function initWindowEditing(linesEnabled) {
 }
 
 function initWindow(state, options, haveStorage) {
-  initWindowHead(false);
+  initWindowHead(options.accordeon);
   initWindowLast(options.clipboard);
   initWindowOptions(options.textarea, state.size, state.base,
     state.lines.enabled);

@@ -150,7 +150,7 @@ class Lines {
     this.lines[index2] = swap;
   }
 
-  focus(avoidRecursion) {
+  focus() {
     const line = this.getLine();
     if (!line) {
       return;
@@ -160,7 +160,7 @@ class Lines {
       if (!item) {
         continue;
       }
-      if (!avoidRecursion && item.focus) {
+      if (item.focus) {
         item.focus();
       }
       if ((i !== "input") && item.scrollIntoView) {

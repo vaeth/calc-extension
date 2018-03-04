@@ -402,6 +402,7 @@ function toggleListener(name, node, defaultOpen) {
 
 function clickListener(state, event) {
   if (!event.target || !event.target.id) {
+    state.lines.focus();
     return;
   }
   const id = event.target.id;
@@ -490,6 +491,7 @@ function submitListener(state, event) {
   }
   if (displayResult(state, event.target.id)) {
     event.preventDefault();
+    state.lines.focus();
   }
 }
 
@@ -510,6 +512,8 @@ function changeListener(state, event) {
       details.open = !details.open;
       break;
     }
+    default:
+      return;
   }
   state.lines.focus();
 }
@@ -525,7 +529,6 @@ function focusinListener(state, event) {
   const lines = state.lines;
   if (lines.setCurrentId(target.id)) {
     enableCurrent(lines, true);
-    lines.focus(true);
   }
 }
 
