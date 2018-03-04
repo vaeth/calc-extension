@@ -35,19 +35,65 @@ function sendCommand(command, message) {
   browser.runtime.sendMessage(message);
 }
 
-function storageOptionsChanges(newOptions) {
-  const changes = calcChanges(state.options, newOptions);
-  if (changes) {
-    state.options = newOptions;
-    sendCommand("storageOptionsChanges", { changes: changes });
+function flagSendHaveStorage() {
+  const send = !state.haveStorage;
+  state.haveStorage = true;
+  if (send) {
+    sendCommand("haveStorageChanges", { haveStorage: true });
   }
 }
 
-function storageDetailsChanges(newDetails) {
-  const changes = calcChanges(state.details, newDetails);
+function sendStorageDetailsChanges(changes) {
+  sendCommand("storageDetailsChanges", { changes: changes });
+}
+
+function sendStoredLastChanges() {
+  sendCommand("storedLastChanges", { last: state.last });
+}
+
+function optionsChanges(options, changes, store) {
+  if (!options) {
+    options = Object.assign({}, state.options);
+  }
   if (changes) {
-    state.details = newDetails;
+    applyChanges(options, changes)
+  }
+  changes = calcChanges(state.options, options);
+  if (!changes) {
+    return;
+  }
+  state.options = options;  // first store to avoid race
+  flagSendHaveStorage();  // We might have partial storage in case of failure
+  function finish() {
+    sendCommand("storageOptionsChanges", { changes: changes });
+  }
+  if (store) {
+    browser.storage.local.set({ optionsV1: options }).then(finish);
+  } else {
+    finish();
+  }
+}
+
+function detailsChanges(details, changes, store) {
+  if (!details) {
+    details = Object.assign({}, state.details);
+  }
+  if (changes) {
+    applyChanges(details, changes)
+  }
+  changes = calcChanges(state.details, details);
+  if (!changes) {
+    return;
+  }
+  state.details = details;  // first store to avoid race
+  flagSendHaveStorage();  // We might have partial storage in case of failure
+  function finish() {
     sendCommand("storageDetailsChanges", { changes: changes });
+  }
+  if (store) {
+    browser.storage.local.set({ detailsV1: details }).then(finish);
+  } else {
+    finish();
   }
 }
 
@@ -63,31 +109,36 @@ function splitLast(session) {  // returns session.last, deleting from session
   return last;
 }
 
-
-function storageSessionChanges(newSession) {
-  let changedLast = false;
-  const last = splitLast(newSession);
-  state.session = newSession;
-  const oldLast = state.last;
-  if (newSession) {
-    if (!oldLast || !Object.is(oldLast[0], last[0]) ||
-      !Object.is(oldLast[1], last[1])) {
-      changedLast = true;
-    }
-  } else if (oldLast) {
-    changedLast = true;
+function changedLast(last1, last2) {
+  if (last1 === null) {
+    return (last2 !== null);
   }
-  if (changedLast) {
-    state.last = last;
-    sendCommand("storedLastChanges", { last: last });
+  if (last2 === null) {
+    return true;
   }
+  return !(Object.is(last1[0], last2[0]) && Object.is(last1[1], last2[1]));
 }
 
-function flagSendHaveStorage() {
-  const send = !state.haveStorage;
-  state.haveStorage = true;
-  if (send) {
-    sendCommand("haveStorageChanges", { haveStorage: true });
+function sessionChanges(session, store) {
+  const sessionStore = (store ? Object.assign({}, state.options) : null);
+  const last = splitLast(session);
+  const changed = changedLast(state.last, last);
+  state.last = last;  // first store to avoid race
+  state.session = session;  // first store to avoid race
+  flagSendHaveStorage();  // We might have partial storage in case of failure
+  function finish() {
+    if (changed) {
+      sendCommand("storedLastChanges", { last: last });
+    }
+  }
+  if (store) {
+    if (session) {
+      browser.storage.local.set({ sessionV1: session }).then(finish);
+    } else {
+      browser.storage.local.remove("sessionV1").then(finish);
+    }
+  } else {
+    finish();
   }
 }
 
@@ -101,48 +152,14 @@ function storageListener(changes) {
     }
   }
   if (changes.optionsV1) {
-    storageOptionsChanges(changes.optionsV1.newValue || {});
+    optionsChanges(changes.optionsV1.newValue || {});
   }
   if (changes.detailsV1) {
-    storageDetailsChanges(changes.detailsV1.newValue || {});
+    detailsChanges(changes.detailsV1.newValue || {});
   }
   if (changes.sessionV1) {
-    storageSessionChanges(changes.sessionV1.newValue || null);
+    sessionChanges(changes.sessionV1.newValue || null);
   }
-}
-
-function storeOptions(options) {
-  browser.storage.local.set({
-    optionsV1: options
-  }).then(() => {  // in case the handler does not apply for self-invoked
-    flagSendHaveStorage();
-    storageOptionsChanges(options);
-  });
-}
-
-function storeDetails(details) {
-  browser.storage.local.set({
-    detailsV1: details
-  }).then(() => {  // in case the handler does not apply for self-invoked
-    flagSendHaveStorage();
-    storageDetailsChanges(details);
-  });
-}
-
-function storeSession(session) {
-  browser.storage.local.set({
-    sessionV1: session
-  }).then(() => {  // in case the handler does not apply for self-invoked
-    flagSendHaveStorage();
-    storageSessionChanges(session);
-  });
-}
-
-function clearSession() {
-  browser.storage.local.remove("sessionV1").then(() => {
-    // in case the handler does not apply for self-invoked
-    storageSessionChanges(null);
-  });
 }
 
 function clearStorage() {
@@ -186,30 +203,6 @@ function sendInit(reply) {
   });
 }
 
-function optionsChanges(options, changes) {
-  const newOptions = options || Object.assign({}, state.options);
-  if (changes) {
-    applyChanges(newOptions, changes);
-  } else {
-    changes = calcChanges(state.options, newOptions);
-  }
-  if (changes) {
-    storeOptions(newOptions);
-  }
-}
-
-function detailsChanges(details, changes) {
-  const newDetails = details || Object.assign({}, state.details);
-  if (changes) {
-    applyChanges(newDetails, changes);
-  } else {
-    changes = calcChanges(state.details, newDetails);
-  }
-  if (changes) {
-    storeDetails(newDetails);
-  }
-}
-
 function messageListener(message) {
   if (!message.command) {
     return;
@@ -225,17 +218,17 @@ function messageListener(message) {
       message.session = state.session;
       sendCommand("session", message);
       return;
-    case "storeSession":
-      storeSession(message.session);
-      return;
     case "optionsChanges":
-      optionsChanges(message.options, message.changes);
+      optionsChanges(message.options, message.changes, true);
       return;
     case "detailsChanges":
-      detailsChanges(message.details, message.changes);
+      detailsChanges(message.details, message.changes, true);
+      return;
+    case "storeSession":
+      sessionChanges(message.session, true);
       return;
     case "clearSession":
-      clearSession();
+      sessionChanges(null, true);
       return;
     case "clearStorage":
       clearStorage();

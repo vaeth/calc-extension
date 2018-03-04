@@ -4,6 +4,14 @@
 
 "use strict";
 
+function sendCommand(command, message) {
+  if (!message) {
+    message = {};
+  }
+  message.command = command;
+  browser.runtime.sendMessage(message);
+}
+
 function getContent(line) {
   return [
     document.getElementById(line.input).value,
@@ -242,14 +250,6 @@ function initCalc(state, options, haveStorage) {
   initWindow(state, options, haveStorage);
 }
 
-function sendCommand(command, message) {
-  if (!message) {
-    message = {};
-  }
-  message.command = command;
-  browser.runtime.sendMessage(message);
-}
-
 function storeSession(state) {
   const session = {
     content: addContent([], state.lines, true)
@@ -331,29 +331,6 @@ function detailsAll(open) {
   detailsStore();
 }
 
-function detailsClicked(id) {
-  if (!isCheckedAccordeon()) {
-    return;
-  }
-  const name = id.substr(7);  // 7 = "summary".length
-  const open = State.details[name];
-  if (typeof(open) != "boolean") {
-    return false;
-  }
-  const list = document.getElementById("details" + name);
-  if (!list) {
-    return false;
-  }
-  const value = {};
-  const changes = {};
-  changes[name] = value;
-  if (!open == !list.open) {  // list.open is currently negated
-    value.value = true;
-  }
-  sendCommand("detailsChanges", { changes: changes });
-  return true;
-}
-
 function detailsChanges(details, changes) {
   const defaultDetails = State.details;
   const modify = Object.getOwnPropertyNames(details ?
@@ -369,7 +346,8 @@ function detailsChanges(details, changes) {
       continue;
     }
     const list = document.getElementById("details" + name);
-    setOpen(list, defaultDetails[name] == !details[name]);
+    const open = (defaultDetails[name] == !details[name]);
+    setOpen(list, open);
   }
 }
 
@@ -407,6 +385,19 @@ function optionsChanges(state, options, changes) {
   if (changes.base) {
     changeBase(state, sanitizeBase(changes.base.value));
   }
+}
+
+function toggleListener(name, node, defaultOpen) {
+  if (!isCheckedAccordeon()) {
+    return;
+  }
+  const value = {};
+  const changes = {};
+  changes[name] = value;
+  if (defaultOpen == !node.open) {
+    value.value = true;
+  }
+  sendCommand("detailsChanges", { changes: changes });
 }
 
 function clickListener(state, event) {
@@ -477,20 +468,16 @@ function clickListener(state, event) {
     case "textCheckboxAccordeon":
       event.preventDefault();
       break;
-    case "textHead":
-      detailsClicked("summaryHead");
-      break;
     default:
+      if (!id) {
+        break;
+      }
       if (id.startsWith("buttonAbbr")) {
         insertButtonAbbr(state.lines, id);
         break;
       }
       if (id.startsWith("button=")) {
         displayResult(state, id);
-        break;
-      }
-      if (id.startsWith("summary")) {
-        detailsClicked(id);
         break;
       }
   }
@@ -587,6 +574,13 @@ function initMain() {
   document.addEventListener("focusin", (event) => {
     focusinListener(state, event);
   });
+  // for some reason "toggle" does not work if bound to document. We must hack:
+  for (let name of Object.getOwnPropertyNames(State.details)) {
+    const node = document.getElementById("details" + name);
+    node.addEventListener("toggle", (event) => {
+      toggleListener(name, node, State.details[name]);
+    });
+  }
   browser.runtime.onMessage.addListener((message) => {
     messageListener(state, message);
   });

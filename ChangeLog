@@ -16,6 +16,7 @@
 	- Center icon
 	- Bugfix: when restoring a session from a textarea in an input field,
 	  newlines are now converted to spaces
+	- Bugfix: avoid possible races with storage
 
 *calc-extension-4.0:
 	Martin Väth <martin at mvath.de>:
