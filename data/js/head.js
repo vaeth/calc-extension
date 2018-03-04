@@ -279,8 +279,11 @@ function getResultParagraph(line, input, size) {
 function getResultTable(line, output) {
   const table = document.createElement("TABLE");
   const row = document.createElement("TR");
-  appendX(row, "TD", appendButton, line.button, "buttonResult", null,
-    null, "titleButtonResult");
+  const button = appendX(row, "TD", appendButton, line.button, "buttonResult",
+    null, null, "titleButtonResult");
+  if (line.isInput) {
+    button.tabIndex = -1;
+  }
   appendX(row, "TD", appendTextNode, null, line.output, null, output);
   table.id = line.table;
   table.appendChild(row);
