@@ -7,29 +7,29 @@
     "message": "Calculate values of mathematical expressions",
     "description": "Description of the extension"
   },
-  "checkboxAccordeon": {
-    "message": "Store accordeon state",
-    "description": "Brief explanation for checkbox to store accordeon state"
+  "checkboxAccordion": {
+    "message": "Store accordion state",
+    "description": "Brief explanation for checkbox to store accordion state"
   },
-  "titleCheckboxAccordeon": {
-    "message": "Store for every item of the accordeon whether it is opened, and propagate the state to other calc-extension tabs!",
-    "description": "Verbose explanation for checkbox to store accordeon state"
+  "titleCheckboxAccordion": {
+    "message": "Store for every item of the accordion whether it is opened, and propagate the state to other calc-extension tabs!",
+    "description": "Verbose explanation for checkbox to store accordion state"
   },
-  "buttonExpandAccordeon": {
+  "buttonExpandAccordion": {
     "message": "Expand",
-    "description": "Brief explanation for button to open the accordeon"
+    "description": "Brief explanation for button to open the accordion"
   },
-  "titleButtonExpandAccordeon": {
-    "message": "Expand the accordeon by opening all details",
-    "description": "Verbose explanation for button to open the accordeon"
+  "titleButtonExpandAccordion": {
+    "message": "Expand the accordion by opening all details",
+    "description": "Verbose explanation for button to open the accordion"
   },
-  "buttonCollapseAccordeon": {
+  "buttonCollapseAccordion": {
     "message": "Collapse",
-    "description": "Brief explanation for button to collapse the accordeon"
+    "description": "Brief explanation for button to collapse the accordion"
   },
-  "titleButtonCollapseAccordeon": {
-    "message": "Collaps the accordeon by closing all details",
-    "description": "Verbose explanation for button to collapse the accordeon"
+  "titleButtonCollapseAccordion": {
+    "message": "Collaps the accordion by closing all details",
+    "description": "Verbose explanation for button to collapse the accordion"
   },
   "checkboxTextarea": {
     "message": "Input expression in textarea",

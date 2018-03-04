@@ -3,9 +3,9 @@
 *calc-extension-5.0:
 	Martin Väth <martin at mvath.de>:
 	- Everything now has an explaining tooltip/title
-	- Option to store accordeon state
-	- Buttons to expand/collapse accordeon
-	- The accordeon list is now itself a detail which can be closed
+	- Option to store accordion state
+	- Buttons to expand/collapse accordion
+	- The accordion list is now itself a detail which can be closed
 	- Always provide ~> button
 	- Input line keeps focus
 	- New option for textarea mode replaces previous non-button option

@@ -7,29 +7,29 @@
     "message": "Wertberechnung mathematischer Ausdrücke",
     "description": "Description of the extension"
   },
-  "checkboxAccordeon": {
+  "checkboxAccordion": {
     "message": "Status des Akkordeons speichern",
-    "description": "Brief explanation for checkbox to store accordeon state"
+    "description": "Brief explanation for checkbox to store accordion state"
   },
-  "titleCheckboxAccordeon": {
+  "titleCheckboxAccordion": {
     "message": "Speichert für jeden Eintrag des Akkordeons, ob er geöffnet ist und sendet den Status an andere Tabulatoren von “Rechner”!",
-    "description": "Verbose explanation for checkbox to store accordeon state"
+    "description": "Verbose explanation for checkbox to store accordion state"
   },
-  "buttonExpandAccordeon": {
+  "buttonExpandAccordion": {
     "message": "Auf",
-    "description": "Brief explanation for button to open the accordeon"
+    "description": "Brief explanation for button to open the accordion"
   },
-  "titleButtonExpandAccordeon": {
+  "titleButtonExpandAccordion": {
     "message": "Öffnet alle Details des Akkordeons",
-    "description": "Verbose explanation for button to open the accordeon"
+    "description": "Verbose explanation for button to open the accordion"
   },
-  "buttonCollapseAccordeon": {
+  "buttonCollapseAccordion": {
     "message": "Zu",
-    "description": "Brief explanation for button to collapse the accordeon"
+    "description": "Brief explanation for button to collapse the accordion"
   },
-  "titleButtonCollapseAccordeon": {
+  "titleButtonCollapseAccordion": {
     "message": "Schließt all Details des Akkordeons",
-    "description": "Verbose explanation for button to collapse the accordeon"
+    "description": "Verbose explanation for button to collapse the accordion"
   },
   "checkboxTextarea": {
     "message": "Eingabe in Textbereich",

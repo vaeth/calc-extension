@@ -241,7 +241,7 @@ function displayResult(state, id) {
 }
 
 function initCalc(state, options, haveStorage) {
-  if (getCheckboxAccordeon()) {  // already initialized
+  if (getCheckboxAccordion()) {  // already initialized
     return;
   }
   state.parser = new Parser();
@@ -272,8 +272,8 @@ function storeSession(state) {
 
 function storeOptions(state) {
   const options = {};
-  if (isCheckedAccordeon()) {
-    options.accordeon = true;
+  if (isCheckedAccordion()) {
+    options.accordion = true;
   }
   if (isCheckedTextarea()) {
     options.textarea = true;
@@ -310,7 +310,7 @@ function insertButtonAbbr(lines, id) {
 }
 
 function detailsStore() {
-  if (!isCheckedAccordeon()) {
+  if (!isCheckedAccordion()) {
     return;
   }
   const details = {};
@@ -355,7 +355,7 @@ function optionsChanges(state, options, changes) {
   if (options) {
     changes = {};
     for (let i of [
-      "accordeon",
+      "accordion",
       "clipboard",
       "textarea",
       "size",
@@ -367,9 +367,9 @@ function optionsChanges(state, options, changes) {
       }
     }
   }
-  if (changes.accordeon) {
-    setCheckboxAccordeon(changes.accordeon.value);
-    if (changes.accordeon.value) {
+  if (changes.accordion) {
+    setCheckboxAccordion(changes.accordion.value);
+    if (changes.accordion.value) {
       detailsStore();
     }
   }
@@ -388,7 +388,7 @@ function optionsChanges(state, options, changes) {
 }
 
 function toggleListener(name, node, defaultOpen) {
-  if (!isCheckedAccordeon()) {
+  if (!isCheckedAccordion()) {
     return;
   }
   const value = {};
@@ -458,15 +458,15 @@ function clickListener(state, event) {
     case "buttonClearStorage":
       sendCommand("clearStorage");
       break;
-    case "buttonExpandAccordeon":
+    case "buttonExpandAccordion":
       event.preventDefault();
       detailsAll(true);
       break;
-    case "buttonCollapseAccordeon":
+    case "buttonCollapseAccordion":
       event.preventDefault();
       detailsAll(false);
       break;
-    case "textCheckboxAccordeon":
+    case "textCheckboxAccordion":
       event.preventDefault();
       break;
     default:
@@ -506,7 +506,7 @@ function changeListener(state, event) {
     case "inputBase":
       changeBase(state, getBase(getInputBase().value), true);
       break;
-    case "checkboxAccordeon": {
+    case "checkboxAccordion": {
       detailsStore();
       const details = document.getElementById("detailsHead");
       details.open = !details.open;

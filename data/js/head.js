@@ -24,8 +24,8 @@ function getCheckboxClipboard() {
   return document.getElementById("checkboxClipboard");
 }
 
-function getCheckboxAccordeon() {
-  return document.getElementById("checkboxAccordeon");
+function getCheckboxAccordion() {
+  return document.getElementById("checkboxAccordion");
 }
 
 function getInputSize() {
@@ -59,12 +59,12 @@ function enableStorageButtons(enable) {
   enableButton(document.getElementById("buttonClearStored"), enable);
 }
 
-function isCheckedAccordeon() {
-  return isChecked(getCheckboxAccordeon());
+function isCheckedAccordion() {
+  return isChecked(getCheckboxAccordion());
 }
 
-function setCheckboxAccordeon(checked) {
-  setChecked(getCheckboxAccordeon(), checked);
+function setCheckboxAccordion(checked) {
+  setChecked(getCheckboxAccordion(), checked);
 }
 
 function isCheckedTextarea() {
@@ -340,16 +340,16 @@ function removeLine(lines, index) {
   return true;
 }
 
-function initWindowHead(accordeon) {
-  appendButton(document.getElementById("spanButtonExpandAccordeon"),
-    "buttonExpandAccordeon", null, null, null, "titleButtonExpandAccordeon");
-  appendButton(document.getElementById("spanButtonCollapseAccordeon"),
-    "buttonCollapseAccordeon", null, null, null,
-    "titleButtonCollapseAccordeon");
-  appendCheckbox(document.getElementById("spanCheckboxAccordeon"),
-    "checkboxAccordeon", accordeon, "titleCheckboxAccordeon");
-  appendTextNode(document.getElementById("textCheckboxAccordeon"),
-    "checkboxAccordeon", "textCheckboxAccordeon", "titleCheckboxAccordeon");
+function initWindowHead(accordion) {
+  appendButton(document.getElementById("spanButtonExpandAccordion"),
+    "buttonExpandAccordion", null, null, null, "titleButtonExpandAccordion");
+  appendButton(document.getElementById("spanButtonCollapseAccordion"),
+    "buttonCollapseAccordion", null, null, null,
+    "titleButtonCollapseAccordion");
+  appendCheckbox(document.getElementById("spanCheckboxAccordion"),
+    "checkboxAccordion", accordion, "titleCheckboxAccordion");
+  appendTextNode(document.getElementById("textCheckboxAccordion"),
+    "checkboxAccordion", "textCheckboxAccordion", "titleCheckboxAccordion");
 }
 
 function initWindowLast(clipboard) {
@@ -441,7 +441,7 @@ function initWindowEditing(linesEnabled) {
 }
 
 function initWindow(state, options, haveStorage) {
-  initWindowHead(options.accordeon);
+  initWindowHead(options.accordion);
   initWindowLast(options.clipboard);
   initWindowOptions(options.textarea, state.size, state.base,
     state.lines.enabled);
