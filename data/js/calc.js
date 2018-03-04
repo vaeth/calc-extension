@@ -12,6 +12,16 @@ function sendCommand(command, message) {
   browser.runtime.sendMessage(message);
 }
 
+function sendChanges(changes) {
+  if (changes) {
+    sendCommand("optionsChanges", { changes: changes });
+  }
+}
+
+function sendOptions(options) {
+  sendCommand("optionsChanges", { options: options });
+}
+
 function getContent(line) {
   return [
     document.getElementById(line.input).value,
@@ -172,7 +182,7 @@ function restoreSessionLast(state, checkOnly) {
 function addSessionPrepare(state, clear) {
   // Setting the clipboard cannot be done in the messageListener,
   // since otherwise we would need clipboard permissions
-  if (restoreSessionLast(state, true) && isCheckedClipboard()) {
+  if (restoreSessionLast(state, true) && state.options.clipboard) {
     toClipboard(state.storedLast[1]);
   }
   sendCommand("sendSession", { clear: clear });
@@ -222,7 +232,7 @@ function displayResult(state, id) {
   }
   if (last) {
     displayLastString(state);
-    if (isCheckedClipboard()) {
+    if (state.options.clipboard) {
       toClipboard(state.lastString);
     }
   }
@@ -245,9 +255,8 @@ function initCalc(state, options, haveStorage) {
     return;  // already initialized
   }
   state.parser = new Parser();
-  state.size = sanitizeSize(options.size);
-  state.base = sanitizeBase(options.base);
-  initWindow(state, options, haveStorage);
+  state.options = addOptions({}, options);
+  initWindow(state, haveStorage);
 }
 
 function storeSession(state) {
@@ -270,26 +279,6 @@ function storeSession(state) {
   sendCommand("storeSession", { session: session });
 }
 
-function storeOptions(state) {
-  const options = {};
-  if (isCheckedAccordion()) {
-    options.accordion = true;
-  }
-  if (isCheckedTextarea()) {
-    options.textarea = true;
-  }
-  if (isCheckedClipboard()) {
-    options.clipboard = true;
-  }
-  if (!isDefaultSize(state.size)) {
-    options.size = state.size;
-  }
-  if (!isDefaultBase(state.base)) {
-    options.base = state.base;
-  }
-  sendCommand("optionsChanges", { options: options });
-}
-
 function insertButtonAbbr(lines, id) {
   const input = lines.currentInput;
   if (!input) {
@@ -309,11 +298,8 @@ function insertButtonAbbr(lines, id) {
   }
 }
 
-function detailsStore(force) {
-  if (!isCheckedAccordion()) {
-    if (force) {  // checkbox was disabled
-      sendCommand("clearDetails");
-    }
+function detailsStore(options) {
+  if (!options.store) {
     return;
   }
   const details = {};
@@ -327,11 +313,11 @@ function detailsStore(force) {
   sendCommand("detailsChanges", { details: details });
 }
 
-function detailsAll(open) {
+function detailsAll(options, open) {
   for (let name of Object.getOwnPropertyNames(State.details)) {
     setOpen(document.getElementById("details" + name), open);
   }
-  detailsStore();
+  detailsStore(options);
 }
 
 function detailsChanges(details, changes) {
@@ -354,31 +340,58 @@ function detailsChanges(details, changes) {
   }
 }
 
+function changeTextarea(options) {
+  const value = isCheckedTextarea();
+  const changes = booleanChanges(options, "textarea", value);
+  if (options.store) {
+    sendChanges(changes);
+  }
+}
+
+function changeClipboard(options) {
+  const value = isCheckedClipboard();
+  const changes = booleanChanges(options, "clipboard", value);
+  if (options.store) {
+    sendChanges(changes);
+  }
+}
+
+function changeAccordion(options) {
+  const value = isCheckedAccordion();
+  const changes = booleanChanges(options, "accordion", value);
+  if (!changes) {
+    return;
+  }
+  if (value) {
+    detailsStore(options);
+  } else {
+    sendCommand("clearDetails");
+  }
+  if (options.store) {
+    sendChanges(changes);
+  }
+}
+
+function changeStore(options) {
+  const value = isCheckedStore();
+  const changes = booleanChanges(options, "store", value);
+  if (changes && value) {
+    sendOptions(options);
+  }
+}
+
 function optionsChanges(state, options, changes) {
-  if (options) {
-    changes = {};
-    for (let i of [
-      "accordion",
-      "clipboard",
-      "textarea",
-      "size",
-      "base"
-      ]) {
-      const change = changes[i] = {};
-      if (options.hasOwnProperty(i)) {
-        change.value = options[i];
-      }
-    }
+  if (!options) {
+    options = Object.assign({}, state.options);
   }
-  if (changes.accordion) {
-    setCheckboxAccordion(changes.accordion.value);
-    if (changes.accordion.value) {
-      detailsStore();
-    }
+  if (changes) {
+    applyChanges(options, changes);
   }
-  if (changes.clipboard) {
-    setCheckboxClipboard(changes.clipboard.value);
+  changes = calcChanges(state.options, options);
+  if (!changes) {
+    return;
   }
+  state.options = options;
   if (changes.textarea) {
     setCheckboxTextarea(changes.textarea.value);
   }
@@ -388,10 +401,25 @@ function optionsChanges(state, options, changes) {
   if (changes.base) {
     changeBase(state, sanitizeBase(changes.base.value));
   }
+  if (changes.clipboard) {
+    setCheckboxClipboard(changes.clipboard.value);
+  }
+  if (changes.accordion) {
+    if (changes.accordion.value) {
+      detailsStore(options);
+    }
+    setCheckboxAccordion(changes.accordion.value);
+  }
+  if (changes.store) {
+    if (changes.store.value) {
+      sendOptions(options);
+    }
+    setCheckboxStore(changes.store.value);
+  }
 }
 
-function toggleListener(name, node, defaultOpen) {
-  if (!isCheckedAccordion()) {
+function toggleListener(state, name, node, defaultOpen) {
+  if (state.options.accordion) {
     return;
   }
   const value = {};
@@ -405,7 +433,6 @@ function toggleListener(name, node, defaultOpen) {
 
 function clickListener(state, event) {
   if (!event.target || !event.target.id) {
-    state.lines.focus();
     return;
   }
   const id = event.target.id;
@@ -455,19 +482,16 @@ function clickListener(state, event) {
     case "buttonClearStored":
       sendCommand("clearSession");
       break;
-    case "buttonStoreOptions":
-      storeOptions(state);
-      break;
     case "buttonClearStorage":
       sendCommand("clearStorage");
       break;
     case "buttonExpandAccordion":
       event.preventDefault();
-      detailsAll(true);
+      detailsAll(state.options, true);
       break;
     case "buttonCollapseAccordion":
       event.preventDefault();
-      detailsAll(false);
+      detailsAll(state.options, false);
       break;
     default:
       if (!id) {
@@ -481,6 +505,7 @@ function clickListener(state, event) {
         displayResult(state, id);
         break;
       }
+      return;
   }
   state.lines.focus();
 }
@@ -506,8 +531,17 @@ function changeListener(state, event) {
     case "inputBase":
       changeBase(state, getBase(getInputBase().value), true);
       break;
+    case "checkboxTextarea":
+      changeTextarea(state.options);
+      break;
+    case "checkboxClipboard":
+      changeClipboard(state.options);
+      break;
     case "checkboxAccordion":
-      detailsStore(true);
+      changeAccordion(state.options);
+      break;
+    case "checkboxStore":
+      changeStore(state.options);
       break;
     default:
       return;
@@ -536,7 +570,7 @@ function messageListener(state, message) {
   switch (message.command) {
     case "initCalc":
       state.storedLast = message.last;
-      initCalc(state, message.options || {}, message.haveStorage);
+      initCalc(state, message.options, message.haveStorage);
       detailsChanges(message.details || {});
       break;
     case "optionsChanges":
@@ -578,7 +612,7 @@ function initMain() {
   for (let name of Object.getOwnPropertyNames(State.details)) {
     const node = document.getElementById("details" + name);
     node.addEventListener("toggle", (event) => {
-      toggleListener(name, node, State.details[name]);
+      toggleListener(state, name, node, State.details[name]);
     });
   }
   browser.runtime.onMessage.addListener((message) => {

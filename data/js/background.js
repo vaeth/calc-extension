@@ -203,7 +203,7 @@ function clearStorage() {
     sendCommand("storageOptionsChanges", { options: empty });
     sendCommand("storageDetailsChanges", { details: empty });
     // in case the handler does not apply for self-invoked
-    storageSessionChanges(null);
+    sessionChanges(null);
   });
 }
 

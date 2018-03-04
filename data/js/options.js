@@ -29,6 +29,10 @@ function getCheckboxAccordion() {
   return document.getElementById("checkboxAccordion");
 }
 
+function getCheckboxStore() {
+  return document.getElementById("checkboxStore");
+}
+
 function getInputSize() {
   return document.getElementById("inputSize");
 }
@@ -39,14 +43,6 @@ function getInputBase() {
 
 function getButtonClearStorage() {
   return document.getElementById("buttonClearStorage");
-}
-
-function isCheckedAccordion() {
-  return isChecked(getCheckboxAccordion());
-}
-
-function setCheckboxAccordion(checked) {
-  setChecked(getCheckboxAccordion(), checked);
 }
 
 function isCheckedTextarea() {
@@ -63,6 +59,22 @@ function isCheckedClipboard() {
 
 function setCheckboxClipboard(checked) {
   setChecked(getCheckboxClipboard(), checked);
+}
+
+function isCheckedAccordion() {
+  return isChecked(getCheckboxAccordion());
+}
+
+function setCheckboxAccordion(checked) {
+  setChecked(getCheckboxAccordion(), checked);
+}
+
+function isCheckedStore() {
+  return isChecked(getCheckboxStore());
+}
+
+function setCheckboxStore(checked) {
+  setChecked(getCheckboxStore(), checked);
 }
 
 function setInputSize(size) {
@@ -109,6 +121,8 @@ function initPage(options, haveStorage) {
     options.clipboard, "titleCheckboxClipboard");
   appendX(table, "TR", appendCheckboxCol, "checkboxAccordion",
     options.textarea, "titleCheckboxAccordion");
+  appendX(table, "TR", appendCheckboxCol, "checkboxStore",
+    options.store, "titleCheckboxStore");
   appendX(table, "TR", appendButtonTextCol, "buttonClearStorage", null,
     !haveStorage, "titleButtonClearStorage");
   const top = getTop();
@@ -120,50 +134,22 @@ function initOptions(state, options, haveStorage) {
   if (getCheckboxAccordion()) {  // already initialized
     return;
   }
-  const stateOptions = state.options = {};
-  if (options.accordion) {
-    stateOptions.accordion = true;
-  }
-  if (options.textarea) {
-    stateOptions.textarea = true;
-  }
-  if (options.clipboard) {
-    stateOptions.clipboard = true;
-  }
-  if (options.size) {
-    const size = sanitizeSize(options.size);
-    if (!isDefaultSize(size)) {
-      stateOptions.size = size;
-    }
-  }
-  if (options.base) {
-    const base = sanitizeBase(options.base);
-    if (!isDefaultBase(base)) {
-      stateOptions.base = base;
-    }
-  }
-  initPage(stateOptions, haveStorage);
+  state.options = addOptions({}, options);
+  initPage(state.options, haveStorage);
 }
 
 function optionsChanges(state, options, changes) {
-  if (!state.options) {
-    state.options = {};
-  }
   if (!options) {
-    options = state.options;
+    options = Object.assign({}, state.options);
   }
   if (changes) {
     applyChanges(options, changes);
-  } else {
-    changes = calcChanges(state.options, options);
   }
+  changes = calcChanges(state.options, options);
   if (!changes) {
     return;
   }
   state.options = options;
-  if (changes.accordion) {
-    setCheckboxAccordion(changes.accordion.value);
-  }
   if (changes.textarea) {
     setCheckboxTextarea(changes.textarea.value);
   }
@@ -184,6 +170,12 @@ function optionsChanges(state, options, changes) {
   if (changes.clipboard) {
     setCheckboxClipboard(changes.clipboard.value);
   }
+  if (changes.accordion) {
+    setCheckboxAccordion(changes.accordion.value);
+  }
+  if (changes.store) {
+    setCheckboxStore(changes.store.value);
+  }
 }
 
 function sendCommand(command, changes) {
@@ -197,58 +189,35 @@ function sendCommand(command, changes) {
 }
 
 function sendChanges(changes) {
-  sendCommand("optionsChanges", changes);
-}
-
-function changeAccordion(options) {
-  const value = isCheckedAccordion();
-  if (value == !!options.accordion) {
-    return;
+  if (changes) {
+    sendCommand("optionsChanges", changes);
   }
-  const accordionChange = {};
-  const changes = {
-    accordion: accordionChange
-  };
-  if (value) {
-    accordionChange.value = options.accordion = true;
-  } else {
-    delete options.accordion;
-    sendCommand("clearDetails");
-  }
-  sendChanges(changes);
 }
 
 function changeTextarea(options) {
   const value = isCheckedTextarea();
-  if (value == !!options.textarea) {
-    return;
-  }
-  const textareaChange = {};
-  const changes = {
-    textarea: textareaChange
-  };
-  if (value) {
-    textareaChange.value = options.textarea = true;
-  } else {
-    delete options.textarea;
-  }
+  const changes = booleanChanges(options, "textarea", value);
   sendChanges(changes);
 }
 
 function changeClipboard(options) {
   const value = isCheckedClipboard();
-  if (value == !!options.clipboard) {
-    return;
+  const changes = booleanChanges(options, "clipboard", value);
+  sendChanges(changes);
+}
+
+function changeAccordion(options) {
+  const value = isCheckedAccordion();
+  const changes = booleanChanges(options, "accordion", value);
+  if (changes && !value) {
+    sendCommand("clearDetails");
   }
-  const clipboardChange = {};
-  const changes = {
-    clipboard: clipboardChange
-  };
-  if (value) {
-    clipboardChange.value = options.clipboard = true;
-  } else {
-    delete options.clipboard;
-  }
+  sendChanges(changes);
+}
+
+function changeStore(options) {
+  const value = isCheckedStore();
+  const changes = booleanChanges(options, "store", value);
   sendChanges(changes);
 }
 
@@ -291,20 +260,23 @@ function changeListener(state, event) {
     return;
   }
   switch (event.target.id) {
-    case "checkboxAccordion":
-      changeAccordion(state.options);
-      return;
     case "checkboxTextarea":
       changeTextarea(state.options);
-      return;
-    case "checkboxClipboard":
-      changeClipboard(state.options);
       return;
     case "inputSize":
       changeSize(state.options);
       return;
     case "inputBase":
       changeBase(state.options);
+      return;
+    case "checkboxClipboard":
+      changeClipboard(state.options);
+      return;
+    case "checkboxAccordion":
+      changeAccordion(state.options);
+      return;
+    case "checkboxStore":
+      changeStore(state.options);
       return;
   }
 }
@@ -326,7 +298,7 @@ function messageListener(state, message) {
   }
   switch (message.command) {
     case "initOptions":
-      initOptions(state, message.options || {}, message.haveStorage);
+      initOptions(state, message.options, message.haveStorage);
       return;
     case "optionsChanges":
     case "storageOptionsChanges":
@@ -340,7 +312,7 @@ function messageListener(state, message) {
 
 function initMain() {
   const state = {
-    options: null
+    options: {}
   };
   document.addEventListener("change", (event) => {
     changeListener(state, event);

@@ -23,14 +23,6 @@
     "message": "Öffnet alle Details des Akkordeons",
     "description": "Verbose explanation for button to open the accordion"
   },
-  "checkboxAccordion": {
-    "message": "Status des Akkordeons speichern",
-    "description": "Brief explanation for checkbox to store accordion state"
-  },
-  "titleCheckboxAccordion": {
-    "message": "Speichert für jeden Eintrag des Akkordeons, ob er geöffnet ist und sendet den Status an andere Tabulatoren von “Rechner”!",
-    "description": "Verbose explanation for checkbox to store accordion state"
-  },
   "checkboxTextarea": {
     "message": "Eingabe in Textbereich",
     "description": "Brief explanation for input mode checkbox"
@@ -38,14 +30,6 @@
   "titleCheckboxTextarea": {
     "message": "Die Eingabe des Ausdrucks erfolgt in einem Textbereich variabler Größe. Die Eingabetaste \u23CE startet dort eine neue Zeile statt die Berechnung zu beginnen.",
     "description": "Verbose explanation for input mode checkbox in popup and on option page"
-  },
-  "checkboxClipboard": {
-    "message": "Automatisch \u21E8 Clipboard",
-    "description": "Brief explanation for clipboard checkbox"
-  },
-  "titleCheckboxClipboard": {
-    "message": "Bei Berechnungen und bei Wiederherstellung/Hinzufügen einer gespeicherten Sitzung das Ergebnis automatisch ins Clipboard kopieren",
-    "description": "Verbose explanation for clipboard checkbox in popup and on option page"
   },
   "inputSize": {
     "message": "Breite:Höhe (0:0 = 80:5)",
@@ -70,6 +54,30 @@
   "titleButtonAbbrBase": {
     "message": "Der Text \"Basis\" (in diesen Anführungszeichen) innerhalb eines Ausdrucks bewirkt das Setzen dieser Option.",
     "description": "Verbose explanation how to set base in an expression"
+  },
+  "checkboxClipboard": {
+    "message": "Automatisch \u21E8 Clipboard",
+    "description": "Brief explanation for clipboard checkbox"
+  },
+  "titleCheckboxClipboard": {
+    "message": "Bei Berechnungen und bei Wiederherstellung/Hinzufügen einer gespeicherten Sitzung das Ergebnis automatisch ins Clipboard kopieren",
+    "description": "Verbose explanation for clipboard checkbox in popup and on option page"
+  },
+  "checkboxAccordion": {
+    "message": "Status des Akkordeons speichern",
+    "description": "Brief explanation for checkbox to store accordion state"
+  },
+  "titleCheckboxAccordion": {
+    "message": "Speichert für jeden Eintrag des Akkordeons, ob er geöffnet ist und sendet den Status an andere Tabulatoren von “Rechner”!",
+    "description": "Verbose explanation for checkbox to store accordion state"
+  },
+  "checkboxStore": {
+    "message": "Optionen speichern",
+    "description": "Brief explanation for checkbox to store options"
+  },
+  "titleCheckboxStore": {
+    "message": "Speichert die Optionen aus dem „Rechner“-Fenster im lokalen Speicher (der einen Browser-Neustart überlebt) und sendet sie zu allen anderen  „Rechner“-Fenster. Diese Option hat keinen Einfluss auf das „Einstellungen”-Fenster: Optionen aus dem „Einstellungen”-Fenster werden immer gespeichert und gesendet. Beachten Sie, dass sich „Optionen“ nicht nur auf jene bezieht, die unter „Optionen” gelistet sind, sondern ebenso auch alle anderen Checkboxen beinhaltet.",
+    "description": "Verbose explanation for checkbox to store options"
   },
   "buttonClearStorage": {
     "message": "Speicher löschen",
@@ -99,43 +107,43 @@
     "message": "Hinteinanderstehende Ausdrücke mit diesen Operatoren werden von rechts nach links ausgewertet. Beispielsweise ist a**b**c äquivalent zu a**(b**c) oder a=b=c äquivalent zu a=(b=c).",
     "description": "Verbose text for operators with right-to-left precedence"
   },
-  "titleAbbrUarr": {
+  "titleButtonAbbrUarr": {
     "message": "„a**b“ ist die b-te Potenz von a.",
     "description": "Explain exponentiation operator"
   },
-  "titleAbbrTimes": {
+  "titleButtonAbbrTimes": {
     "message": "„a*b“ ist das Produkt von a und b.",
     "description": "Explain multiplication operator"
   },
-  "titleAbbrSlash": {
+  "titleButtonAbbrSlash": {
     "message": "„a/b“ ist der Quotient von a und b.",
     "description": "Explain division operator"
   },
-  "titleAbbrPercentage": {
+  "titleButtonAbbrPercentage": {
     "message": "„a%b“ ist der Rest der Division von a durch b.",
     "description": "Explain remainder operator"
   },
-  "titleAbbrPlus": {
+  "titleButtonAbbrPlus": {
     "message": "„a+b“ ist die Summe von a und b.",
     "description": "Explain sum operator"
   },
-  "titleAbbrMinus": {
+  "titleButtonAbbrMinus": {
     "message": "„a-b“ ist die Differenz von a und b.",
     "description": "Explain difference operator"
   },
-  "titleAbbrAmp": {
+  "titleButtonAbbrAmp": {
     "message": "„a&b“ ist das binäre „und” von a und b",
     "description": "Explain binary AND operator"
   },
-  "titleAbbrPow": {
+  "titleButtonAbbrPow": {
     "message": "„a&b“ ist das binäre „exklusiv-oder“ von a und b.",
     "description": "Explain binary XOR operator"
   },
-  "titleAbbrVert": {
+  "titleButtonAbbrVert": {
     "message": "„a|b“ ist das binäre „oder“ von a und b.",
     "description": "Explain binary OR operator"
   },
-  "titleAbbrAssign": {
+  "titleButtonAbbrAssign": {
     "message": "„a=b“ weist der Variablen a den Wert von b zu. Das Ergebnis der Zuweisung ist die Variable a.",
     "description": "Explain assignment operator"
   },
@@ -423,14 +431,6 @@
     "message": "Die gespeicherte Sitzung wird aus dem lokalen Speicher entfernt. Die hat keine unmittelbar sichtbaren Auswirkungen",
     "description": "Explain what clearing a stored session means"
   },
-  "buttonStoreOptions": {
-    "message": "Optionen speichern",
-    "description": "Button to store the options"
-  },
-  "titleButtonStoreOptions": {
-    "message": "Speichert die Optionen (dazu gehören auch die Checkboxen, die nicht unter “Optionen” gelistet sind) im lokalen Speicher, der einen Browser-Neustart überlebt. Die Optionen werden ebenfalls an alle Tabulatoren von „Rechner” gesendet.",
-    "description": "Explain what storing the options means"
-  },
   "summaryEditing": {
     "message": "Editieren",
     "description": "Announcement of editing"
@@ -521,7 +521,6 @@
   },
   "titleTextarea": {
     "message": "Geben Sie den Ausdruck ein, den Sie auswerten wollen, beispielsweise „1+2cos PI“. Drücken Sie den „~>”-Knopf zum Start der Auswertung.",
-    "message": "Enter the expression you want to evaluate, e.g. 1+2(3+4). To actually start the evaluation press the ~> button. There is also an option to remove that button and let the evaluation start with the enter key \u23CE instead.",
     "description": "Explain result button"
   },
   "buttonResult": {

@@ -23,14 +23,6 @@
     "message": "Expand the accordion by opening all details",
     "description": "Verbose explanation for button to open the accordion"
   },
-  "checkboxAccordion": {
-    "message": "Store accordion state",
-    "description": "Brief explanation for checkbox to store accordion state"
-  },
-  "titleCheckboxAccordion": {
-    "message": "Store for every item of the accordion whether it is opened, and propagate the state to other calc-extension tabs!",
-    "description": "Verbose explanation for checkbox to store accordion state"
-  },
   "checkboxTextarea": {
     "message": "Input expression in textarea",
     "description": "Brief explanation for input mode checkbox"
@@ -38,14 +30,6 @@
   "titleCheckboxTextarea": {
     "message": "The input of the expression occurs in a textarea of variable size. The enter key \u23CE opens a new line instead of initiating the calculation.",
     "description": "Verbose explanation for input mode checkbox in popup and on option page"
-  },
-  "checkboxClipboard": {
-    "message": "Automatic \u21E8 Clipboard",
-    "description": "Brief explanation for clipboard checkbox"
-  },
-  "titleCheckboxClipboard": {
-    "message": "Automatically copy the result to the clipboard for calculations or when restoring/adding a stored session",
-    "description": "Verbose explanation for clipboard checkbox in popup and on option page"
   },
   "inputSize": {
     "message": "width:height (0:0 = 80:5)",
@@ -70,6 +54,30 @@
   "titleButtonAbbrBase": {
     "message": "The text \"base\" (in these quotes) within an expression modifies this option.",
     "description": "Verbose explanation how to set base in an expression"
+  },
+  "checkboxClipboard": {
+    "message": "Automatic \u21E8 Clipboard",
+    "description": "Brief explanation for clipboard checkbox"
+  },
+  "titleCheckboxClipboard": {
+    "message": "Automatically copy the result to the clipboard for calculations or when restoring/adding a stored session",
+    "description": "Verbose explanation for clipboard checkbox in popup and on option page"
+  },
+  "checkboxAccordion": {
+    "message": "Store accordion state",
+    "description": "Brief explanation for checkbox to store accordion state"
+  },
+  "titleCheckboxAccordion": {
+    "message": "Store for every item of the accordion whether it is opened, and propagate the state to other calc-extension tabs!",
+    "description": "Verbose explanation for checkbox to store accordion state"
+  },
+  "checkboxStore": {
+    "message": "Store options",
+    "description": "Brief explanation for checkbox to store options"
+  },
+  "titleCheckboxStore": {
+    "message": "Store options set in the main calc-extension tab on local storage (which survives a browser restart) and propagate them to all calc-extension tabs. This option has no influence on the preferences tab: Options set in the preferences are always stored and propagated. Note that “Options” refers not only to the options listed in “Options” but includes all other checkboxes as well.",
+    "description": "Verbose explanation for checkbox to store options"
   },
   "buttonClearStorage": {
     "message": "Clear Storage",
@@ -422,14 +430,6 @@
   "titleButtonClearStored": {
     "message": "The stored session is removed from local storage. This has no immediately visible effect.",
     "description": "Explain what clearing a stored session means"
-  },
-  "buttonStoreOptions": {
-    "message": "Store Options",
-    "description": "Button to store the options"
-  },
-  "titleButtonStoreOptions": {
-    "message": "Store the options (including also the checkboxes not listed in “Options”) on local storage, surviving a browser restart. The options are also propagated to all calc-extension tabs.",
-    "description": "Explain what storing the options means"
   },
   "summaryEditing": {
     "message": "Editing",

@@ -28,6 +28,10 @@ function getCheckboxAccordion() {
   return document.getElementById("checkboxAccordion");
 }
 
+function getCheckboxStore() {
+  return document.getElementById("checkboxStore");
+}
+
 function getInputSize() {
   return document.getElementById("inputSize");
 }
@@ -59,14 +63,6 @@ function enableStorageButtons(enable) {
   enableButton(document.getElementById("buttonClearStored"), enable);
 }
 
-function isCheckedAccordion() {
-  return isChecked(getCheckboxAccordion());
-}
-
-function setCheckboxAccordion(checked) {
-  setChecked(getCheckboxAccordion(), checked);
-}
-
 function isCheckedTextarea() {
   return isChecked(getCheckboxTextarea());
 }
@@ -81,6 +77,22 @@ function isCheckedClipboard() {
 
 function setCheckboxClipboard(checked) {
   setChecked(getCheckboxClipboard(), checked);
+}
+
+function isCheckedAccordion() {
+  return isChecked(getCheckboxAccordion());
+}
+
+function setCheckboxAccordion(checked) {
+  setChecked(getCheckboxAccordion(), checked);
+}
+
+function isCheckedStore() {
+  return isChecked(getCheckboxStore());
+}
+
+function setCheckboxStore(checked) {
+  setChecked(getCheckboxStore(), checked);
 }
 
 function enableCurrent(lines, enable) {
@@ -299,8 +311,8 @@ function appendNext(state, input, output, before, size) {
   } else if (Array.isArray(size)) {
     useTextarea = true;
   } else {
-    useTextarea = isCheckedTextarea();
-    size = state.size;
+    useTextarea = state.options.textarea;
+    size = state.options.size;
   }
   const line = lines.generateLine(useTextarea);
   lines.currentIndex = lines.insertLine(line, before);
@@ -364,10 +376,6 @@ function initWindowOptions(textarea, size, base, linesEnabled) {
   const disabled = !linesEnabled;
   const rowTextarea = document.getElementById("rowTextarea");
   clearItem(rowTextarea);
-  const rowSize = document.getElementById("rowSize");
-  clearItem(rowSize);
-  const rowBase = document.getElementById("rowBase");
-  clearItem(rowBase);
   appendCheckboxCol(rowTextarea, "checkboxTextarea", textarea,
     null, "titleCheckboxTextarea");
   appendX(rowTextarea, "TD", appendButton, "buttonAbbrExclam",
@@ -382,12 +390,16 @@ function initWindowOptions(textarea, size, base, linesEnabled) {
     disabled, null, "titleButtonRedrawLine");
   appendX(rowTextarea, "TD", appendButton, "buttonRedrawWindow", null,
     null, null, "titleButtonRedrawWindow");
+  const rowSize = document.getElementById("rowSize");
+  clearItem(rowSize);
   appendInputCol(rowSize, "inputSize", 3, getSizeText(size),
     "inputSize", "titleInputSize");
   appendX(rowSize, "TD", appendButton, "buttonAbbrSize603",
     null, disabled, "'60:3'", "titleButtonAbbrSize");
   appendX(rowSize, "TD", appendButton, "buttonAbbrSize00",
     null, disabled, "'0:0'", "titleButtonAbbrSize");
+  const rowBase = document.getElementById("rowBase");
+  clearItem(rowBase);
   appendInputCol(rowBase, "inputBase", 1, getBaseText(base),
     "inputBase", "titleinputBase");
   appendX(rowBase, "TD", appendButton, "buttonAbbrBase16", null,
@@ -398,14 +410,14 @@ function initWindowOptions(textarea, size, base, linesEnabled) {
     disabled, '""', "titleButtonAbbrBase");
 }
 
-function initWindowStorage(accordion, haveStored, haveStorage) {
+function initWindowStorage(accordion, store, haveStored, haveStorage) {
   const disabled = !haveStored;
   const rowAccordion = document.getElementById("rowAccordion");
   clearItem(rowAccordion);
+  appendCheckboxCol(rowAccordion, "checkboxAccordion", accordion, null,
+    "titleCheckboxAccordion");
   const rowSession = document.getElementById("rowSession");
   clearItem(rowSession);
-  appendCheckboxCol(rowAccordion, "checkboxAccordion", accordion,
-    null, "titleCheckboxAccordion");
   appendX(rowSession, "TD", appendButton, "buttonStoreSession", null,
     null, null, "titleButtonStoreSession");
   appendX(rowSession, "TD", appendButton, "buttonRestoreSession", null,
@@ -414,10 +426,12 @@ function initWindowStorage(accordion, haveStored, haveStorage) {
     disabled, null, "titleButtonAddSession");
   appendX(rowSession, "TD", appendButton, "buttonClearStored", null,
     disabled, null, "titleButtonClearStored");
+  const rowStore = document.getElementById("rowStore");
+  clearItem(rowStore);
+  appendCheckboxCol(rowStore, "checkboxStore", store, null,
+    "titleCheckboxStore");
   const rowStorage = document.getElementById("rowStorage");
   clearItem(rowStorage);
-  appendX(rowStorage, "TD", appendButton, "buttonStoreOptions", null,
-    null, null, "titleButtonStoreOptions");
   appendX(rowStorage, "TD", appendButton, "buttonClearStorage", null,
     !haveStorage, null, "titleButtonClearStorage");
 }
@@ -442,12 +456,14 @@ function initWindowEditing(linesEnabled) {
     null, "titleButtonClearWindow");
 }
 
-function initWindow(state, options, haveStorage) {
+function initWindow(state, haveStorage) {
+  const options = state.options;
   initWindowHead();
   initWindowLast(options.clipboard);
-  initWindowOptions(options.textarea, state.size, state.base,
+  initWindowOptions(options.textarea, options.size, options.base,
     state.lines.enabled);
-  initWindowStorage(options.accordion, state.storedLast, haveStorage);
+  initWindowStorage(options.accordion, options.store, state.storedLast,
+    haveStorage);
   initWindowEditing(state.lines.enabled);
   appendNext(state);
 }
@@ -472,8 +488,12 @@ function changeInputWidth(lines, width) {
 }
 
 function changeSize(state, size, forceRedisplay) {
-  const oldSize = state.size;
-  state.size = size;
+  const oldSize = (state.options.size || [ 0, 0 ]);
+  if (isDefaultSize(size)) {
+    delete state.options.size;
+  } else {
+    state.options.size = size;
+  }
   if (forceRedisplay || !equalSize(oldSize, size)) {
     setInputSize(size);
   }
@@ -483,10 +503,15 @@ function changeSize(state, size, forceRedisplay) {
 }
 
 function changeBase(state, base, forceRedisplay) {
-   if (forceRedisplay || (state.base != base)) {
-     setInputBase(base);
-   }
-   state.base = base;
+  const oldBase = (state.options.base || 0);
+  if (isDefaultBase(base)) {
+    delete state.options.base;
+  } else {
+    state.options.base = base;
+  }
+  if (forceRedisplay || (oldBase != base)) {
+    setInputBase(base);
+  }
 }
 
 function toClipboardUnsafe(text) {

@@ -4,6 +4,27 @@
 
 "use strict";
 
+function booleanChanges(object, property, value) {
+  if (value) {
+    if (object[property]) {
+      object[property] = true;  // normalize
+      return null;
+    }
+    object[property] = true;
+    let changes = {}
+    changes[property] = { value: true };
+    return changes;
+  }
+  if (!object[property]) {
+    delete object.property;  // normalize
+    return null;
+  }
+  delete object[property];
+  let changes = {};
+  changes[property] = {};
+  return changes;
+}
+
 function calcChanges(oldObject, newObject) {
   const changes = {};
   let changed = false;

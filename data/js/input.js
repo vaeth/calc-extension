@@ -91,3 +91,34 @@ function getBaseText(base) {
   }
   return "";
 }
+
+function addOptions(options, add) {
+  if (!add) {
+    return options;
+  }
+  if (add.textarea) {
+    options.textarea = true;
+  }
+  if (add.clipboard) {
+    options.clipboard = true;
+  }
+  if (add.accordion) {
+    options.accordion = true;
+  }
+  if (add.store) {
+    options.store = true;
+  }
+  if (add.size) {
+    const size = sanitizeSize(add.size);
+    if (!isDefaultSize(size)) {
+      options.size = size;
+    }
+  }
+  if (add.base) {
+    const base = sanitizeBase(add.base);
+    if (!isDefaultBase(base)) {
+      options.base = base;
+    }
+  }
+  return options;
+}

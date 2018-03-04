@@ -5,6 +5,7 @@
 	- Everything now has an explaining tooltip/title
 	- Option to store accordion state
 	- Buttons to expand/collapse accordion
+	- There is now an option to store options set in the main window
 	- The accordion list is now itself a detail which can be closed
 	- Always provide ~> button
 	- Input line keeps focus

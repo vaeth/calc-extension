@@ -10,8 +10,7 @@ class State {
     this.last = null;
     this.lastString = null;
     this.storedLast = null;
-    this.size = [0, 0];
-    this.base = 0;
+    this.options = {};
     this.parser = null;
   }
 
