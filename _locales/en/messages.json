@@ -8,7 +8,7 @@
     "description": "Description of the extension"
   },
   "buttonCollapseAccordion": {
-    "message": "Collapse",
+    "message": "Full collapse",
     "description": "Brief explanation for button to collapse the accordion"
   },
   "titleButtonCollapseAccordion": {
@@ -16,7 +16,7 @@
     "description": "Verbose explanation for button to collapse the accordion"
   },
   "buttonExpandAccordion": {
-    "message": "Expand",
+    "message": "Full expand",
     "description": "Brief explanation for button to open the accordion"
   },
   "titleButtonExpandAccordion": {
