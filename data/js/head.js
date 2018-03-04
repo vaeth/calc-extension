@@ -360,18 +360,14 @@ function initWindowLast(clipboard) {
     "titleButtonAllClipboard");
 }
 
-function initWindowOptions(accordion, textarea, size, base, linesEnabled) {
+function initWindowOptions(textarea, size, base, linesEnabled) {
   const disabled = !linesEnabled;
-  const rowAccordion = document.getElementById("rowAccordion");
-  clearItem(rowAccordion);
   const rowTextarea = document.getElementById("rowTextarea");
   clearItem(rowTextarea);
   const rowSize = document.getElementById("rowSize");
   clearItem(rowSize);
   const rowBase = document.getElementById("rowBase");
   clearItem(rowBase);
-  appendCheckboxCol(rowAccordion, "checkboxAccordion", accordion,
-    null, "titleCheckboxAccordion");
   appendCheckboxCol(rowTextarea, "checkboxTextarea", textarea,
     null, "titleCheckboxTextarea");
   appendX(rowTextarea, "TD", appendButton, "buttonAbbrExclam",
@@ -402,10 +398,14 @@ function initWindowOptions(accordion, textarea, size, base, linesEnabled) {
     disabled, '""', "titleButtonAbbrBase");
 }
 
-function initWindowStorage(haveStored, haveStorage) {
+function initWindowStorage(accordion, haveStored, haveStorage) {
   const disabled = !haveStored;
+  const rowAccordion = document.getElementById("rowAccordion");
+  clearItem(rowAccordion);
   const rowSession = document.getElementById("rowSession");
   clearItem(rowSession);
+  appendCheckboxCol(rowAccordion, "checkboxAccordion", accordion,
+    null, "titleCheckboxAccordion");
   appendX(rowSession, "TD", appendButton, "buttonStoreSession", null,
     null, null, "titleButtonStoreSession");
   appendX(rowSession, "TD", appendButton, "buttonRestoreSession", null,
@@ -445,9 +445,9 @@ function initWindowEditing(linesEnabled) {
 function initWindow(state, options, haveStorage) {
   initWindowHead();
   initWindowLast(options.clipboard);
-  initWindowOptions(options.accordion, options.textarea, state.size,
-    state.base, state.lines.enabled);
-  initWindowStorage(state.storedLast, haveStorage);
+  initWindowOptions(options.textarea, state.size, state.base,
+    state.lines.enabled);
+  initWindowStorage(options.accordion, state.storedLast, haveStorage);
   initWindowEditing(state.lines.enabled);
   appendNext(state);
 }

@@ -99,8 +99,6 @@ function appendLink(parent) {
 
 function initPage(options, haveStorage) {
   const table = document.createElement("TABLE");
-  appendX(table, "TR", appendCheckboxCol, "checkboxAccordion",
-    options.textarea, "titleCheckboxAccordion");
   appendX(table, "TR", appendCheckboxCol, "checkboxTextarea",
     options.textarea, "titleCheckboxTextarea");
   appendX(table, "TR", appendInputCol, "inputSize", 3,
@@ -109,6 +107,8 @@ function initPage(options, haveStorage) {
     getBaseText(options.base), "titleInputBase");
   appendX(table, "TR", appendCheckboxCol, "checkboxClipboard",
     options.clipboard, "titleCheckboxClipboard");
+  appendX(table, "TR", appendCheckboxCol, "checkboxAccordion",
+    options.textarea, "titleCheckboxAccordion");
   appendX(table, "TR", appendButtonTextCol, "buttonClearStorage", null,
     !haveStorage, "titleButtonClearStorage");
   const top = getTop();
