@@ -133,7 +133,7 @@ State.buttonsAbbr = {
   buttonAbbrLast: "#",
   buttonAbbrExclam: "!",
   buttonAbbrQuestion: "?",
-  buttonAbbrSize805: "'80:5'",
+  buttonAbbrSize603: "'60:3'",
   buttonAbbrSize00: "'0:0'",
   buttonAbbrBase16: '"16"',
   buttonAbbrBase8: '"8"',

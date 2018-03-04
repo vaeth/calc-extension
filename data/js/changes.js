@@ -7,6 +7,14 @@
 function calcChanges(oldObject, newObject) {
   const changes = {};
   let changed = false;
+  if (!oldObject) {
+    if (!newObject) {
+      return null;
+    }
+    oldObject = {};
+  } else if (!newObject) {
+    newObject = {};
+  }
   for (let i of Object.getOwnPropertyNames(oldObject)) {
     if (newObject.hasOwnProperty(i)) {
       continue;
@@ -31,6 +39,9 @@ function calcChanges(oldObject, newObject) {
 }
 
 function applyChanges(object, changes) {
+  if (!changes) {
+    return false;
+  }
   let changed = false;
   for (let i of Object.getOwnPropertyNames(changes)) {
     const change = changes[i];

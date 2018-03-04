@@ -11,8 +11,8 @@
 
 const state = {
   virgin: true,
-  options: {},
-  details: {},
+  options: null,
+  details: null,
   session: null,
   last: null,
   haveStorage: false
@@ -52,23 +52,32 @@ function sendStoredLastChanges() {
 }
 
 function optionsChanges(options, changes, store) {
-  if (!options) {
-    options = Object.assign({}, state.options);
+  if (!options && changes) {
+    options = Object.assign({}, state.options || {});
   }
   if (changes) {
     applyChanges(options, changes)
   }
   changes = calcChanges(state.options, options);
-  if (!changes) {
+  if (!changes && state.options) {
     return;
   }
+  if (options && !Object.getOwnPropertyNames(options).length) {
+    options = null;
+  }
   state.options = options;  // first store to avoid race
-  flagSendHaveStorage();  // We might have partial storage in case of failure
   function finish() {
-    sendCommand("storageOptionsChanges", { changes: changes });
+    if (changes) {
+      sendCommand("storageOptionsChanges", { changes: changes });
+    }
   }
   if (store) {
-    browser.storage.local.set({ optionsV1: options }).then(finish);
+    if (options) {
+      flagSendHaveStorage();  // We might have partial storage if failure
+      browser.storage.local.set({ optionsV1: options }).then(finish);
+    } else {
+      browser.storage.local.remove("optionsV1").then(finish);
+    }
   } else {
     finish();
   }
@@ -76,24 +85,44 @@ function optionsChanges(options, changes, store) {
 
 function detailsChanges(details, changes, store) {
   if (!details) {
-    details = Object.assign({}, state.details);
+    if (changes) {
+      details = Object.assign({}, state.details || {});
+    }
   }
   if (changes) {
     applyChanges(details, changes)
   }
   changes = calcChanges(state.details, details);
-  if (!changes) {
+  if (!changes && state.details) {
     return;
   }
+  if (details && !Object.getOwnPropertyNames(details).length) {
+    details = null;
+  }
   state.details = details;  // first store to avoid race
-  flagSendHaveStorage();  // We might have partial storage in case of failure
   function finish() {
-    sendCommand("storageDetailsChanges", { changes: changes });
+    if (changes) {
+      sendCommand("storageDetailsChanges", { changes: changes });
+    }
   }
   if (store) {
-    browser.storage.local.set({ detailsV1: details }).then(finish);
+    if (details) {
+      flagSendHaveStorage();  // We might have partial storage if failure
+      browser.storage.local.set({ detailsV1: details }).then(finish);
+    } else {
+      browser.storage.local.remove("detailsV1").then(finish);
+    }
   } else {
     finish();
+  }
+}
+
+// This differs from DetailsChanges(null, null, true),
+// because we never forward "storageDetailsChanges"
+function clearDetailsTacitly() {
+  if (state.details) {
+    state.details = null;
+    browser.storage.local.remove("detailsV1");
   }
 }
 
@@ -120,12 +149,12 @@ function changedLast(last1, last2) {
 }
 
 function sessionChanges(session, store) {
-  const sessionStore = (store ? Object.assign({}, state.options) : null);
+  const sessionStore = ((store && session) ?
+    Object.assign({}, session) : null);
   const last = splitLast(session);
   const changed = changedLast(state.last, last);
   state.last = last;  // first store to avoid race
   state.session = session;  // first store to avoid race
-  flagSendHaveStorage();  // We might have partial storage in case of failure
   function finish() {
     if (changed) {
       sendCommand("storedLastChanges", { last: last });
@@ -133,7 +162,8 @@ function sessionChanges(session, store) {
   }
   if (store) {
     if (session) {
-      browser.storage.local.set({ sessionV1: session }).then(finish);
+      flagSendHaveStorage();  // We might have partial storage if failure
+      browser.storage.local.set({ sessionV1: sessionStore }).then(finish);
     } else {
       browser.storage.local.remove("sessionV1").then(finish);
     }
@@ -152,10 +182,10 @@ function storageListener(changes) {
     }
   }
   if (changes.optionsV1) {
-    optionsChanges(changes.optionsV1.newValue || {});
+    optionsChanges(changes.optionsV1.newValue || null);
   }
   if (changes.detailsV1) {
-    detailsChanges(changes.detailsV1.newValue || {});
+    detailsChanges(changes.detailsV1.newValue || null);
   }
   if (changes.sessionV1) {
     sessionChanges(changes.sessionV1.newValue || null);
@@ -178,6 +208,9 @@ function clearStorage() {
 }
 
 function removeObsoleteOptions(options) {
+  if (!options) {
+    return;
+  }
   delete options.inputMode;  // existed up to calc-extension-4.0
 }
 
@@ -190,9 +223,9 @@ function sendInit(reply) {
     delete state.virgin;
     if (storage && Object.getOwnPropertyNames(storage).length) {
       state.haveStorage = true;
-      state.options = (storage.optionsV1 || {});
+      state.options = (storage.optionsV1 || null);
       removeObsoleteOptions(state.options);
-      state.details = (storage.detailsV1 || {});
+      state.details = (storage.detailsV1 || null);
       const session = (storage.sessionV1 || null);
       state.last = splitLast(session);
       state.session = session;
@@ -229,6 +262,9 @@ function messageListener(message) {
       return;
     case "clearSession":
       sessionChanges(null, true);
+      return;
+    case "clearDetails":
+      clearDetailsTacitly();
       return;
     case "clearStorage":
       clearStorage();

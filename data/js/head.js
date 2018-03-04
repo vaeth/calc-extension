@@ -241,7 +241,6 @@ function initLayout() {
     }
     const translation = browser.i18n.getMessage("titleButton" + i[0]);
     for (let j of i) {
-if (!document.getElementById("button" + j)) { console.log(j); }
       document.getElementById("button" + j).title = translation;
     }
   }
@@ -343,16 +342,12 @@ function removeLine(lines, index) {
   return true;
 }
 
-function initWindowHead(accordion) {
-  appendButton(document.getElementById("spanButtonExpandAccordion"),
-    "buttonExpandAccordion", null, null, null, "titleButtonExpandAccordion");
+function initWindowHead() {
   appendButton(document.getElementById("spanButtonCollapseAccordion"),
     "buttonCollapseAccordion", null, null, null,
     "titleButtonCollapseAccordion");
-  appendCheckbox(document.getElementById("spanCheckboxAccordion"),
-    "checkboxAccordion", accordion, "titleCheckboxAccordion");
-  appendTextNode(document.getElementById("textCheckboxAccordion"),
-    "checkboxAccordion", "textCheckboxAccordion", "titleCheckboxAccordion");
+  appendButton(document.getElementById("spanButtonExpandAccordion"),
+    "buttonExpandAccordion", null, null, null, "titleButtonExpandAccordion");
 }
 
 function initWindowLast(clipboard) {
@@ -365,14 +360,18 @@ function initWindowLast(clipboard) {
     "titleButtonAllClipboard");
 }
 
-function initWindowOptions(textarea, size, base, linesEnabled) {
+function initWindowOptions(accordion, textarea, size, base, linesEnabled) {
   const disabled = !linesEnabled;
+  const rowAccordion = document.getElementById("rowAccordion");
+  clearItem(rowAccordion);
   const rowTextarea = document.getElementById("rowTextarea");
   clearItem(rowTextarea);
   const rowSize = document.getElementById("rowSize");
   clearItem(rowSize);
   const rowBase = document.getElementById("rowBase");
   clearItem(rowBase);
+  appendCheckboxCol(rowAccordion, "checkboxAccordion", accordion,
+    null, "titleCheckboxAccordion");
   appendCheckboxCol(rowTextarea, "checkboxTextarea", textarea,
     null, "titleCheckboxTextarea");
   appendX(rowTextarea, "TD", appendButton, "buttonAbbrExclam",
@@ -389,8 +388,8 @@ function initWindowOptions(textarea, size, base, linesEnabled) {
     null, null, "titleButtonRedrawWindow");
   appendInputCol(rowSize, "inputSize", 3, getSizeText(size),
     "inputSize", "titleInputSize");
-  appendX(rowSize, "TD", appendButton, "buttonAbbrSize805",
-    null, disabled, "'80:5'", "titleButtonAbbrSize");
+  appendX(rowSize, "TD", appendButton, "buttonAbbrSize603",
+    null, disabled, "'60:3'", "titleButtonAbbrSize");
   appendX(rowSize, "TD", appendButton, "buttonAbbrSize00",
     null, disabled, "'0:0'", "titleButtonAbbrSize");
   appendInputCol(rowBase, "inputBase", 1, getBaseText(base),
@@ -444,10 +443,10 @@ function initWindowEditing(linesEnabled) {
 }
 
 function initWindow(state, options, haveStorage) {
-  initWindowHead(options.accordion);
+  initWindowHead();
   initWindowLast(options.clipboard);
-  initWindowOptions(options.textarea, state.size, state.base,
-    state.lines.enabled);
+  initWindowOptions(options.accordion, options.textarea, state.size,
+    state.base, state.lines.enabled);
   initWindowStorage(state.storedLast, haveStorage);
   initWindowEditing(state.lines.enabled);
   appendNext(state);

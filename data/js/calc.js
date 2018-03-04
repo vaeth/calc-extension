@@ -241,11 +241,11 @@ function displayResult(state, id) {
 }
 
 function initCalc(state, options, haveStorage) {
-  if (getCheckboxAccordion()) {  // already initialized
-    return;
+  if (document.getElementById("buttonCollapseAccordion")) {
+    return;  // already initialized
   }
   state.parser = new Parser();
-  state.size = sanitizeSize(options.size)
+  state.size = sanitizeSize(options.size);
   state.base = sanitizeBase(options.base);
   initWindow(state, options, haveStorage);
 }
@@ -309,8 +309,11 @@ function insertButtonAbbr(lines, id) {
   }
 }
 
-function detailsStore() {
+function detailsStore(force) {
   if (!isCheckedAccordion()) {
+    if (force) {  // checkbox was disabled
+      sendCommand("clearDetails");
+    }
     return;
   }
   const details = {};
@@ -466,9 +469,6 @@ function clickListener(state, event) {
       event.preventDefault();
       detailsAll(false);
       break;
-    case "textCheckboxAccordion":
-      event.preventDefault();
-      break;
     default:
       if (!id) {
         break;
@@ -506,12 +506,9 @@ function changeListener(state, event) {
     case "inputBase":
       changeBase(state, getBase(getInputBase().value), true);
       break;
-    case "checkboxAccordion": {
-      detailsStore();
-      const details = document.getElementById("detailsHead");
-      details.open = !details.open;
+    case "checkboxAccordion":
+      detailsStore(true);
       break;
-    }
     default:
       return;
   }
@@ -539,8 +536,8 @@ function messageListener(state, message) {
   switch (message.command) {
     case "initCalc":
       state.storedLast = message.last;
-      initCalc(state, message.options, message.haveStorage);
-      detailsChanges(message.details);
+      initCalc(state, message.options || {}, message.haveStorage);
+      detailsChanges(message.details || {});
       break;
     case "optionsChanges":
     case "storageOptionsChanges":

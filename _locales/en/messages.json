@@ -7,13 +7,13 @@
     "message": "Calculate values of mathematical expressions",
     "description": "Description of the extension"
   },
-  "checkboxAccordion": {
-    "message": "Store accordion state",
-    "description": "Brief explanation for checkbox to store accordion state"
+  "buttonCollapseAccordion": {
+    "message": "Collapse",
+    "description": "Brief explanation for button to collapse the accordion"
   },
-  "titleCheckboxAccordion": {
-    "message": "Store for every item of the accordion whether it is opened, and propagate the state to other calc-extension tabs!",
-    "description": "Verbose explanation for checkbox to store accordion state"
+  "titleButtonCollapseAccordion": {
+    "message": "Collaps the accordion by closing all details",
+    "description": "Verbose explanation for button to collapse the accordion"
   },
   "buttonExpandAccordion": {
     "message": "Expand",
@@ -23,13 +23,13 @@
     "message": "Expand the accordion by opening all details",
     "description": "Verbose explanation for button to open the accordion"
   },
-  "buttonCollapseAccordion": {
-    "message": "Collapse",
-    "description": "Brief explanation for button to collapse the accordion"
+  "checkboxAccordion": {
+    "message": "Store accordion state",
+    "description": "Brief explanation for checkbox to store accordion state"
   },
-  "titleButtonCollapseAccordion": {
-    "message": "Collaps the accordion by closing all details",
-    "description": "Verbose explanation for button to collapse the accordion"
+  "titleCheckboxAccordion": {
+    "message": "Store for every item of the accordion whether it is opened, and propagate the state to other calc-extension tabs!",
+    "description": "Verbose explanation for checkbox to store accordion state"
   },
   "checkboxTextarea": {
     "message": "Input expression in textarea",

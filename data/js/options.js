@@ -213,6 +213,7 @@ function changeAccordion(options) {
     accordionChange.value = options.accordion = true;
   } else {
     delete options.accordion;
+    sendCommand("clearDetails");
   }
   sendChanges(changes);
 }
@@ -325,7 +326,7 @@ function messageListener(state, message) {
   }
   switch (message.command) {
     case "initOptions":
-      initOptions(state, message.options, message.haveStorage);
+      initOptions(state, message.options || {}, message.haveStorage);
       return;
     case "optionsChanges":
     case "storageOptionsChanges":
