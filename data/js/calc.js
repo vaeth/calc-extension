@@ -71,24 +71,22 @@ function addContent(seed, lines, withSize) {
   return seed;
 }
 
-function redrawLine(state) {
-  const lines = state.lines;
+function redrawLine(lines, options) {
   const line = lines.currentLine;
   if (!line) {
     return;
   }
   const content = getContent(line);
-  appendNext(state, content[0], content[1], lines.currentIndex);
+  appendNext(lines, options, content[0], content[1], lines.currentIndex);
   removeLine(lines, lines.currentIndex + 1);
 }
 
-function redrawWindow(state) {
-  const lines = state.lines;
+function redrawWindow(lines, options) {
   const content = addContent([], lines);
-  const index = state.lines.currentIndex;
+  const index = lines.currentIndex;
   clearAllLines(lines);
   for (let [input, output] of content) {
-    appendNext(state, input, output);
+    appendNext(lines, options, input, output);
   }
   lines.setCurrentIndex(index);
 }
@@ -121,14 +119,13 @@ function cleanLine(lines) {
   input.value = "";
 }
 
-function removeCurrentLine(state) {
-  const lines = state.lines;
+function removeCurrentLine(lines, options) {
   const index = lines.currentIndex;
   if (!removeLine(lines)) {
     return;
   }
   if (!lines.setCurrentIndex(index)) {
-    appendNext(state);
+    appendNext(lines, options);
   }
 }
 
@@ -148,13 +145,12 @@ function moveLine(lines, add) {
   swapLines(line, swapLine);
 }
 
-function insertLine(state) {
-  const lines = state.lines;
+function insertLine(lines, options) {
   const line = lines.currentLine;
   if (!line) {
     return;
   }
-  appendNext(state, null, null, lines.currentIndex);
+  appendNext(lines, options, null, null, lines.currentIndex);
 }
 
 function restoreSessionLast(state, checkOnly) {
@@ -204,8 +200,9 @@ function addSession(state, session, clear) {
       clearAllLines(lines);
     }
     const lastIndex = lines.currentIndex;
+    const options = state.options;
     for (let [input, output, size] of content) {
-      appendNext(state, input, output, null, size);
+      appendNext(lines, options, input, output, null, size);
     }
     if (lastIndex !== null) {
       lines.currentIndex = lastIndex;
@@ -231,7 +228,7 @@ function displayResult(state, id) {
     text = browser.i18n.getMessage("messageError", error);
   }
   if (last) {
-    displayLastString(state);
+    displayLastString(lastString);
     if (state.options.clipboard) {
       toClipboard(state.lastString);
     }
@@ -245,7 +242,7 @@ function displayResult(state, id) {
     removeLine(lines);  // invalidates lines.currentIndex
   }
   if (!lines.setCurrentIndex(nextIndex)) {
-    appendNext(state);
+    appendNext(lines, state.options);
   }
   return true;
 }
@@ -256,7 +253,7 @@ function initCalc(state, options, haveStorage) {
   }
   state.parser = new Parser();
   state.options = addOptions({}, options);
-  initWindow(state, haveStorage);
+  initWindow(state.lines, state.options, state.storedLast, haveStorage);
 }
 
 function storeSession(state) {
@@ -396,10 +393,10 @@ function optionsChanges(state, options, changes) {
     setCheckboxTextarea(changes.textarea.value);
   }
   if (changes.size) {
-    changeSize(state, sanitizeSize(changes.size.value));
+    changeSize(state.lines, state.options, sanitizeSize(changes.size.value));
   }
   if (changes.base) {
-    changeBase(state, sanitizeBase(changes.base.value));
+    changeBase(state.options, sanitizeBase(changes.base.value));
   }
   if (changes.clipboard) {
     setCheckboxClipboard(changes.clipboard.value);
@@ -444,7 +441,7 @@ function clickListener(state, event) {
       toClipboard(addContent("", state.lines));
       break;
     case "buttonRedrawLine":
-      redrawLine(state);
+      redrawLine(state.lines, state.options);
       break;
     case "buttonBackspace":
       backspace(state.lines);
@@ -453,7 +450,7 @@ function clickListener(state, event) {
       cleanLine(state.lines);
       break;
     case "buttonRemoveLine":
-      removeCurrentLine(state);
+      removeCurrentLine(state.lines, state.options);
       break;
     case "buttonMoveLineUp":
       moveLine(state.lines, -1);
@@ -462,13 +459,13 @@ function clickListener(state, event) {
       moveLine(state.lines, 1);
       break;
     case "buttonInsertLine":
-      insertLine(state);
+      insertLine(state.lines, state.options);
       break;
     case "buttonRedrawWindow":
-      redrawWindow(state);
+      redrawWindow(state.lines, state.options);
       break;
     case "buttonClearWindow":
-      clearAll(state);
+      clearAll(state.lines, state.options);
       break;
     case "buttonStoreSession":
       storeSession(state);
@@ -526,10 +523,11 @@ function changeListener(state, event) {
   }
   switch (event.target.id) {
     case "inputSize":
-      changeSize(state, getSize(getInputSize().value), true);
+      changeSize(state.lines, state.options, getSize(getInputSize().value),
+        true);
       break;
     case "inputBase":
-      changeBase(state, getBase(getInputBase().value), true);
+      changeBase(state.options, getBase(getInputBase().value), true);
       break;
     case "checkboxTextarea":
       changeTextarea(state.options);
@@ -557,9 +555,8 @@ function focusinListener(state, event) {
   while (!target.id && target.hasChildNodes()) {
     target = target.firstChild;
   }
-  const lines = state.lines;
-  if (lines.setCurrentId(target.id)) {
-    enableCurrent(lines, true);
+  if (state.lines.setCurrentId(target.id)) {
+    enableCurrent(state.lines, true);
   }
 }
 

@@ -52,8 +52,8 @@ function enableButtonClipboard() {
   enableButton(document.getElementById("buttonClipboard"), true);
 }
 
-function displayLastString(state) {
-  changeText("lastString", state.lastString);
+function displayLastString(lastString) {
+  changeText("lastString", lastString);
   enableButtonClipboard();
 }
 
@@ -301,8 +301,7 @@ function getResultTable(line, output) {
   return table;
 }
 
-function appendNext(state, input, output, before, size) {
-  const lines = state.lines;
+function appendNext(lines, options, input, output, before, size) {
   const beforeNode = (lines.isValidIndex(before) ?
     document.getElementById(lines.getLine(before).paragraph) : null);
   let useTextarea;
@@ -311,8 +310,8 @@ function appendNext(state, input, output, before, size) {
   } else if (Array.isArray(size)) {
     useTextarea = true;
   } else {
-    useTextarea = state.options.textarea;
-    size = state.options.size;
+    useTextarea = options.textarea;
+    size = options.size;
   }
   const line = lines.generateLine(useTextarea);
   lines.currentIndex = lines.insertLine(line, before);
@@ -456,16 +455,14 @@ function initWindowEditing(linesEnabled) {
     null, "titleButtonClearWindow");
 }
 
-function initWindow(state, haveStorage) {
-  const options = state.options;
+function initWindow(lines, options, storedLast, haveStorage) {
   initWindowHead();
   initWindowLast(options.clipboard);
   initWindowOptions(options.textarea, options.size, options.base,
-    state.lines.enabled);
-  initWindowStorage(options.accordion, options.store, state.storedLast,
-    haveStorage);
-  initWindowEditing(state.lines.enabled);
-  appendNext(state);
+    lines.enabled);
+  initWindowStorage(options.accordion, options.store, storedLast, haveStorage);
+  initWindowEditing(lines.enabled);
+  appendNext(lines, options);
 }
 
 function clearAllLines(lines) {
@@ -474,9 +471,9 @@ function clearAllLines(lines) {
   clearWindow();
 }
 
-function clearAll(state) {
-  clearAllLines(state.lines);
-  appendNext(state);
+function clearAll(lines, options) {
+  clearAllLines(lines);
+  appendNext(lines, options);
 }
 
 function changeInputWidth(lines, width) {
@@ -487,27 +484,27 @@ function changeInputWidth(lines, width) {
   }
 }
 
-function changeSize(state, size, forceRedisplay) {
-  const oldSize = (state.options.size || [ 0, 0 ]);
+function changeSize(lines, options, size, forceRedisplay) {
+  const oldSize = (options.size || [ 0, 0 ]);
   if (isDefaultSize(size)) {
-    delete state.options.size;
+    delete options.size;
   } else {
-    state.options.size = size;
+    options.size = size;
   }
   if (forceRedisplay || !equalSize(oldSize, size)) {
     setInputSize(size);
   }
   if (oldSize[0] != size[0]) {
-    changeInputWidth(state.lines, size[0] || 80);
+    changeInputWidth(lines, size[0] || 80);
   }
 }
 
-function changeBase(state, base, forceRedisplay) {
-  const oldBase = (state.options.base || 0);
+function changeBase(options, base, forceRedisplay) {
+  const oldBase = (options.base || 0);
   if (isDefaultBase(base)) {
-    delete state.options.base;
+    delete options.base;
   } else {
-    state.options.base = base;
+    options.base = base;
   }
   if (forceRedisplay || (oldBase != base)) {
     setInputBase(base);
@@ -532,8 +529,7 @@ function toClipboard(text) {
   }
 }
 
-function lastToClipboard(state) {
-  const lastString = state.lastString;
+function lastToClipboard(lastString) {
   if (typeof(lastString) == "string") {
     toClipboard(lastString);
   }

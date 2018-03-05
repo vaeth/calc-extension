@@ -6,16 +6,16 @@
 
 // Handling of the special tokens ! ? '...' "...":
 
-function handleInlineToken(state, token) {
+function handleInlineToken(lines, options, token) {
   switch (token.inline) {
     case "textarea":
       setCheckboxTextarea(token.value);
       return;
     case "size":
-      changeSize(state, token.value);
+      changeSize(lines, options, token.value);
       return;
     case "base":
-      changeBase(state, token.value);
+      changeBase(options, token.value);
       return;
   }
 }
@@ -450,12 +450,12 @@ For simplicity, we first scan the whole expression and handle
 the inline tokens already in this step to keep them off the parser.
 */
 
-function getTokenArray(state, input) {
+function getTokenArray(lines, options, input) {
   const tokens = [];
   while ((input = input.replace(/^[;\s]+/, ""))) {
     const token = lexToken(input);
     if (token.type === "#inline") {
-      handleInlineToken(state, token);
+      handleInlineToken(lines, options, token);
     } else {
       tokens.push(token);
     }
@@ -466,8 +466,9 @@ function getTokenArray(state, input) {
 
 /*
 The main function which returns the output by getting "input".
-state is only needed to get/set the last result for #
+state is essentially only needed to get/set the last result for #
 (and to set the corresponding lastString for copying to clipboard).
+Other reasons for state: For setting inline options, the parser and base.
 In the error case, we just throw.
 */
 
@@ -476,7 +477,7 @@ function calculate(state, input) {
     type: "#empty",
     text: browser.i18n.getMessage("textImplicit")
   };
-  const tokens = getTokenArray(state, input);
+  const tokens = getTokenArray(state.lines, state.options, input);
   if (!tokens.length) {
     return null;
   }
@@ -535,7 +536,7 @@ function calculate(state, input) {
     throw browser.i18n.getMessage("errorNaN");
   }
   const value = state.last = result.value;
-  const base = state.base;
+  const base = state.options.base;
   if (isBase(base)) {
     const resultString = state.lastString = value.toString(base);
     return browser.i18n.getMessage("messageResult",
