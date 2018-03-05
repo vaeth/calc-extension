@@ -411,10 +411,6 @@ function initWindowOptions(textarea, size, base, linesEnabled) {
 
 function initWindowStorage(accordion, store, haveStored, haveStorage) {
   const disabled = !haveStored;
-  const rowAccordion = document.getElementById("rowAccordion");
-  clearItem(rowAccordion);
-  appendCheckboxCol(rowAccordion, "checkboxAccordion", accordion, null,
-    "titleCheckboxAccordion");
   const rowSession = document.getElementById("rowSession");
   clearItem(rowSession);
   appendX(rowSession, "TD", appendButton, "buttonStoreSession", null,
@@ -425,12 +421,13 @@ function initWindowStorage(accordion, store, haveStored, haveStorage) {
     disabled, null, "titleButtonAddSession");
   appendX(rowSession, "TD", appendButton, "buttonClearStored", null,
     disabled, null, "titleButtonClearStored");
-  const rowStore = document.getElementById("rowStore");
-  clearItem(rowStore);
-  appendCheckboxCol(rowStore, "checkboxStore", store, null,
-    "titleCheckboxStore");
   const rowStorage = document.getElementById("rowStorage");
   clearItem(rowStorage);
+  appendCheckboxCol(rowStorage, "checkboxAccordion", accordion, null,
+    "titleCheckboxAccordion");
+  appendCheckboxCol(rowStorage, "checkboxStore", store, null,
+    "titleCheckboxStore");
+  appendX(rowStorage, "TD", appendTextNode, null, null, null, "\xa0");
   appendX(rowStorage, "TD", appendButton, "buttonClearStorage", null,
     !haveStorage, null, "titleButtonClearStorage");
 }

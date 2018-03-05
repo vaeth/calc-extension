@@ -3,6 +3,7 @@
 *calc-extension-5.1:
 	Martin Väth <martin at mvath.de>:
 	- Fix display of #
+	- Put most storage options in one line
 
 *calc-extension-5.0:
 	Martin Väth <martin at mvath.de>:
