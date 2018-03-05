@@ -484,14 +484,27 @@ function changeInputWidth(lines, width) {
   }
 }
 
-function changeSize(lines, options, size, forceRedisplay) {
+function changeTextareaValue(options, value, forceRedisplay) {
+  const changes = booleanChanges(options, "textarea", value);
+  if (changes) {
+    State.storeChanges(options, "textarea");
+  }
+  if (forceRedisplay || changes) {
+    setCheckboxTextarea(value);
+  }
+}
+
+function changeSizeValue(lines, options, size, forceRedisplay) {
   const oldSize = (options.size || [ 0, 0 ]);
   if (isDefaultSize(size)) {
     delete options.size;
   } else {
     options.size = size;
   }
-  if (forceRedisplay || !equalSize(oldSize, size)) {
+  if (!equalSize(oldSize, size)) {
+    setInputSize(size);
+    State.storeChanges(options, "size");
+  } else if (forceRedisplay) {
     setInputSize(size);
   }
   if (oldSize[0] != size[0]) {
@@ -499,14 +512,17 @@ function changeSize(lines, options, size, forceRedisplay) {
   }
 }
 
-function changeBase(options, base, forceRedisplay) {
+function changeBaseValue(options, base, forceRedisplay) {
   const oldBase = (options.base || 0);
   if (isDefaultBase(base)) {
     delete options.base;
   } else {
     options.base = base;
   }
-  if (forceRedisplay || (oldBase != base)) {
+  if (oldBase != base) {
+    setInputBase(base);
+    State.storeChanges(options, "base");
+  } else if (forceRedisplay) {
     setInputBase(base);
   }
 }

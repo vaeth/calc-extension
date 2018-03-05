@@ -9,13 +9,13 @@
 function handleInlineToken(lines, options, token) {
   switch (token.inline) {
     case "textarea":
-      setCheckboxTextarea(token.value);
+      changeTextareaValue(options, token.value);
       return;
     case "size":
-      changeSize(lines, options, token.value);
+      changeSizeValue(lines, options, token.value);
       return;
     case "base":
-      changeBase(options, token.value);
+      changeBaseValue(options, token.value);
       return;
   }
 }

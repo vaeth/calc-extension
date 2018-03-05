@@ -151,3 +151,5 @@ State.details = {
   Storage: false,
   Editing: false
 };
+
+State.storeChanges = function () {};

@@ -224,7 +224,7 @@ function displayResult(state, id) {
       last = true;
     }
   }
-  catch (error) {
+  catch(error) {
     text = browser.i18n.getMessage("messageError", error);
   }
   if (last) {
@@ -247,11 +247,23 @@ function displayResult(state, id) {
   return true;
 }
 
+function storeChanges(options, property) {
+  if (!options.store) {
+    return;
+  }
+  const value = {};
+  if (options.hasOwnProperty(property)) {
+    value.value = options[property];
+  }
+  const changes = {};
+  changes[property] = value;
+  sendChanges(changes);
+}
+
 function initCalc(state, options, haveStorage) {
   if (document.getElementById("buttonCollapseAccordion")) {
     return;  // already initialized
   }
-  state.parser = new Parser();
   state.options = addOptions({}, options);
   initWindow(state.lines, state.options, state.storedLast, haveStorage);
 }
@@ -344,6 +356,14 @@ function changeTextarea(options) {
   }
 }
 
+function changeSize(lines, options) {
+  changeSizeValue(lines, options, getSize(getInputSize().value), true);
+}
+
+function changeBase(options) {
+  changeBaseValue(options, getBase(getInputBase().value), true);
+}
+
 function changeClipboard(options) {
   const value = isCheckedClipboard();
   const changes = booleanChanges(options, "clipboard", value);
@@ -394,13 +414,14 @@ function optionsChanges(state, options, changes) {
   }
   state.options = options;
   if (changes.textarea) {
-    setCheckboxTextarea(changes.textarea.value);
+    changeTextareaValue(options, changes.textarea.value, true);
   }
   if (changes.size) {
-    changeSize(state.lines, state.options, sanitizeSize(changes.size.value));
+    changeSizeValue(state.lines, state.options,
+      sanitizeSize(changes.size.value), true);
   }
   if (changes.base) {
-    changeBase(state.options, sanitizeBase(changes.base.value));
+    changeBaseValue(state.options, sanitizeBase(changes.base.value), true);
   }
   if (changes.clipboard) {
     setCheckboxClipboard(changes.clipboard.value);
@@ -526,15 +547,14 @@ function changeListener(state, event) {
     return;
   }
   switch (event.target.id) {
-    case "inputSize":
-      changeSize(state.lines, state.options, getSize(getInputSize().value),
-        true);
-      break;
-    case "inputBase":
-      changeBase(state.options, getBase(getInputBase().value), true);
-      break;
     case "checkboxTextarea":
       changeTextarea(state.options);
+      break;
+    case "inputSize":
+      changeSize(state.lines, state.options);
+      break;
+    case "inputBase":
+      changeBase(state.options);
       break;
     case "checkboxClipboard":
       changeClipboard(state.options);
@@ -596,7 +616,9 @@ function messageListener(state, message) {
 }
 
 function initMain() {
-  let state = new State();
+  const state = new State();
+  state.parser = new Parser();
+  State.storeChanges = storeChanges;
   document.addEventListener("submit", (event) => {
     submitListener(state, event);
   });
