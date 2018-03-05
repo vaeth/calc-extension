@@ -127,7 +127,7 @@ function initPage(options, haveStorage) {
     !haveStorage, "titleButtonClearStorage");
   const top = getTop();
   top.appendChild(table);
-  appendX(top, "P", appendLink, top);
+  appendX(top, "DIV", appendLink, top);
 }
 
 function initOptions(state, options, haveStorage) {

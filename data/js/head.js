@@ -139,7 +139,7 @@ function setInputBase(base) {
 }
 
 function translateExamples() {
-  const examples = document.getElementById("summaryExamples");
+  const examples = document.getElementById("textExamples");
   const td = document.createElement("TD");
   appendTextNode(td, "textResult");
   for (let table of examples.children) {
@@ -275,16 +275,16 @@ function clearWindow() {
   }
 }
 
-function getResultParagraph(line, input, size) {
-  const paragraph = document.createElement("P");
-  paragraph.id = line.paragraph;
+function getResultDiv(line, input, size) {
+  const div = document.createElement("DIV");
+  div.id = line.div;
   if (line.isInput) {
-    appendFormInput(paragraph, line.form, line.input, size,
+    appendFormInput(div, line.form, line.input, size,
       input && input.replace(/[\r\n]+/g, " "), "titleInput");
   } else {
-    appendTextarea(paragraph, line.input, size, input, "titleTextarea");
+    appendTextarea(div, line.input, size, input, "titleTextarea");
   }
-  return paragraph;
+  return div;
 }
 
 function getResultTable(line, output) {
@@ -303,7 +303,7 @@ function getResultTable(line, output) {
 
 function appendNext(lines, options, input, output, before, size) {
   const beforeNode = (lines.isValidIndex(before) ?
-    document.getElementById(lines.getLine(before).paragraph) : null);
+    document.getElementById(lines.getLine(before).div) : null);
   let useTextarea;
   if (typeof(size) == "number") {
     useTextarea = false;
@@ -315,18 +315,18 @@ function appendNext(lines, options, input, output, before, size) {
   }
   const line = lines.generateLine(useTextarea);
   lines.currentIndex = lines.insertLine(line, before);
-  const paragraph = getResultParagraph(line, input, size);
+  const div = getResultDiv(line, input, size);
   const table = getResultTable(line, output);
   const top = getTop();
-  top.insertBefore(paragraph, beforeNode);
+  top.insertBefore(div, beforeNode);
   top.insertBefore(table, beforeNode);
 }
 
 function swapLines(line1, line2) {
   const top = getTop();
-  const a1 = document.getElementById(line1.paragraph);
+  const a1 = document.getElementById(line1.div);
   const b1 = document.getElementById(line1.table);
-  const a2 = document.getElementById(line2.paragraph);
+  const a2 = document.getElementById(line2.div);
   const b2 = document.getElementById(line2.table);
   top.removeChild(b1);
   top.insertBefore(b1, a2);
@@ -349,7 +349,7 @@ function removeLine(lines, index) {
   lines.removeLine(index);  // order matters: first invalidate currentIndex
   const top = getTop();
   top.removeChild(document.getElementById(line.table));
-  top.removeChild(document.getElementById(line.paragraph));
+  top.removeChild(document.getElementById(line.div));
   return true;
 }
 

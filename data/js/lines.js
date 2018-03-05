@@ -40,7 +40,7 @@ class Lines {
     const line = {
       button: "button=" + unique,
       output: "output=" + unique,
-      paragraph: "paragraph=" + unique,
+      div: "div=" + unique,
       table: "table=" + unique
     }
     if (textarea) {
@@ -170,6 +170,5 @@ class Lines {
   }
 }
 
-Lines.indexedItems = [ "input", "output", "button", "form",
-  "paragraph", "table" ];
+Lines.indexedItems = [ "input", "output", "button", "form", "div", "table" ];
 Lines.scrollIntoView = [ "table", "button", "output", "input" ];
