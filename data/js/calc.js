@@ -454,6 +454,7 @@ function toggleListener(state, name, node, defaultOpen) {
 
 function clickListener(state, event) {
   if (!event.target || !event.target.id) {
+    state.lines.focus();
     return;
   }
   const id = event.target.id;
@@ -514,10 +515,10 @@ function clickListener(state, event) {
       event.preventDefault();
       detailsAll(state.options, false);
       break;
+    case "inputSize":
+    case "inputBase":
+      return;  // These are allowed to get focus!
     default:
-      if (!id) {
-        break;
-      }
       if (id.startsWith("buttonAbbr")) {
         insertButtonAbbr(state.lines, id);
         break;
@@ -526,7 +527,6 @@ function clickListener(state, event) {
         displayResult(state, id);
         break;
       }
-      return;
   }
   state.lines.focus();
 }

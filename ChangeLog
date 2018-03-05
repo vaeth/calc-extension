@@ -5,6 +5,7 @@
 	- Fix display of #
 	- Put most storage options in one line
 	- Add tooltips even for the texts for constants and functions
+	- More aggressive focus keeping of input
 
 *calc-extension-5.0:
 	Martin Väth <martin at mvath.de>:
