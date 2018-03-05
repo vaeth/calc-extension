@@ -1,0 +1,21 @@
+/* Copyright (C) 2018 Nartin Väth <martin@mvath.de>
+ * This project is under the GNU public license 2.0
+*/
+
+.mainDetails {
+  display: inline;
+}
+
+.details {
+  margin-left: 1em;
+}
+
+.grouping {
+  border-style: solid;
+  border-width: 1px;
+}
+
+.h1 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
