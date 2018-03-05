@@ -256,6 +256,22 @@ function initLayout() {
       document.getElementById("button" + j).title = translation;
     }
   }
+  for (let i of [
+    "Log1p",
+    "Expm1",
+    "Clz32",
+    "E",
+    "Pi",
+    "SQRT2",
+    "SQRT1_2",
+    "LN2",
+    "LN10",
+    "LOG2E",
+    "LOG10E"
+    ]) {
+    const name = "titleButtonAbbr" + i;
+    document.getElementById(name).title = browser.i18n.getMessage(name);
+  }
   const textRightToLeft = browser.i18n.getMessage("textRightToLeft");
   const titleTextRightToLeft = browser.i18n.getMessage("titleTextRightToLeft");
   for (let id of [
