@@ -421,7 +421,7 @@ function optionsChanges(state, options, changes) {
 }
 
 function toggleListener(state, name, node, defaultOpen) {
-  if (state.options.accordion) {
+  if (!state.options.accordion) {
     return;
   }
   const value = {};
