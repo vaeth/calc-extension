@@ -372,8 +372,13 @@ function changeAccordion(options) {
 function changeStore(options) {
   const value = isCheckedStore();
   const changes = booleanChanges(options, "store", value);
-  if (changes && value) {
+  if (!changes) {
+    return;
+  }
+  if (value) {
     sendOptions(options);
+  } else {
+    sendChanges(changes);
   }
 }
 
