@@ -325,14 +325,14 @@
   },
   "titleButtonAbbrVarA": {
     "message": "Variablennamen einfügen (mit nachfolgendem Leerzeichen).",
-    "description": "Explain space button"
+    "description": "Explain variable name buttons"
   },
   "titleButtonAbbr0x": {
     "message": "„0x“ einfügen, was den Beginn einer Hexadezimalzahl markiert.",
     "description": "Explain 0x button"
   },
   "titleButtonAbbr0": {
-    "message": "„0“ einfügen, was entweder das Ziffernsymbol 0 oder den Start einer Oktalzahl markiert.",
+    "message": "„0“ einfügen, was entweder das Ziffernsymbol 0 bedeutet oder den Start einer Oktalzahl markiert.",
     "description": "Explain 0 button"
   },
   "titleButtonAbbr1": {
@@ -468,7 +468,7 @@
     "description": "font-weight property for buttonMoveLineUp"
   },
   "titleButtonMoveLineUp": {
-    "message": "Die aktuelle Zeile wird nach oben verschieben.",
+    "message": "Die aktuelle Zeile wird nach oben verschoben.",
     "description": "Explain that the current line will be moved up"
   },
   "buttonMoveLineDown": {
@@ -488,7 +488,7 @@
     "description": "Button to insert a new empty line over the current line"
   },
   "titleButtonInsertLine": {
-    "message": "Eine neue leere Zeile über der aktuellen einfügen",
+    "message": "Eine neue leere Zeile wird über der aktuellen eingefügt.",
     "description": "Explain that a new empty line will be inserted over the current line"
   },
   "buttonClearWindow": {
@@ -496,7 +496,7 @@
     "description": "Button to clear the window"
   },
   "titleButtonClearWindow": {
-    "message": "Alle Zeilen aus dem Fenster entfernen",
+    "message": "Alle Zeilen werden entfert.",
     "description": "Explain that all lines will be removed from the window"
   },
   "buttonRedrawLine": {
@@ -611,7 +611,7 @@
     "placeholders": {
       "token": {
         "content": "$1",
-        "example": "("
+        "example": "="
       }
     }
   },

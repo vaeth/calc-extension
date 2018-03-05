@@ -325,14 +325,14 @@
   },
   "titleButtonAbbrVarA": {
     "message": "Insert variable name (with a trailing space).",
-    "description": "Explain space button"
+    "description": "Explain variable name buttons"
   },
   "titleButtonAbbr0x": {
-    "message": "Insert “0x”, which denotes the start of a hexadecimal number.",
+    "message": "Insert “0x”, which indicates the start of a hexadecimal number.",
     "description": "Explain 0x button"
   },
   "titleButtonAbbr0": {
-    "message": "Insert “0”, which either denotes the number symbol 0 or the start of an octal number.",
+    "message": "Insert “0”, which either denotes the number symbol 0 or indicates the start of an octal number.",
     "description": "Explain 0 button"
   },
   "titleButtonAbbr1": {
@@ -468,7 +468,7 @@
     "description": "font-weight property for buttonMoveLineUp"
   },
   "titleButtonMoveLineUp": {
-    "message": "Move the current line up.",
+    "message": "Move the current line up",
     "description": "Explain that the current line will be moved up"
   },
   "buttonMoveLineDown": {
@@ -480,7 +480,7 @@
     "description": "font-weight property for buttonMoveLineDown"
   },
   "titleButtonMoveLineDown": {
-    "message": "Move the current line down.",
+    "message": "Move the current line down",
     "description": "Explain that the current line will be moved down"
   },
   "buttonInsertLine": {
@@ -496,7 +496,7 @@
     "description": "Button to clear the window"
   },
   "titleButtonClearWindow": {
-    "message": "Remove all lines from the window",
+    "message": "Remove all lines",
     "description": "Explain that all lines will be removed from the window"
   },
   "buttonRedrawLine": {
@@ -611,7 +611,7 @@
     "placeholders": {
       "token": {
         "content": "$1",
-        "example": "("
+        "example": "="
       }
     }
   },
