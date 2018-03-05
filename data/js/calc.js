@@ -295,10 +295,7 @@ function insertButtonAbbr(lines, id) {
   }
 }
 
-function detailsStore(options) {
-  if (!options.store) {
-    return;
-  }
+function detailsStore() {
   const details = {};
   const defaultDetails = State.details;
   for (let name of Object.getOwnPropertyNames(defaultDetails)) {
@@ -314,7 +311,9 @@ function detailsAll(options, open) {
   for (let name of Object.getOwnPropertyNames(State.details)) {
     setOpen(document.getElementById("details" + name), open);
   }
-  detailsStore(options);
+  if (options.accordion) {
+    detailsStore();
+  }
 }
 
 function detailsChanges(details, changes) {
@@ -360,7 +359,7 @@ function changeAccordion(options) {
     return;
   }
   if (value) {
-    detailsStore(options);
+    detailsStore();
   } else {
     sendCommand("clearDetails");
   }
@@ -408,7 +407,7 @@ function optionsChanges(state, options, changes) {
   }
   if (changes.accordion) {
     if (changes.accordion.value) {
-      detailsStore(options);
+      detailsStore();
     }
     setCheckboxAccordion(changes.accordion.value);
   }
