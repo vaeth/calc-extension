@@ -1,5 +1,9 @@
 # ChangeLog for calc-extension:
 
+*calc-extension-5.1:
+	Martin Väth <martin at mvath.de>:
+	- Fix display of #
+
 *calc-extension-5.0:
 	Martin Väth <martin at mvath.de>:
 	- Everything now has an explaining tooltip/title

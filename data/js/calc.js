@@ -163,8 +163,7 @@ function restoreSessionLast(state, checkOnly) {
     if (checkOnly) {
       return true;
     }
-    state.lastString = lastString;
-    displayLastString(state);
+    displayLastString((state.lastString = lastString));
   }
   if (checkOnly) {
     return false;
@@ -228,7 +227,7 @@ function displayResult(state, id) {
     text = browser.i18n.getMessage("messageError", error);
   }
   if (last) {
-    displayLastString(lastString);
+    displayLastString(state.lastString);
     if (state.options.clipboard) {
       toClipboard(state.lastString);
     }

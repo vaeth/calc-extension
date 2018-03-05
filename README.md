@@ -122,8 +122,8 @@ browser restarts), you have to store them or use the preferences window.
 
 - `'width:height'` textarea size
 - `"base"` switch output to base (2-36)
-- `!` Omit the ~> button
-- `?` Do not omit the ~> button
+- `!` new input fields are textareas (multiple lines)
+- `?` new input fields are for single lines
 
 The actual calculation of the functions and number conversion occurs
 by javascript calls. Therefore, mathematical properties like available
@@ -149,8 +149,9 @@ precision, error messages, number limitations, and possible inaccuracies
 
 ## Permissions
 
-The extension requires storage permissions in order to store the options
-(and possibly a session) locally.
+
+The extension requires the storage permission in order to store
+options/accordion state and possibly a session on local storage.
 
 ## Languages
 
