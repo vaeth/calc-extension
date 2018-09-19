@@ -1,4 +1,4 @@
-/* Copyright (C) 2018 Nartin Väth <martin@mvath.de>
+/* Copyright (C) 2018 Martin Väth <martin@mvath.de>
  * This project is under the GNU public license 2.0
 */
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2018 Nartin Väth <martin@mvath.de>
+/* Copyright (C) 2018 Martin Väth <martin@mvath.de>
  * This project is under the GNU public license 2.0
 */
 
@@ -540,19 +540,9 @@ function changeBaseValue(options, base, forceRedisplay) {
   }
 }
 
-function toClipboardUnsafe(text) {
-  const textarea = document.createElement("TEXTAREA");
-  textarea.value = (text || "");
-  const top = getTop();
-  top.appendChild(textarea);
-  textarea.select();
-  document.execCommand("copy");
-  top.removeChild(textarea);
-}
-
 function toClipboard(text) {
   try {
-    toClipboardUnsafe(text);
+    clipboard.writeText(text);
   }
   catch (error) {  // tacitly ignore clipboard issues
   }
