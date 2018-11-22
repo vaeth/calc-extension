@@ -1,5 +1,10 @@
 # ChangeLog for calc-extension:
 
+*calc-extension-5.2:
+	Mrtin Väth <mvath at google.com>:
+	- Accept \d+. as a valid number.
+	  Thanks to Alexandre Fedotov for reporting.
+
 *calc-extension-5.1:
 	Martin Väth <martin at mvath.de>:
 	- Fix display of #

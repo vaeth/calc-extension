@@ -414,8 +414,9 @@ function lexToken(input) {
     token.isName = true;
     return token;
   }
-  const number = /^\d*\.?\d+(?:[eE][+-]?\d+)?/.exec(input);
-  if (!number) {
+  const number = /^\d*\.?\d*(?:[eE][+-]?\d+)?/.exec(input);
+  const nonumber = /^\.\D/.exec(input);
+  if ((!number) || nonumber || (input == '.')) {
     const identifier = /^\w+/.exec(input);
     if (!identifier) {
       throw browser.i18n.getMessage("errorIllegalCharacter", first);
