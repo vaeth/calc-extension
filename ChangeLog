@@ -1,7 +1,11 @@
 # ChangeLog for calc-extension:
 
+*calc-extension-5.3:
+	Martin Väth <mvath at google.com>:
+	- Fix parsing regression introduced in calc-extension-5.2
+
 *calc-extension-5.2:
-	Mrtin Väth <mvath at google.com>:
+	Martin Väth <mvath at google.com>:
 	- Accept \d+. as a valid number.
 	  Thanks to Alexandre Fedotov for reporting.
 
