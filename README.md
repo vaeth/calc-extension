@@ -149,7 +149,6 @@ precision, error messages, number limitations, and possible inaccuracies
 
 ## Permissions
 
-
 The extension requires the storage permission in order to store
 options/accordion state and possibly a session on local storage.
 

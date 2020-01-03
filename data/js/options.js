@@ -1,6 +1,6 @@
-/* Copyright (C) 2018 Nartin Väth <martin@mvath.de>
+/* Copyright (C) 2018-2020 Martin Väth <martin@mvath.de>
  * This project is under the GNU public license 2.0
-*/
+ */
 
 "use strict";
 
@@ -13,7 +13,7 @@ function setTitle(title) {
 }
 
 function initLayout() {
-  const title = browser.i18n.getMessage("extensionName");
+  const title = compatible.getMessage("extensionName");
   setTitle(title);
 }
 
@@ -101,10 +101,10 @@ function setInputBase(base) {
 
 function appendLink(parent) {
   const link = document.createElement("A");
-  const url = browser.extension.getURL("data/html/tab.html");
+  const url = compatible.browser.extension.getURL("data/html/tab.html");
   link.href = url;
   link.target = "_blank";
-  link.textContent = browser.i18n.getMessage("textLinkOpen");
+  link.textContent = compatible.getMessage("textLinkOpen");
   link.referrerpolicy = "no-referrer";
   parent.appendChild(link);
 }
@@ -185,7 +185,7 @@ function sendCommand(command, changes) {
   if (changes) {
     message.changes = changes;
   }
-  browser.runtime.sendMessage(message);
+  compatible.browser.runtime.sendMessage(message);
 }
 
 function sendChanges(changes) {
@@ -320,7 +320,7 @@ function initMain() {
   document.addEventListener("click", (event) => {
     clickListener(state, event);
   });
-  browser.runtime.onMessage.addListener((message) => {
+  compatible.browser.runtime.onMessage.addListener((message) => {
     messageListener(state, message);
   });
 }
