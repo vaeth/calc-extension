@@ -1,6 +1,6 @@
-/* Copyright (C) 2018 Martin Väth <martin@mvath.de>
+/* Copyright (C) 2018-2020 Martin Väth <martin@mvath.de>
  * This project is under the GNU public license 2.0
-*/
+ */
 
 "use strict";
 
@@ -9,7 +9,7 @@ function sendCommand(command, message) {
     message = {};
   }
   message.command = command;
-  browser.runtime.sendMessage(message);
+  compatible.browser.runtime.sendMessage(message);
 }
 
 function sendChanges(changes) {
@@ -48,7 +48,7 @@ function getSizeOf(line) {
 function addContent(seed, lines, withSize) {
   let textResult;
   if (!Array.isArray(seed)) {
-    textResult = browser.i18n.getMessage("textResult");
+    textResult = compatible.getMessage("textResult");
   }
   for (let line of lines.lines) {
     const content = getContent(line);
@@ -224,7 +224,7 @@ function displayResult(state, id) {
     }
   }
   catch(error) {
-    text = browser.i18n.getMessage("messageError", error);
+    text = compatible.getMessage("messageError", error);
   }
   if (last) {
     displayLastString(state.lastString);
@@ -637,7 +637,7 @@ function initMain() {
       toggleListener(state, name, node, State.details[name]);
     });
   }
-  browser.runtime.onMessage.addListener((message) => {
+  compatible.browser.runtime.onMessage.addListener((message) => {
     messageListener(state, message);
   });
 }

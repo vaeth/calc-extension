@@ -3,7 +3,7 @@
   "short_name": "calc-extension",
   "description": "__MSG_extensionDescription__",
   "author": "Martin Väth",
-  "version": "5.4",
+  "version": "5.5",
   "manifest_version": 2,
   "homepage_url": "https://addons.mozilla.org/en-US/firefox/addon/calc-extension/",
   "default_locale": "en",
@@ -14,6 +14,7 @@
 
   "background": {
     "scripts": [
+      "data/js/compatible.js",
       "data/js/changes.js",
       "data/js/background.js"
     ]

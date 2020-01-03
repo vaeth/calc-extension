@@ -1,6 +1,6 @@
-/* Copyright (C) 2018 Martin Väth <martin@mvath.de>
+/* Copyright (C) 2018-2020 Martin Väth <martin@mvath.de>
  * This project is under the GNU public license 2.0
-*/
+ */
 
 // For documentation on the tab API see e.g.
 // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/tabs
@@ -32,7 +32,7 @@ function sendCommand(command, message) {
     }
   }
   message.command = command;
-  browser.runtime.sendMessage(message);
+  compatible.browser.runtime.sendMessage(message);
 }
 
 function flagSendHaveStorage() {
@@ -74,9 +74,9 @@ function optionsChanges(options, changes, store) {
   if (store) {
     if (options) {
       flagSendHaveStorage();  // We might have partial storage if failure
-      browser.storage.local.set({ optionsV1: options }).then(finish);
+      compatible.storageSet({ optionsV1: options }, finish);
     } else {
-      browser.storage.local.remove("optionsV1").then(finish);
+      compatible.storageRemove("optionsV1", finish);
     }
   } else {
     finish();
@@ -108,9 +108,9 @@ function detailsChanges(details, changes, store) {
   if (store) {
     if (details) {
       flagSendHaveStorage();  // We might have partial storage if failure
-      browser.storage.local.set({ detailsV1: details }).then(finish);
+      compatible.storageSet({ detailsV1: details }, finish);
     } else {
-      browser.storage.local.remove("detailsV1").then(finish);
+      compatible.storageRemove("detailsV1", finish);
     }
   } else {
     finish();
@@ -122,7 +122,7 @@ function detailsChanges(details, changes, store) {
 function clearDetailsTacitly() {
   if (state.details) {
     state.details = null;
-    browser.storage.local.remove("detailsV1");
+    compatible.storageRemove("detailsV1");
   }
 }
 
@@ -163,9 +163,9 @@ function sessionChanges(session, store) {
   if (store) {
     if (session) {
       flagSendHaveStorage();  // We might have partial storage if failure
-      browser.storage.local.set({ sessionV1: sessionStore }).then(finish);
+      compatible.storageSet({ sessionV1: sessionStore }, finish);
     } else {
-      browser.storage.local.remove("sessionV1").then(finish);
+      compatible.storageRemove("sessionV1", finish);
     }
   } else {
     finish();
@@ -193,7 +193,7 @@ function storageListener(changes) {
 }
 
 function clearStorage() {
-  browser.storage.local.clear().then(() => {
+  compatible.storageClear(() => {
     if (!state.haveStorage) {
       return;
     }
@@ -219,7 +219,7 @@ function sendInit(reply) {
     sendCommand(reply);
     return;
   }
-  browser.storage.local.get().then((storage) => {
+  compatible.storageGet((storage) => {
     delete state.virgin;
     if (storage && Object.getOwnPropertyNames(storage).length) {
       state.haveStorage = true;
@@ -272,11 +272,11 @@ function messageListener(message) {
   }
 }
 
-browser.storage.onChanged.addListener(storageListener);
-browser.runtime.onMessage.addListener(messageListener);
-browser.browserAction.onClicked.addListener(() => {
-  browser.tabs.create({
-    url: browser.extension.getURL("data/html/tab.html"),
+compatible.browser.storage.onChanged.addListener(storageListener);
+compatible.browser.runtime.onMessage.addListener(messageListener);
+compatible.browser.browserAction.onClicked.addListener(() => {
+  compatible.browser.tabs.create({
+    url: compatible.browser.extension.getURL("data/html/tab.html"),
     active: true
   });
 });

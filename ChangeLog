@@ -1,5 +1,9 @@
 # ChangeLog for calc-extension:
 
+*calc-extension-5.5:
+	Martin Väth <mvath at mvath.de>:
+	- Provide chrome compatibility layer in javascript
+
 *calc-extension-5.4:
 	Martin Väth <martin at mvath.de>:
 	- Use clipboard.writeText available for >=firefox-63

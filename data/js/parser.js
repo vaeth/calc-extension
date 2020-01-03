@@ -1,6 +1,6 @@
-/* Copyright (C) 2018 Martin Väth <martin@mvath.de>
+/* Copyright (C) 2018-2020 Martin Väth <martin@mvath.de>
  * This project is under the GNU public license 2.0
-*/
+ */
 
 "use strict";
 
@@ -23,11 +23,11 @@ function handleInlineToken(lines, options, token) {
 // Frequent parser errors:
 
 function errorUnexpected(text) {
-  return browser.i18n.getMessage("errorUnexpectedToken", text);
+  return compatible.getMessage("errorUnexpectedToken", text);
 }
 
 function errorUninitialized(text) {
-  return browser.i18n.getMessage("errorUninitializedVariable", text);
+  return compatible.getMessage("errorUninitializedVariable", text);
 }
 
 function errorNonNumeric(expression) {
@@ -35,10 +35,10 @@ function errorNonNumeric(expression) {
     return errorUninitialized(expression.name);
   }
   if (expression.type === "function") {
-    return browser.i18n.getMessage("errorUnresolvableFunction",
+    return compatible.getMessage("errorUnresolvableFunction",
       expression.name);
   }
-  return browser.i18n.getMessage("errorParse");  // should not happen
+  return compatible.getMessage("errorParse");  // should not happen
 }
 
 /*
@@ -80,13 +80,13 @@ class ParserState {
         this.gobbleQuick();
         return gobbled;
       }
-      throw browser.i18n.getMessage("errorIncomplete");
+      throw compatible.getMessage("errorIncomplete");
     }
     if (gobbled && (gobbled.type === token)) {
       this.gobbleQuick();
       return;
     }
-    throw browser.i18n.getMessage("errorMissingToken", token);
+    throw compatible.getMessage("errorMissingToken", token);
   }
 }
 
@@ -211,7 +211,7 @@ class Parser {
   registerLast(name) {
     this.registerPrefix(name, (parserState)  => {
       if (parserState.last === null) {
-        throw browser.i18n.getMessage("errorNoLast");
+        throw compatible.getMessage("errorNoLast");
       }
       return {
         type: "result",
@@ -262,7 +262,7 @@ class Parser {
     this.registerInfix(name, precedence, (parserState) => {
       const left = parserState.left;
       if (left.type !== "variable") {
-        throw browser.i18n.getMessage("errorAssignNonVariable");
+        throw compatible.getMessage("errorAssignNonVariable");
       }
       const right = parserState.getExpression(precedence, rightToLeft);
       if (!right.numeric) {
@@ -359,7 +359,7 @@ function lexToken(input) {
     } else if (first === "'") {
       const quote = /^\'\s*(\d*(?:\s*\D\s*\d*)?)\s*\'/.exec(input);
       if (!quote) {
-        throw browser.i18n.getMessage("errorBadSingleQuote");
+        throw compatible.getMessage("errorBadSingleQuote");
       }
       token.text = quote[0];
       token.value = getSize(quote[1]);
@@ -368,7 +368,7 @@ function lexToken(input) {
     } else if (first === '"') {
       const quote = /^\"\s*(\d*)\s*\"/.exec(input);
       if (!quote) {
-        throw  browser.i18n.getMessage("errorBadDoubleQuote");
+        throw  compatible.getMessage("errorBadDoubleQuote");
       }
       token.text = quote[0];
       token.value = getBase(quote[1]);
@@ -418,7 +418,7 @@ function lexToken(input) {
   if ((!number) || (!(number[1])) || (number[1] == ".")) {
     const identifier = /^\w+/.exec(input);
     if (!identifier) {
-      throw browser.i18n.getMessage("errorIllegalCharacter", first);
+      throw compatible.getMessage("errorIllegalCharacter", first);
     } else {
       token.text = token.type = identifier[0];
       token.isName = true;
@@ -475,7 +475,7 @@ In the error case, we just throw.
 function calculate(state, input) {
   const emptyToken = {
     type: "#empty",
-    text: browser.i18n.getMessage("textImplicit")
+    text: compatible.getMessage("textImplicit")
   };
   const tokens = getTokenArray(state.lines, state.options, input);
   if (!tokens.length) {
@@ -533,13 +533,13 @@ function calculate(state, input) {
     throw errorNonNumeric(result);
   }
   if (Number.isNaN(result)) {
-    throw browser.i18n.getMessage("errorNaN");
+    throw compatible.getMessage("errorNaN");
   }
   const value = state.last = result.value;
   const base = state.options.base;
   if (isBase(base)) {
     const resultString = state.lastString = value.toString(base);
-    return browser.i18n.getMessage("messageResult",
+    return compatible.getMessage("messageResult",
       [resultString, String(base)]);
   }
   return ((state.lastString = String(value)));

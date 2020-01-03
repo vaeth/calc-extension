@@ -1,6 +1,6 @@
-/* Copyright (C) 2018 Martin Väth <martin@mvath.de>
+/* Copyright (C) 2018-2020 Martin Väth <martin@mvath.de>
  * This project is under the GNU public license 2.0
-*/
+ */
 
 "use strict";
 
@@ -158,12 +158,12 @@ function translateExamples() {
     ]) {
     const element = document.getElementById(id);
     element.textContent =
-      browser.i18n.getMessage("messageResult", [element.textContent, "16"]);
+      compatible.getMessage("messageResult", [element.textContent, "16"]);
   }
 }
 
 function initLayout() {
-  const title = browser.i18n.getMessage("extensionName");
+  const title = compatible.getMessage("extensionName");
   setTitle(title);
   setHead(title);
   for (let id of [
@@ -177,7 +177,7 @@ function initLayout() {
     "summaryStorage",
     "summaryEditing"
     ]) {
-    const translation = browser.i18n.getMessage(id);
+    const translation = compatible.getMessage(id);
     document.getElementById(id).textContent = translation;
   }
   translateExamples();
@@ -251,7 +251,7 @@ function initLayout() {
     if (!Array.isArray(i)) {
       i = [ i ];
     }
-    const translation = browser.i18n.getMessage("titleButton" + i[0]);
+    const translation = compatible.getMessage("titleButton" + i[0]);
     for (let j of i) {
       document.getElementById("button" + j).title = translation;
     }
@@ -270,10 +270,10 @@ function initLayout() {
     "LOG10E"
     ]) {
     const name = "titleButtonAbbr" + i;
-    document.getElementById(name).title = browser.i18n.getMessage(name);
+    document.getElementById(name).title = compatible.getMessage(name);
   }
-  const textRightToLeft = browser.i18n.getMessage("textRightToLeft");
-  const titleTextRightToLeft = browser.i18n.getMessage("titleTextRightToLeft");
+  const textRightToLeft = compatible.getMessage("textRightToLeft");
+  const titleTextRightToLeft = compatible.getMessage("titleTextRightToLeft");
   for (let id of [
     "textRightToLeft1",
     "textRightToLeft2"

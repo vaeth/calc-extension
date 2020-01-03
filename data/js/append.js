@@ -1,6 +1,6 @@
-/* Copyright (C) 2018 Martin Väth <martin@mvath.de>
+/* Copyright (C) 2018-2020 Martin Väth <martin@mvath.de>
  * This project is under the GNU public license 2.0
-*/
+ */
 
 "use strict";
 
@@ -60,7 +60,7 @@ function appendCheckbox(parent, id, checked, titleId) {
     checkbox.checked = checked;
   }
   if (titleId) {
-    checkbox.title = browser.i18n.getMessage(titleId);
+    checkbox.title = compatible.getMessage(titleId);
   }
   checkbox.id = id;
   parent.appendChild(checkbox);
@@ -76,7 +76,7 @@ function appendTextarea(parent, id, size, value, titleId) {
     textarea.value = value;
   }
   if (titleId) {
-    textarea.title = browser.i18n.getMessage(titleId);
+    textarea.title = compatible.getMessage(titleId);
   }
   parent.appendChild(textarea);
   return textarea;
@@ -91,7 +91,7 @@ function appendInput(parent, id, size, value, titleId) {
     input.value = value;
   }
   if (titleId) {
-    input.title = browser.i18n.getMessage(titleId);
+    input.title = compatible.getMessage(titleId);
   }
   parent.appendChild(input);
   return input;
@@ -114,12 +114,12 @@ function appendButton(parent, id, textId, disabled, text, titleId, fontWeightId)
     button.disabled = true;
   }
   if (titleId) {
-    button.title = browser.i18n.getMessage(titleId);
+    button.title = compatible.getMessage(titleId);
   }
   if (fontWeightId) {
-    button.style.fontWeight = browser.i18n.getMessage(fontWeightId);
+    button.style.fontWeight = compatible.getMessage(fontWeightId);
   }
-  button.textContent = (text || browser.i18n.getMessage(textId || id));
+  button.textContent = (text || compatible.getMessage(textId || id));
   parent.appendChild(button);
   return button;
 }
@@ -129,10 +129,10 @@ function appendTextNode(parent, textId, id, titleId, text) {
     parent.id = id;
   }
   if (titleId) {
-    parent.title = browser.i18n.getMessage(titleId);
+    parent.title = compatible.getMessage(titleId);
   }
   const textNode = document.createTextNode(textId ?
-    browser.i18n.getMessage(textId) : (text || ""));
+    compatible.getMessage(textId) : (text || ""));
   parent.appendChild(textNode);
   return textNode;
 }
