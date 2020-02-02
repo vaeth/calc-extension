@@ -5,7 +5,6 @@
   "author": "Martin Väth",
   "version": "5.4",
   "manifest_version": 2,
-  "homepage_url": "https://addons.mozilla.org/en-US/firefox/addon/calc-extension/",
   "default_locale": "en",
 
   "permissions": [
