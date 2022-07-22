@@ -1,4 +1,4 @@
-/* Copyright (C) 2018-2020 Martin Väth <martin@mvath.de>
+/* Copyright (C) 2018-2022 Martin Väth <martin@mvath.de>
  * This project is under the GNU public license 2.0
  */
 
@@ -101,7 +101,7 @@ function setInputBase(base) {
 
 function appendLink(parent) {
   const link = document.createElement("A");
-  const url = compatible.browser.extension.getURL("data/html/tab.html");
+  const url = compatible.browser.runtime.getURL("data/html/tab.html");
   link.href = url;
   link.target = "_blank";
   link.textContent = compatible.getMessage("textLinkOpen");

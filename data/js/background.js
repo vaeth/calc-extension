@@ -1,8 +1,107 @@
-/* Copyright (C) 2018-2020 Martin Väth <martin@mvath.de>
+/* Copyright (C) 2018-2022 Martin Väth <martin@mvath.de>
  * This project is under the GNU public license 2.0
  */
 
 "use strict";
+
+function callbackOrError(callback, errorCallback) {
+  return callback ? (arg) => {
+    if (chrome.runtime.lastError) {
+      if (errorCallback) {
+        errorCallback(chrome.runtime.lastError);
+      }
+    } else {
+      callback(arg);
+    }
+  } : (arg) => {};
+}
+
+const compatible = (typeof(browser) != "undefined"
+    && Object.getPrototypeOf(browser) === Object.prototype) ? {
+  browser: browser,
+  getMessage: browser.i18n.getMessage,
+  storageGet: function(callback, errorCallback) {
+    browser.storage.local.get().then(callback, errorCallback);
+  },
+  storageClear: function(callback, errorCallback) {
+    browser.storage.local.clear().then(callback, errorCallback);
+  },
+  storageSet: function(arg, callback, errorCallback) {
+    browser.storage.local.set(arg).then(callback, errorCallback);
+  },
+  storageRemove: function(arg, callback, errorCallback) {
+    browser.storage.local.remove(arg).then(callback, errorCallback);
+  }
+} : {
+  browser: chrome,
+  getMessage: chrome.i18n.getMessage,
+  storageGet: function(callback, errorCallback) {
+    chrome.storage.local.get(callbackOrError(callback, errorCallback));
+  },
+  storageClear: function(callback, errorCallback) {
+    chrome.storage.local.get(callbackOrError(callback, errorCallback));
+  },
+  storageSet: function(arg, callback, errorCallback) {
+    chrome.storage.local.set(arg, callbackOrError(callback, errorCallback));
+  },
+  storageRemove: function(arg, callback, errorCallback) {
+    chrome.storage.local.remove(arg, callbackOrError(callback, errorCallback));
+  }
+};
+
+function calcChanges(oldObject, newObject) {
+  const changes = {};
+  let changed = false;
+  if (!oldObject) {
+    if (!newObject) {
+      return null;
+    }
+    oldObject = {};
+  } else if (!newObject) {
+    newObject = {};
+  }
+  for (let i of Object.getOwnPropertyNames(oldObject)) {
+    if (newObject.hasOwnProperty(i)) {
+      continue;
+    }
+    changed = true;
+    changes[i] = {};
+  }
+  for (let i of Object.getOwnPropertyNames(newObject)) {
+    if (!newObject.hasOwnProperty(i)) {
+      continue;
+    }
+    const value = newObject[i];
+    if(oldObject.hasOwnProperty(i) && (oldObject[i] === value)) {
+      continue;
+    }
+    changed = true;
+    changes[i] = {
+        value: value
+    };
+  }
+  return changed ? changes : null;
+}
+
+function applyChanges(object, changes) {
+  if (!changes) {
+    return false;
+  }
+  let changed = false;
+  for (let i of Object.getOwnPropertyNames(changes)) {
+    const change = changes[i];
+    if (change.hasOwnProperty("value")) {
+      if (!object.hasOwnProperty(i) || object[i] !== change.value) {
+        changed = true;
+        object[i] = change.value;
+      }
+    } else if (object.hasOwnProperty(i)) {
+        changed = true;
+        delete object[i];
+    }
+  }
+  return changed;
+}
 
 const state = {
   virgin: true,
@@ -269,9 +368,11 @@ function messageListener(message) {
 
 compatible.browser.storage.onChanged.addListener(storageListener);
 compatible.browser.runtime.onMessage.addListener(messageListener);
-compatible.browser.browserAction.onClicked.addListener(() => {
+((typeof(compatible.browser.action) != "undefined")
+  ? compatible.browser.action : compatible.browser.browserAction )
+.onClicked.addListener(() => {
   compatible.browser.tabs.create({
-    url: compatible.browser.extension.getURL("data/html/tab.html"),
+    url: compatible.browser.runtime.getURL("data/html/tab.html"),
     active: true
   });
 });

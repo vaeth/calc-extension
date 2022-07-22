@@ -3,8 +3,8 @@
   "short_name": "calc-extension",
   "description": "__MSG_extensionDescription__",
   "author": "Martin Väth",
-  "version": "5.4",
-  "manifest_version": 2,
+  "version": "5.5",
+  "manifest_version": 3,
   "default_locale": "en",
 
   "permissions": [
@@ -12,14 +12,10 @@
   ],
 
   "background": {
-    "scripts": [
-      "data/js/compatible.js",
-      "data/js/changes.js",
-      "data/js/background.js"
-    ]
+    "service_worker": "data/js/background.js"
   },
 
-  "browser_action": {
+  "action": {
     "default_icon": {
       "16": "data/icons/16.png",
       "32": "data/icons/32.png",
