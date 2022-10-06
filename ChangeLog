@@ -1,5 +1,10 @@
 # ChangeLog for calc-extension:
 
+*calc-extension-5.5:
+	Martin Väth <martin at mvath.de>:
+	- Manifest v3
+	- Use Clipboard.writeText
+
 *calc-extension-5.4:
 	Martin Väth <martin at mvath.de>:
 	- Provide chrome compatibility layer in javascript

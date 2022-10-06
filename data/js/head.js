@@ -540,19 +540,9 @@ function changeBaseValue(options, base, forceRedisplay) {
   }
 }
 
-function toClipboardUnsafe(text) {
-  const textarea = document.createElement("TEXTAREA");
-  textarea.value = (text || "");
-  const top = getTop();
-  top.appendChild(textarea);
-  textarea.select();
-  document.execCommand("copy");
-  top.removeChild(textarea);
-}
-
 function toClipboard(text) {
   try {
-    toClipboardUnsafe(text);
+    navigator.clipboard.writeText(text);
   }
   catch (error) {  // tacitly ignore clipboard issues
   }
